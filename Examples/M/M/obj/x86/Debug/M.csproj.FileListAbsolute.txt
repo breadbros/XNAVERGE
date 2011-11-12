@@ -17,3 +17,13 @@ C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\M\obj\x86\Debug\ResolveAssembl
 C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\M\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\M\obj\x86\Debug\M.exe
 C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\M\obj\x86\Debug\M.pdb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\M.exe
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\M.pdb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\XNAVERGE.dll
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\SharpZlib.dll
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\XNAVERGE.pdb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\SharpZlib.pdb
+C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\M.exe
+C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\M.pdb

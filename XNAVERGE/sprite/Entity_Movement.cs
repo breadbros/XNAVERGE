@@ -329,7 +329,7 @@ namespace XNAVERGE {
         // using up all the elapsed time while accomplishing nothing.
         protected virtual int try_to_move(int elapsed, bool player_control) {
             int maxmove, actualmove; // maximum distance possible to move in this iteration, in hundredths of pixels
-            int dist_to_next_pixel_x = 0, dist_to_next_pixel_y = 0, tilesize;
+            int dist_to_next_pixel_x = 0, dist_to_next_pixel_y = 0, extra_dist, tilesize;
             Point signs;
             tilesize = VERGEGame.game.map.tileset.tilesize;
             if (player_control) maxmove = elapsed;
@@ -341,12 +341,12 @@ namespace XNAVERGE {
             if (signs.Y < 0) dist_to_next_pixel_y = _exact_y - hitbox.Y * 100;
             else if (signs.Y > 0) dist_to_next_pixel_y = (hitbox.Y + 1) * 100 - _exact_y - 1;
 
-            //if (player_control) 
-              //  Console.WriteLine("Signs ({0},{1}). Exact coordinates ({2},{3}). Distances ({4},{5})", signs.X, signs.Y, _exact_x, _exact_y, dist_to_next_pixel_x, dist_to_next_pixel_y);
-            if (Math.Max(dist_to_next_pixel_x, dist_to_next_pixel_y) < maxmove) {
-                actualmove = dist_to_next_pixel_x + dist_to_next_pixel_y +
-                    VERGEGame.game.map.max_unobstructed_distance(maxmove - dist_to_next_pixel_x - dist_to_next_pixel_y, signs.X, signs.Y, this);
-            }
+            if ((int)movement_direction < 4)  // cardinal-direction movement
+                extra_dist = Math.Max(dist_to_next_pixel_x, dist_to_next_pixel_y); // at most one of these will be nonzero, and we want that one
+            else extra_dist = Math.Min(dist_to_next_pixel_x, dist_to_next_pixel_y); // both may be nonzero, and we want the smaller one
+            
+            if (extra_dist < maxmove) 
+                actualmove = extra_dist + VERGEGame.game.map.max_unobstructed_distance(maxmove - extra_dist, signs.X, signs.Y, this);            
             else actualmove = maxmove;
 
             exact_x += signs.X * actualmove;

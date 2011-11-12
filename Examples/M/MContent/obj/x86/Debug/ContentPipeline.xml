@@ -7,10 +7,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\MContent\</RootDirectory>
-      <LoggerRootDirectory>C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\M\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\MContent\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\M\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\games\dev\XNAVERGE.git\Examples\M\MContent\</RootDirectory>
+      <LoggerRootDirectory>C:\games\dev\XNAVERGE.git\Examples\M\M\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\games\dev\XNAVERGE.git\Examples\M\MContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>

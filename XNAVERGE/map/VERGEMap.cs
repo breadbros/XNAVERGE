@@ -208,7 +208,7 @@ namespace XNAVERGE {
             tile_x = Math.DivRem(x, tilesize, out pixel_x); // tile_x = x/tilesize, pixel_x = x%tilesize
             tile_y = Math.DivRem(y, tilesize, out pixel_y); // as above but for y
             tile = obstruction_layer.data[tile_x][tile_y];
-            //if (tile == 0) return false;
+            if (tile == 0) return false;
             return tileset.obs[tile][pixel_x][pixel_y];
         }
 
