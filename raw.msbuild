@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- include this just before </project> in your contentproj to cause 
+the content/raw subdirectory to get copied at build-time as raw, untouched content -->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+<ItemGroup>
+  <None Include="raw\**\*.*" Exclude="raw\.svn\*;raw\.svn\**\*.*;raw\**\.svn\*;raw\**\.svn\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+
+<Target Name="BeforeBuild">
+  <CreateItem Include="@(None)" AdditionalMetadata="Name=%(FileName);CopyToOutputDirectory=Always">
+    <Output TaskParameter="Include" ItemName="None" />
+  </CreateItem>
+</Target>
+</Project>

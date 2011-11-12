@@ -1,0 +1,20 @@
+chr_version 5
+in mole.png
+out mole.chr
+frame_w 24
+frame_h 24
+hotspot_x 4
+hotspot_y 6
+hotspot_w 16
+hotspot_h 16
+frames_per_row 3
+frame_rows 6
+d_idle 8
+u_idle 8
+l_idle 8
+r_idle 8
+d_walk F6W8F7W8F8W8
+u_walk F9W8F10W8F11W8
+l_walk F12W8F13W8F14W8
+r_walk F15W8F16W8F17W8
+

@@ -1,0 +1,2 @@
+C:\games\dev\M\Examples\M\MContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\games\dev\Gayo-CAROT\Gayo-CAROT.git\Examples\M\MContent\obj\x86\Debug\ResolveAssemblyReference.cache
