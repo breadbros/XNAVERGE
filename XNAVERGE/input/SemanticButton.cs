@@ -61,7 +61,8 @@ namespace XNAVERGE {
             _pressed = _released = false;
 
             // Determine current state of semantic button (it's down if anything mapped to the button is down)
-            if (input.keys.FindIndex(manager.kb_state.IsKeyDown) >= 0) down_now = true;
+            if (manager.gp_state.IsConnected && input.gamepad_buttons.FindIndex(manager.gp_state.IsButtonDown) >= 0) down_now = true;
+            else if (input.keys.FindIndex(manager.kb_state.IsKeyDown) >= 0) down_now = true;
             else {
                 // TODO: other input types here
                 down_now = false;
@@ -76,19 +77,19 @@ namespace XNAVERGE {
             if (down_now || _released) ticks_held += time_elapsed;
             else ticks_held = 0;
         }
-    }
-
-
-
+    }    
 
     // Encapsulates a bunch of physical input buttons (regardless of device) that all do the same thing.
     public class ButtonInputSet {
         private const int KEY_LIST_CAPACITY = 6; // initial capacity of key list (list will be expanded if it's exceeded)
+        private const int BUTTON_LIST_CAPACITY = 2; // initial capacity of button list (list will be expanded if it's exceeded)
         public List<Keys> keys;
-        // TODO: mouse and gamepad buttons
+        public List<Buttons> gamepad_buttons;
+        // TODO: mouse buttons
 
         public ButtonInputSet() {
             keys = new List<Keys>(KEY_LIST_CAPACITY);
+            gamepad_buttons = new List<Buttons>(BUTTON_LIST_CAPACITY);
         }
 
     }
