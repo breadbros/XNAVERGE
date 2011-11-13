@@ -342,8 +342,9 @@ namespace XNAVERGE {
             else if (signs.Y > 0) dist_to_next_pixel_y = (hitbox.Y + 1) * 100 - _exact_y - 1;
 
             if ((int)movement_direction < 4)  // cardinal-direction movement
-                extra_dist = Math.Max(dist_to_next_pixel_x, dist_to_next_pixel_y); // at most one of these will be nonzero, and we want that one
-            else extra_dist = Math.Min(dist_to_next_pixel_x, dist_to_next_pixel_y); // both may be nonzero, and we want the smaller one
+                extra_dist = Math.Max(dist_to_next_pixel_x, dist_to_next_pixel_y); // one of these will be set, and we want that one
+            else // main diagonal movement
+                extra_dist = Math.Min(dist_to_next_pixel_x, dist_to_next_pixel_y); // both are set, and we want the smaller one (even if it's zero)
             
             if (extra_dist < maxmove) 
                 actualmove = extra_dist + VERGEGame.game.map.max_unobstructed_distance(maxmove - extra_dist, signs.X, signs.Y, this);            

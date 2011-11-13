@@ -154,7 +154,7 @@ namespace XNAVERGE {
         public int max_unobstructed_distance(int intended_distance, int xs, int ys, Entity ent) {
             VERGEGame game = VERGEGame.game;
             bool tile_based;            
-            int cur_x, cur_y, targ_x, targ_y, tilesize; 
+            int cur_x = 0, cur_y = 0, targ_x, targ_y, tilesize, edge_bound; 
             
             if (intended_distance <= 0 || (xs == 0 && ys == 0)) return 0;
             tilesize = tileset.tilesize;            
@@ -162,15 +162,17 @@ namespace XNAVERGE {
             else tile_based = ent.tile_obstruction;
             //if (ent == game.player) Console.Write Line(intended_distance);
             //Console.WriteLine("Intended Distance {0}. Expecting at most {1} iterations.", intended_distance, intended_distance / 100);
+
+            if (xs < 0) cur_x = ent.x - 1;
+            else if (xs > 0) cur_x = ent.x + ent.hitbox.Width;
+            if (ys < 0) cur_y = ent.y - 1;
+            else if (ys > 0) cur_y = ent.y + ent.hitbox.Height;
+
             if (xs == 0) { // vertical movement
                 cur_x = ent.x;
                 targ_x = ent.x + ent.hitbox.Width - 1;
-                if (ys < 0) cur_y = ent.y - 1; // up
-                else cur_y = ent.y + ent.hitbox.Height; // down
-                targ_y = cur_y + ys * ((intended_distance-1) / 100 + 1); // technically, this is one pixel past the target, to simplify the loop
-                //Console.WriteLine("Cur {0}, Targ {1}", cur_y, targ_y);
-                for (int y = cur_y; y != targ_y; y += ys) {
-                    //Console.WriteLine(game.tick);
+                targ_y = cur_y + ys * ((intended_distance-1) / 100 + 1); // technically, this is one pixel past the target, to simplify the loop                
+                for (int y = cur_y; y != targ_y; y += ys) {                    
                     for (int x = cur_x; x <= targ_x; x++) {
                         if (obs_at_pixel(x, y)) {
                             //Console.WriteLine("Hit at ({0},{1}). Returning value of {2} instead of optimal {3}", x, y, Math.Abs(cur_y - y) - 1, intended_distance);
@@ -179,22 +181,47 @@ namespace XNAVERGE {
                     }
                 }
             }
-            else { // horizontal movement
-                cur_y = ent.y;
-                targ_y = ent.y + ent.hitbox.Height - 1;
-                if (xs < 0) cur_x = ent.x - 1; // left
-                else cur_x = ent.x + ent.hitbox.Width; // right
-                targ_x = cur_x + xs * ((intended_distance-1) / 100 + 1);  // technically, this is one pixel past the target, to simplify the loop
-                //Console.WriteLine("Cur {0}, Targ {1}, ID {2}", cur_x, targ_x, intended_distance);
-                for (int x = cur_x; x != targ_x; x += xs) {
-                    //Console.WriteLine(game.tick);
-                    for (int y = cur_y; y <= targ_y; y++) {                        
-                        if (obs_at_pixel(x, y)) {
-                            //Console.WriteLine("Hit at ({0},{1}). Returning value of {2} instead of optimal {3}", x, y, Math.Abs(cur_x - x) - 1, intended_distance);
-                            return Math.Abs(cur_x - x) * 100;
+            else {
+                if (ys == 0) { // horizontal movement
+                    cur_y = ent.y;
+                    targ_y = ent.y + ent.hitbox.Height - 1;
+                    targ_x = cur_x + xs * ((intended_distance - 1) / 100 + 1);  // technically, this is one pixel past the target, to simplify the loop                    
+                    for (int x = cur_x; x != targ_x; x += xs) {                        
+                        for (int y = cur_y; y <= targ_y; y++) {
+                            if (obs_at_pixel(x, y)) {
+                                //Console.WriteLine("Hit at ({0},{1}). Returning value of {2} instead of optimal {3}", x, y, Math.Abs(cur_x - x) - 1, intended_distance);
+                                return Math.Abs(cur_x - x) * 100;
+                            }
                         }
                     }
-                }                
+                }
+                else { // main diagonal movement
+                    // technically, this is one pixel past the target, to simplify the loop
+                    targ_x = cur_x + xs * ((intended_distance - 1) / 100 + 1);
+                    // We're moving the same distance in both dimensions, so we can just loop over x and update y manually.
+                    for (int x = cur_x; x != targ_x; x += xs) {
+                        // check the horizontal edge (top or bottom) for collisions
+                        edge_bound = x - ent.hitbox.Width * xs;
+                        for (int edge_x = x; edge_x != edge_bound; edge_x -= xs) {
+                            if (obs_at_pixel(edge_x, cur_y)) { 
+                                //Console.WriteLine("Hit at ({0},{1}). Returning value of {2} instead of optimal {3}", x, y, Math.Abs(cur_x - x) - 1, intended_distance);
+                                return Math.Abs(cur_x - x) * 100;
+                            }
+                        }
+                        // check the vertical edge (left or right side) for collisions
+                        edge_bound = cur_y - ent.hitbox.Height * ys;
+                        for (int edge_y = cur_y + ys; edge_y != edge_bound; edge_y -= ys) { // we don't need to recheck (x, cur_y), so start after that one
+                            if (obs_at_pixel(x, edge_y)) {
+                                //Console.WriteLine("Hit at ({0},{1}). Returning value of {2} instead of optimal {3}", x, y, Math.Abs(cur_x - x) - 1, intended_distance);
+                                return Math.Abs(cur_x - x) * 100;
+                            }
+                        }
+                        cur_y += ys; // also update y, since the loop only handles x            
+                    }
+
+
+
+                }
             }
 
             return intended_distance;

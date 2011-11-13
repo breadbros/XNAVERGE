@@ -17,7 +17,7 @@ namespace XNAVERGE {
             else {
                 if (!_moving) set_walk_state(true);
                 facing = Utility.direction_from_signs(x, y, false);
-                movement_direction = Utility.direction_from_signs(x, y, false);
+                movement_direction = Utility.direction_from_signs(x, y, true);
                 try_to_move(elapsed, true);
             }
         }
