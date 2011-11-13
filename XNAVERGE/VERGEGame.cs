@@ -23,12 +23,12 @@ namespace XNAVERGE {
         public bool player_tile_obstruction; // true if player uses tile-based, rather than pixel-based, obstruction
         
         public int tick { get { return _tick; } }
-        private int _tick; // Centiseconds since app start. This will overflow if you leave the game on for 248 days.        
+        protected int _tick; // Centiseconds since app start. This will overflow if you leave the game on for 248 days.        
 
         public Camera camera;
-        private Rectangle[][] dest_rect;
+        protected Rectangle[][] dest_rect;
         public Rectangle screen { get { return _screen; } }
-        private Rectangle _screen;
+        protected Rectangle _screen;
         public float y_range; // the total vertical distance in which sprites are drawable, centred on the middle of the map (necessary for technical reasons)
 
         public InputManager input;
@@ -54,6 +54,7 @@ namespace XNAVERGE {
             initialize_buttons();
 
             // Initialize other variables
+            map = null;
             player = null;
             player_controllable = true;
             player_tile_obstruction = true;
@@ -121,31 +122,7 @@ namespace XNAVERGE {
         protected override void LoadContent() {
             // Create a new SpriteBatch, which can be used to draw textures.
             spritebatch = new SpriteBatch(GraphicsDevice);
-            map = new VERGEMap("Content\\raw\\town01.map");
-            y_range = map.height * map.tileset.tilesize + _screen.Height * 2;
-            setup_tile_destinations();                        
-            camera = new Camera(map);
-            camera.mode = CameraMode.FollowPlayer;
-
-            // ---------------------
-            // BEGIN SILLINESS
-
-            player = map.spawn_entity(12, 16, "Content\\raw\\chap.chr");            
-            Entity e;
-            e = map.spawn_entity(21, 14, "Content\\raw\\chap.chr");
-                        e.set_movestring("L2D2R2U2B");
-            e.speed = 80;
-
-            for (int x = 0; false && x < map.width; x++) {
-                for (int y = 0; y < map.height; y++) {
-                    e = map.spawn_entity(x, y, "Content\\raw\\chap.chr");
-                    e.set_movestring("L1D1R1U1B");
-
-                }
-            }
-
-            // END SILLINESS
-            // ---------------------
+            // load a map here
             
             // TODO: use this.Content to load your game content here
         }
@@ -172,8 +149,10 @@ namespace XNAVERGE {
             _tick++;
             input.Update();
             //if (player_controllable && player != null) control_player();
-            for (int i = 0; i < map.num_entities; i++) {
-                map.entities[i].Update();
+            if (map != null) {
+                for (int i = 0; i < map.num_entities; i++) {
+                    map.entities[i].Update();
+                }
             }
 
             base.Update(gameTime);            
@@ -190,6 +169,7 @@ namespace XNAVERGE {
         protected override void Draw(GameTime gameTime) {
             int min_tile_x, min_tile_y, tiles_to_draw_x, tiles_to_draw_y, offset_x, offset_y, parallaxed_camera_x, parallaxed_camera_y;
             min_tile_x = min_tile_y = tiles_to_draw_x = tiles_to_draw_y = offset_x = offset_y = parallaxed_camera_x = parallaxed_camera_y = 0;
+            if (map == null) return;
             int tilesize = map.tileset.tilesize;
             int mapwidth = map.width;
             int mapheight = map.height;
