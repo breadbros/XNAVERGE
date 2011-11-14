@@ -19,12 +19,13 @@ namespace XNAVERGE.Content {
     /// Extension Library project.
     /// </summary>
     public class TilesetReader : ContentTypeReader<TRead> {
-        protected override TRead Read(ContentReader input, TRead tileset) {
-            int tilesize, numtiles, numobs, numanim, cur_int;
+        protected override TRead Read(ContentReader input, TRead nobody_seems_to_know_what_this_argument_is_for) {
+            int ver, tilesize, numtiles, numobs, numanim, cur_int;
             uint[] pixels;
             Texture2D image;
+            Tileset tileset;
 
-            tileset.version = input.ReadInt32();
+            ver = input.ReadInt32();
             tilesize = input.ReadInt32();
             numtiles = input.ReadInt32();
             numobs = input.ReadInt32();
@@ -35,10 +36,10 @@ namespace XNAVERGE.Content {
             pixels = new uint[cur_int*cur_int];
             for (int i = 0; i < pixels.Length; i++)
                 pixels[i] = input.ReadUInt32();
-            image.SetData<uint>(pixels);
-            tileset.set_tile_data(numtiles, tilesize, image);
-            tileset.set_obs_data(numobs, input.ReadBytes(tilesize * tilesize * numobs));
+            image.SetData<uint>(pixels);           
 
+            tileset = new Tileset(tilesize, numtiles, image, numobs, input.ReadBytes(tilesize * tilesize * numobs));
+            tileset.version = ver;
             // discard animation data for the time being
 
             return tileset;

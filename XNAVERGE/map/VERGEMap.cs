@@ -21,8 +21,7 @@ namespace XNAVERGE {
         
 
         protected int _version, _num_layers;
-        protected String _vsp, _music, renderstring;
-        protected Tileset _tileset;
+        protected String _music, renderstring;
 
         public int start_x, start_y;
         public virtual int width { get { return tiles[0].width; } } // width of master layer        
@@ -32,13 +31,12 @@ namespace XNAVERGE {
         public int version { get { return _version; } }
         public virtual int num_layers { get { return _num_layers; } }
 
-        public String name, initscript;
-        public String vsp_name { get { return _vsp; } } // TODO: add a setter that loads a new tileset
+        public String name, initscript;        
         public String music { get { return _music; } }
         public Vector2[] parallax;
 
         public RenderStack renderstack;
-        public Tileset tileset { get { return _tileset; } }        
+        public Tileset tileset;
         public TileLayer[] tiles; // these are ordered according to their order in the MAP file, not their rendering order.
         public TileLayer obstruction_layer;
         public TileLayer zone_layer;

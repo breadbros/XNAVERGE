@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAVERGE", "XNAVERGE\XNAVER
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpZipLib", "SharpZlib\SharpZipLib.csproj", "{D658EC86-5396-4A69-AAF8-A9D9D5C51DCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XVCX", "XVCX\XVCX.csproj", "{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,18 @@ Global
 		{D658EC86-5396-4A69-AAF8-A9D9D5C51DCE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D658EC86-5396-4A69-AAF8-A9D9D5C51DCE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D658EC86-5396-4A69-AAF8-A9D9D5C51DCE}.Release|x86.ActiveCfg = Release|Any CPU
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Debug|Any CPU.Build.0 = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Debug|x86.ActiveCfg = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Debug|x86.Build.0 = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Release|Any CPU.ActiveCfg = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Release|Any CPU.Build.0 = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Release|Mixed Platforms.ActiveCfg = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Release|Mixed Platforms.Build.0 = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Release|x86.ActiveCfg = Debug|x86
+		{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}.Release|x86.Build.0 = Debug|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

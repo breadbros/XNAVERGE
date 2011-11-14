@@ -30,6 +30,10 @@ namespace XNAVERGE {
 
         public Texture2D image;
 
+        public Tileset(int new_tilesize, int new_num_tiles, Texture2D tile_texture_atlas, int new_num_obs_tiles, byte[] obsdata) {
+            set_tile_data(new_num_tiles, new_tilesize, tile_texture_atlas);
+            set_obs_data(new_num_obs_tiles, obsdata);
+        }
         public Tileset() { }
         public Tileset(String filename) {
             Stream stream = null;
@@ -149,23 +153,24 @@ namespace XNAVERGE {
             }
         }
 
-        public void set_tile_data(int new_num_tiles, int new_tilesize, Texture2D new_image) {
+        protected void set_tile_data(int new_num_tiles, int new_tilesize, Texture2D new_image) {
             int x=0, y=0;
             image = new_image;
             _num_tiles = new_num_tiles;
+            tile_frame = new Rectangle[new_num_tiles];
             _tilesize = new_tilesize;
             _per_row = new_image.Width / new_tilesize;
-            for (int cur_tile = 0; cur_tile < new_num_tiles; cur_tile++) { // set up source rects for use in tile blitting
+            for (int cur_tile = 0; cur_tile < new_num_tiles; cur_tile++) { // set up source rects for use in tile blitting                
                 tile_frame[cur_tile] = new Rectangle(x, y, new_tilesize, new_tilesize);
                 x += new_tilesize;
-                if (x <= new_image.Width) {
+                if (x > new_image.Width - new_tilesize) {
                     x = 0;
                     y += new_tilesize;
                 }
             }
         }
         
-        public void set_obs_data(int new_num_obs, byte[] new_obs) {
+        protected void set_obs_data(int new_num_obs, byte[] new_obs) {
             int count = 0;
             _num_obs_tiles = new_num_obs;
             if (new_num_obs * _tilesize * _tilesize != new_obs.Length) 
@@ -187,7 +192,7 @@ namespace XNAVERGE {
                 }
             }
         }
-        public void set_obs_data(int new_num_obs, bool[] new_obs) {
+        protected void set_obs_data(int new_num_obs, bool[] new_obs) {
             int count = 0;
             _num_obs_tiles = new_num_obs;
             if (new_num_obs * _tilesize * _tilesize != new_obs.Length)

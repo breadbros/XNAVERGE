@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\TilesetReader.cs" />
     <Compile Include="input\InputManager.cs" />
     <Compile Include="input\SemanticButton.cs" />
     <Compile Include="map\Zone.cs" />

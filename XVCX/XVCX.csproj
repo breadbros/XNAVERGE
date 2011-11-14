@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-    <ProjectGuid>6072c88f-751d-4231-8616-261a7e56a381</ProjectGuid>
+    <ProjectGuid>{CEE58E89-EFF1-47DF-BDBA-32F7D9B01BA3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
@@ -27,6 +27,7 @@
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
@@ -49,8 +50,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentProcessor1.cs" />
+    <Compile Include="VSPWriter.cs" />
+    <Compile Include="VSPImporter.cs" />
+    <Compile Include="VSPProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpZlib\SharpZipLib.csproj">
+      <Project>{D658EC86-5396-4A69-AAF8-A9D9D5C51DCE}</Project>
+      <Name>SharpZipLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XNAVERGE\XNAVERGE.csproj">
+      <Project>{0D524863-D249-4CCC-8C99-349EF7AAA0FF}</Project>
+      <Name>XNAVERGE</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.ContentPipelineExtensions.targets" />

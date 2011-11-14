@@ -22,7 +22,7 @@ namespace XNAVERGE {
             Stream stream = null;
             BinaryReader bin_reader = null;
             StreamReader str_reader = null;
-            String cur_str;
+            String cur_str, vsp;
             Vector2 cur_parallax;
             int cur_int;
 
@@ -54,7 +54,7 @@ namespace XNAVERGE {
 
                 str_reader.DiscardBufferedData();
                 name = Utility.read_known_length_string(str_reader, 256);
-                _vsp = Utility.read_known_length_string(str_reader, 256);
+                vsp = Utility.read_known_length_string(str_reader, 256);
                 _music = Utility.read_known_length_string(str_reader, 256);
                 renderstring = Utility.read_known_length_string(str_reader, 256);
                 initscript = Utility.read_known_length_string(str_reader, 256);
@@ -70,7 +70,7 @@ namespace XNAVERGE {
                 cur_int = Math.Max(filename.LastIndexOf("\\"), filename.LastIndexOf("/"));
                 if (cur_int < 0) cur_str = "";
                 else cur_str = filename.Substring(0, cur_int + 1);
-                _tileset = new Tileset(cur_str + _vsp);     
+                tileset = new Tileset(cur_str + vsp);     
 
                 _num_layers = bin_reader.ReadInt32();
                 if (_num_layers <= 0) throw new Exception(filename + " is specified to have " + _num_layers + " layers.");
@@ -201,8 +201,8 @@ namespace XNAVERGE {
             bool obstructable, obstructing, autoface;
             String filename, ent_name, movestring;
             
-            x = bin_reader.ReadUInt16() * _tileset.tilesize; // x
-            y = bin_reader.ReadUInt16() * _tileset.tilesize; // y            
+            x = bin_reader.ReadUInt16() * tileset.tilesize; // x
+            y = bin_reader.ReadUInt16() * tileset.tilesize; // y            
             facing = bin_reader.ReadByte(); // initial facing direction 
             obstructable = (bin_reader.ReadByte() == 0); // obstructable
             obstructing = (bin_reader.ReadByte() == 0); // obstructs others

@@ -36,8 +36,7 @@ namespace XVCX {
             StreamReader str_reader = null;
             Inflater inflater;
             int cur_int, decompressed_size, compressed_size, x, y, pixels_per_tile, tiles_per_row;
-            byte[] inbuf, outbuf;
-            String cur_str;
+            byte[] inbuf, outbuf;            
  
             try {
                 context.Logger.LogMessage("Processing VSP file.");
@@ -74,9 +73,9 @@ namespace XVCX {
 
                 // decompress tile data
                 decompressed_size = bin_reader.ReadInt32();
-                if (decompressed_size != tileset.num_tiles * tileset.tilesize * tileset.tilesize)
-                    throw new PipelineException("Expected " + tileset.num_tiles + "x" + tileset.tilesize + "*" + tileset.tilesize +
-                                        " = " + (tileset.num_tiles * tileset.tilesize * tileset.tilesize).ToString() + " bytes of tile data, but got "
+                if (decompressed_size != tileset.num_tiles * tileset.tilesize * tileset.tilesize * 3)
+                    throw new PipelineException("Expected " + tileset.num_tiles + "x" + tileset.tilesize + "x" + tileset.tilesize +
+                                        "x3 = " + (tileset.num_tiles * tileset.tilesize * tileset.tilesize * 3).ToString() + " bytes of tile data, but got "
                                         + decompressed_size + " bytes.");
                 compressed_size = bin_reader.ReadInt32();
                 inbuf = new byte[compressed_size];
@@ -95,10 +94,11 @@ namespace XVCX {
                 // Once loaded they are in 32bpp, they're ordered left to right and top to bottom for the entire texture 
                 // (rather than for each tile in order), and the transparency colour has been converted to 0x0.
                 pixels_per_tile = tileset.tilesize * tileset.tilesize;
+                                
                 for (int cur_tile = 0; cur_tile < tileset.num_tiles; cur_tile++) {
                     for (int cur_pixel = 0; cur_pixel < pixels_per_tile; cur_pixel++) {
-                        x = (cur_tile % tiles_per_row) * tiles_per_row + (cur_pixel % tiles_per_row);
-                        y = (cur_tile / tiles_per_row) * tiles_per_row + (cur_pixel / tiles_per_row);
+                        x = (cur_tile % tiles_per_row) * tileset.tilesize + (cur_pixel % tileset.tilesize);
+                        y = (cur_tile / tiles_per_row) * tileset.tilesize + (cur_pixel / tileset.tilesize);                        
                         tileset.tiledata[y * tileset.texture_dim + x] = Utility.convert_rgb_to_abgr(outbuf, (cur_tile * pixels_per_tile + cur_pixel) * 3, 0xFFFF00FFU); // 3 bytes per pixel
                     }
                 }
@@ -113,29 +113,27 @@ namespace XVCX {
                 else if (tileset.num_animations == 0) context.Logger.LogMessage("...no animations in this tileset.");
                 else {
                     tileset.animations = new ProcessedTileAnimation[tileset.num_animations];
-                    for (int i = 0; i < tileset.num_animations; i++) {
+                    for (int i = 0; i < tileset.num_animations; i++) {                        
                         tileset.animations[i] = new ProcessedTileAnimation();
                         tileset.animations[i].name = Utility.read_known_length_string(str_reader, 256);
                         tileset.animations[i].start = bin_reader.ReadInt32();
-                        if (tileset.animations[i].start < 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its starting index as " + tileset.animations[i].start + ".");
+                        //if (tileset.animations[i].start < 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its starting index as " + tileset.animations[i].start + ".");
                         tileset.animations[i].end = bin_reader.ReadInt32();
-                        if (tileset.animations[i].end < 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its ending index as " + tileset.animations[i].end + ".");
-                        else if (tileset.animations[i].end < tileset.animations[i].start) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its starting index as " + tileset.animations[i].start + " and its ending index as " + tileset.animations[i].end + ". The start must precede or equal the end.");
+                        //if (tileset.animations[i].end < 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its ending index as " + tileset.animations[i].end + ".");
+                        //else if (tileset.animations[i].end < tileset.animations[i].start) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its starting index as " + tileset.animations[i].start + " and its ending index as " + tileset.animations[i].end + ". The start must precede or equal the end.");
                         tileset.animations[i].delay = bin_reader.ReadInt32();
-                        if (tileset.animations[i].delay <= 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") has a non-positive delay (" + tileset.animations[i].delay + ").");
+                        //if (tileset.animations[i].delay <= 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") has a non-positive delay (" + tileset.animations[i].delay + ").");
                         tileset.animations[i].mode = bin_reader.ReadInt32(); // We won't bother trying to validate this right now
                     }
                 }
-
+                context.Logger.LogImportantMessage(input.Position.ToString());
                 // ----------------------------------------------------
                 // LOAD OBSTRUCTION DATA
 
                 tileset.num_obs_tiles = bin_reader.ReadInt32();                
 
                 if (tileset.num_tiles <= 0) throw new PipelineException("The number of obstruction tiles is specified as " + tileset.num_obs_tiles + ".");
-
-                bin_reader.ReadInt32(); // compression field. unused and unreliable -- assume zlib regardless.
-
+               
                 context.Logger.LogMessage("Loading compressed obstruction tile atlas...");
 
                 // decompress tile data
