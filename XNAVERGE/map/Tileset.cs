@@ -15,12 +15,12 @@ namespace XNAVERGE {
    public class Tileset {        
 
         public const int VSP_HEADER = 5264214; // the first four bytes of a VERGE VSP file is set to this value
-        protected int _version, _tilesize, _num_tiles, _num_obs_tiles, _num_animations, _per_row;
+        protected int _tilesize, _num_tiles, _num_obs_tiles, _num_animations, _per_row;
         public Rectangle[] tile_frame;
 
-        public int version { get { return _version; } }
-        public int tilesize { get { return _tilesize; } }
         
+        public int tilesize { get { return _tilesize; } }
+        public int version;
         public int num_tiles { get { return _num_tiles; } }
         public int num_obs_tiles { get { return _num_obs_tiles; } }
         public int tiles_per_row { get { return _per_row; } }
@@ -52,8 +52,8 @@ namespace XNAVERGE {
                 if (cur_int != Tileset.VSP_HEADER) throw new System.IO.IOException(filename + " is not a VSP file.");
 
                 // ...check version (currently only v6 is supported)
-                _version = bin_reader.ReadInt32();
-                if (_version != 6) throw new Exception(filename + " is a version " + _version + " VSP. Currently only version 6 is supported.");
+                version = bin_reader.ReadInt32();
+                if (version != 6) throw new Exception(filename + " is a version " + version + " VSP. Currently only version 6 is supported.");
 
                 _tilesize = bin_reader.ReadInt32();
                 if (_tilesize <= 0) throw new Exception(filename + " has its tile size set to " + _tilesize + ".");
@@ -148,6 +148,68 @@ namespace XNAVERGE {
                 else if (stream != null) stream.Dispose();
             }
         }
+
+        public void set_tile_data(int new_num_tiles, int new_tilesize, Texture2D new_image) {
+            int x=0, y=0;
+            image = new_image;
+            _num_tiles = new_num_tiles;
+            _tilesize = new_tilesize;
+            _per_row = new_image.Width / new_tilesize;
+            for (int cur_tile = 0; cur_tile < new_num_tiles; cur_tile++) { // set up source rects for use in tile blitting
+                tile_frame[cur_tile] = new Rectangle(x, y, new_tilesize, new_tilesize);
+                x += new_tilesize;
+                if (x <= new_image.Width) {
+                    x = 0;
+                    y += new_tilesize;
+                }
+            }
+        }
         
+        public void set_obs_data(int new_num_obs, byte[] new_obs) {
+            int count = 0;
+            _num_obs_tiles = new_num_obs;
+            if (new_num_obs * _tilesize * _tilesize != new_obs.Length) 
+                throw new ArgumentException("Because the tile size is " + _tilesize + " pixels, set_obs_data() expects an array of exactly " 
+                    + new_num_obs + "x" + _tilesize + "x" + _tilesize + " bytes. However, the array passed contains " + new_obs.Length + 
+                    " bytes.");
+            obs = new bool[new_num_obs][][];
+            for (int cur_tile = 0; cur_tile < new_num_obs; cur_tile++) {
+                obs[cur_tile] = new bool[_tilesize][];
+                // We need to loop over x inside y, but the array is the other way round (i.e. it goes bool[obstile][x][y]), 
+                // so we'll run through and initialize the x subarrays for this tile first.
+                for (int x = 0; x < _tilesize; x++) obs[cur_tile][x] = new bool[_tilesize];
+ 
+                for (int y = 0; y < _tilesize; y++) {                                        
+                    for (int x = 0; x < _tilesize; x++) {
+                        obs[cur_tile][x][y] = (new_obs[count] != 0);
+                        count++;
+                    }
+                }
+            }
+        }
+        public void set_obs_data(int new_num_obs, bool[] new_obs) {
+            int count = 0;
+            _num_obs_tiles = new_num_obs;
+            if (new_num_obs * _tilesize * _tilesize != new_obs.Length)
+                throw new ArgumentException("Because the tile size is " + _tilesize + " pixels, set_obs_data() expects an array of exactly "
+                    + new_num_obs + "x" + _tilesize + "x" + _tilesize + " bytes. However, the array passed contains " + new_obs.Length +
+                    " bytes.");
+            obs = new bool[new_num_obs][][];
+            for (int cur_tile = 0; cur_tile < new_num_obs; cur_tile++) {
+                obs[cur_tile] = new bool[_tilesize][];
+                // We need to loop over x inside y, but the array is the other way round (i.e. it goes bool[obstile][x][y]), 
+                // so we'll run through and initialize the x subarrays for this tile first.
+                for (int x = 0; x < _tilesize; x++) obs[cur_tile][x] = new bool[_tilesize];
+
+                for (int y = 0; y < _tilesize; y++) {
+                    for (int x = 0; x < _tilesize; x++) {
+                        obs[cur_tile][x][y] = new_obs[count];
+                        count++;
+                    }
+                }
+            }
+        }
+
+
     }
 }

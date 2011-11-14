@@ -35,7 +35,7 @@ namespace XVCX {
             BinaryReader bin_reader = null;
             StreamReader str_reader = null;
             Inflater inflater;
-            int cur_int, decompressed_size, compressed_size;
+            int cur_int, decompressed_size, compressed_size, x, y, pixels_per_tile, tiles_per_row;
             byte[] inbuf, outbuf;
             String cur_str;
  
@@ -87,13 +87,21 @@ namespace XVCX {
                 inflater.SetInput(inbuf);                
                 inflater.Inflate(outbuf);
 
-                tileset.texture_dim = Utility.smallest_bounding_square(tileset.tilesize, tileset.tilesize, tileset.num_tiles); // side dimension of the entire texture                
-                tileset.tiledata = new uint[tileset.texture_dim*tileset.texture_dim];
-                context.Logger.LogMessage("Converting pixels to XNA's ABGR format...");
+                tileset.texture_dim = Utility.smallest_bounding_square(tileset.tilesize, tileset.tilesize, tileset.num_tiles); // side dimension of the entire texture
+                tiles_per_row = tileset.texture_dim / tileset.tilesize;
+                tileset.tiledata = new uint[tileset.texture_dim*tileset.texture_dim]; // unused (excess) pixels will stay at their initial value of 0
+                context.Logger.LogMessage("Converting and realigning pixels...");
                 // Load pixel data. In the vsp, pixels are ordered left to right, top to bottom, one tile at a time, in 24bpp.
-                // Once loaded they are in 32bpp, and the transparency colour has been converted to 0x0.
-                for (int i = 0; i < tileset.tiledata.Length;i++) 
-                    tileset.tiledata[i] = Utility.convert_rgb_to_abgr(outbuf, i*3, 0xFFFF00FFU); // 3 bytes per pixel
+                // Once loaded they are in 32bpp, they're ordered left to right and top to bottom for the entire texture 
+                // (rather than for each tile in order), and the transparency colour has been converted to 0x0.
+                pixels_per_tile = tileset.tilesize * tileset.tilesize;
+                for (int cur_tile = 0; cur_tile < tileset.num_tiles; cur_tile++) {
+                    for (int cur_pixel = 0; cur_pixel < pixels_per_tile; cur_pixel++) {
+                        x = (cur_tile % tiles_per_row) * tiles_per_row + (cur_pixel % tiles_per_row);
+                        y = (cur_tile / tiles_per_row) * tiles_per_row + (cur_pixel / tiles_per_row);
+                        tileset.tiledata[y * tileset.texture_dim + x] = Utility.convert_rgb_to_abgr(outbuf, (cur_tile * pixels_per_tile + cur_pixel) * 3, 0xFFFF00FFU); // 3 bytes per pixel
+                    }
+                }
 
                 // ----------------------------------------------------
                 // LOAD ANIMATION DATA
@@ -112,6 +120,7 @@ namespace XVCX {
                         if (tileset.animations[i].start < 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its starting index as " + tileset.animations[i].start + ".");
                         tileset.animations[i].end = bin_reader.ReadInt32();
                         if (tileset.animations[i].end < 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its ending index as " + tileset.animations[i].end + ".");
+                        else if (tileset.animations[i].end < tileset.animations[i].start) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") lists its starting index as " + tileset.animations[i].start + " and its ending index as " + tileset.animations[i].end + ". The start must precede or equal the end.");
                         tileset.animations[i].delay = bin_reader.ReadInt32();
                         if (tileset.animations[i].delay <= 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") has a non-positive delay (" + tileset.animations[i].delay + ").");
                         tileset.animations[i].mode = bin_reader.ReadInt32(); // We won't bother trying to validate this right now
@@ -144,6 +153,9 @@ namespace XVCX {
                 context.Logger.LogMessage("Decompressing...");
                 inflater.SetInput(inbuf);
                 inflater.Inflate(tileset.obsdata); // keep this as a byte array for now
+                // obstruction data isn't graphical, so we needn't go through the same contortions required of the tile data.
+                // It's kept as a byte array of exactly the right length, and the order is left-to-right, top-to-bottom for 
+                // EACH tile, in order, unlike the graphical tile data which is written without regard for tile boundaries.
             }
             catch (EndOfStreamException) {
                 throw new PipelineException("VSP file was shorter than expected.");
@@ -151,6 +163,8 @@ namespace XVCX {
             finally {
                 if (bin_reader != null) bin_reader.Dispose();                
             }
+
+            context.Logger.LogMessage("Finished processing VSP.");
 
             return tileset;
         }
