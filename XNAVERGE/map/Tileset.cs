@@ -30,6 +30,7 @@ namespace XNAVERGE {
 
         public Texture2D image;
 
+        public Tileset() { }
         public Tileset(String filename) {
             Stream stream = null;
             BinaryReader bin_reader = null;
@@ -92,7 +93,7 @@ namespace XNAVERGE {
                         pixels[y*dim + x] = Utility.convert_rgb_to_abgr(outbuf, (cur_tile*pixels_per_tile + cur_pixel)*3, 0xFFFF00FFU); // 3 bytes per pixel
                     }
                 }
-                                                                                          
+
                 image = new Texture2D(VERGEGame.game.GraphicsDevice, dim, dim);
                 image.SetData<uint>(pixels);
 
