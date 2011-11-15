@@ -10,6 +10,15 @@
       <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town tiles.xnb</Output>
       <Time>2011-11-14T03:32:11.5305745-04:00</Time>
     </Item>
+    <Item>
+      <Source>town01.map</Source>
+      <Name>town01</Name>
+      <Importer>VERGEMapImporter</Importer>
+      <Processor>VERGEMapProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.xnb</Output>
+      <Time>2011-11-15T00:27:36.99603-04:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
@@ -24,7 +33,7 @@
     <Assemblies>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XVCX.dll</Key>
-        <Value>2011-11-14T23:29:29.3685491-04:00</Value>
+        <Value>2011-11-15T00:38:47.7433946-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XNAVERGE\bin\x86\Debug\XNAVERGE.dll</Key>

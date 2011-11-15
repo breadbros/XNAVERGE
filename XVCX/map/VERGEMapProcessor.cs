@@ -14,7 +14,6 @@ using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
-// TODO: replace these with the processor input and output types.
 using TInput = System.IO.MemoryStream;
 using TOutput = XVCX.ProcessedMap;
 
@@ -112,6 +111,7 @@ namespace XVCX {
 
                 context.Logger.LogMessage("Reading zone type specifications...");
                 map.num_zones = bin_reader.ReadInt32();
+                map.zones = new Zone[map.num_zones];
                 for (int i = 0; i < map.num_zones; i++) map.zones[i] = load_zone_from_file(bin_reader, str_reader);
 
                 // ----------------------------------------------------
@@ -119,6 +119,7 @@ namespace XVCX {
 
                 context.Logger.LogMessage("Reading preloaded entity details...");
                 map.num_ents = bin_reader.ReadInt32();
+                map.entities = new ProcessedEntity[map.num_ents];
                 for (int i = 0; i < map.num_ents; i++) map.entities[i] = load_entity_from_file(context, bin_reader, str_reader);
 
             }
@@ -131,6 +132,8 @@ namespace XVCX {
             }
 
             // the rest of the file consists of the compiled vc for the map scripts, which we are ignoring.
+
+            context.Logger.LogMessage("Finished processing MAP file.");
 
             return map;
         }

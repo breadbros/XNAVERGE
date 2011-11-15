@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="map\VERGEMapProcessor.cs" />
     <Compile Include="map\VERGEMapImporter.cs" />
+    <Compile Include="map\VERGEMapWriter.cs" />
     <Compile Include="vsp\VSPWriter.cs" />
     <Compile Include="vsp\VSPImporter.cs" />
     <Compile Include="vsp\VSPProcessor.cs" />

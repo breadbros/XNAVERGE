@@ -28,3 +28,4 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\Microsoft.Xna.Framework.Run
 C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\M.exe
 C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\M.pdb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town tiles.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.xnb
