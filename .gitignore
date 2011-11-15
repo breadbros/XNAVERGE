@@ -2,6 +2,7 @@
 *.dll
 *.pdb
 *.cache*
+cachefile*.*
 *.user
 *.suo
 MapedPreferences.xml

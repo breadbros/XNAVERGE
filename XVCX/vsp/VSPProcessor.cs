@@ -125,8 +125,7 @@ namespace XVCX {
                         //if (tileset.animations[i].delay <= 0) throw new PipelineException("Animations #" + i + "(" + tileset.animations[i].name + ") has a non-positive delay (" + tileset.animations[i].delay + ").");
                         tileset.animations[i].mode = bin_reader.ReadInt32(); // We won't bother trying to validate this right now
                     }
-                }
-                context.Logger.LogImportantMessage(input.Position.ToString());
+                }                
                 // ----------------------------------------------------
                 // LOAD OBSTRUCTION DATA
 
@@ -159,7 +158,8 @@ namespace XVCX {
                 throw new PipelineException("VSP file was shorter than expected.");
             }
             finally {
-                if (bin_reader != null) bin_reader.Dispose();                
+                if (bin_reader != null) bin_reader.Dispose();
+                if (str_reader != null) str_reader.Dispose();
             }
 
             context.Logger.LogMessage("Finished processing VSP.");

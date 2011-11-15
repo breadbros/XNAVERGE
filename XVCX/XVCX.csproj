@@ -50,9 +50,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="VSPWriter.cs" />
-    <Compile Include="VSPImporter.cs" />
-    <Compile Include="VSPProcessor.cs" />
+    <Compile Include="map\VERGEMapProcessor.cs" />
+    <Compile Include="map\VERGEMapImporter.cs" />
+    <Compile Include="vsp\VSPWriter.cs" />
+    <Compile Include="vsp\VSPImporter.cs" />
+    <Compile Include="vsp\VSPProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +66,9 @@
       <Project>{0D524863-D249-4CCC-8C99-349EF7AAA0FF}</Project>
       <Name>XNAVERGE</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="chr\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.ContentPipelineExtensions.targets" />

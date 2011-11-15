@@ -363,6 +363,10 @@ namespace XNAVERGE {
     // An enumeration of movestring actions. "Stop" is not actually used in movestrings -- it indicates a non-looping end and is inserted by the loader.
     public enum MovestringCommand { Up, Down, Left, Right, Wait, Frame, Face, Loop, PixelMode, TileMode, ToX, ToY, Stop } 
 
+    // An enumeration of wander styles. The first, "scripted", covers both the "static" and "scripted" modes in normal VERGE and denotes an entity
+    // that does not wander at random.
+    public enum WanderMode { Scripted, Zone, Rectangle };
+
     public class MalformedMovestringException : Exception {
         public MalformedMovestringException(String movestring) : base("\"" + movestring + "\" is not a valid movestring. Each term must be one of U, D, L, R, W, Z, F, or B followed by a nonnegative number, or one of Z, B, P, or T by itself. For more information, consult http://verge-rpg.com/docs/the-verge-3-manual/entity-functions/entitymove/.") {}
     }
