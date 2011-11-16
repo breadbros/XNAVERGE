@@ -37,7 +37,7 @@ namespace M
             map.tileset = Content.Load<Tileset>("town tiles");
             y_range = map.height * map.tileset.tilesize + _screen.Height * 2;
             setup_tile_destinations();
-            camera = new Camera(map);
+            camera = new Camera();
             camera.mode = CameraMode.FollowPlayer;
 
             // ---------------------
