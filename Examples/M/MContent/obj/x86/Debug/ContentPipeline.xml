@@ -24,7 +24,7 @@
       <TargetPlatform>Windows</TargetPlatform>
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
-      <CompressContent>true</CompressContent>
+      <CompressContent>false</CompressContent>
       <RootDirectory>C:\games\dev\XNAVERGE.git\Examples\M\MContent\</RootDirectory>
       <LoggerRootDirectory>C:\games\dev\XNAVERGE.git\Examples\M\M\</LoggerRootDirectory>
       <IntermediateDirectory>C:\games\dev\XNAVERGE.git\Examples\M\MContent\obj\x86\Debug\</IntermediateDirectory>
@@ -33,11 +33,11 @@
     <Assemblies>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XVCX.dll</Key>
-        <Value>2011-11-15T00:38:47.7433946-04:00</Value>
+        <Value>2011-11-16T00:10:53.7476359-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XNAVERGE\bin\x86\Debug\XNAVERGE.dll</Key>
-        <Value>2011-11-14T23:27:03.3521975-04:00</Value>
+        <Value>2011-11-16T00:10:52.9915927-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>

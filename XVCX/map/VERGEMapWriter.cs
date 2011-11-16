@@ -26,13 +26,13 @@ namespace XVCX {
             output.Write(value.version); 
             output.Write(value.num_layers); 
             output.Write(value.num_zones);
-            output.Write(value.start_x);
-            output.Write(value.start_y);
             output.Write(value.num_ents); 
-            output.Write(value.vsp); // string
-            output.Write(value.renderstring); // string
             output.Write(value.initscript); // string
             output.Write(value.music); // string
+            output.Write(value.vsp); // string
+            output.Write(value.renderstring); // string
+            output.Write(value.start_x);
+            output.Write(value.start_y);
             for (int i = 0; i < value.num_layers; i++) write_layer(output, value.layers[i], true);
             write_layer(output, value.obslayer, false);
             write_layer(output, value.zonelayer, false);
@@ -45,8 +45,7 @@ namespace XVCX {
             output.Write(layer.w);
             output.Write(layer.h);
             if (tile_layer) {
-                output.Write(layer.parallax.X); // float
-                output.Write(layer.parallax.Y); // float
+                output.Write(layer.parallax); // vector2                 
                 output.Write(layer.alpha); // double
             }
             for (int i = 0; i < layer.tiles.Length; i++) output.Write(layer.tiles[i]);
@@ -70,7 +69,6 @@ namespace XVCX {
             output.Write(ent.autoface); // bool
             output.Write(ent.obstructs); // bool
             output.Write(ent.obstructable); // bool
-            output.Write(ent.autoface); // bool
             output.Write(ent.movestring); // string
             output.Write(ent.movemode);
             output.Write(ent.delay);

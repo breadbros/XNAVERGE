@@ -55,6 +55,7 @@ namespace XNAVERGE {
         // Sets the default values for the many, many movement-related members each entity possesses.
         protected virtual void initialize_movement_attributes() {
             speed = DEFAULT_SPEED;
+            _moving = false;
             move_actions = new MovestringCommand[DEFAULT_MOVE_ARRAY_LENGTH];
             move_params = new int[DEFAULT_MOVE_ARRAY_LENGTH];
             tile_movement = DEFAULT_TO_TILE_MOVEMENT;

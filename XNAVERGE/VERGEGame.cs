@@ -15,6 +15,7 @@ namespace XNAVERGE {
         public static Random rand = new Random();
         public GraphicsDeviceManager graphics;
         public SpriteBatch spritebatch;
+        public ContentManager MapContent; // this is used rather than the standard "Content" contentmanager to handle map-specific data
         public Matrix scaling_matrix;
         
         public VERGEMap map;
@@ -47,6 +48,7 @@ namespace XNAVERGE {
             graphics = new GraphicsDeviceManager(this);
             _screen = new Rectangle(0, 0, 320, 240);
             set_scaling_factor(2);
+            MapContent = new ContentManager(Services, "Content");
             Content.RootDirectory = "Content";
 
             // Set up input

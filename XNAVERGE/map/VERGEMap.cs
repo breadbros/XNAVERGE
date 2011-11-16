@@ -20,26 +20,23 @@ namespace XNAVERGE {
         public static Vector2 FIXED_PARALLAX = new Vector2(0.0f);
         
 
-        protected int _version, _num_layers;
-        protected String _music, renderstring;
+        protected int _num_layers;
+        protected String renderstring;
 
-        public int start_x, start_y;
+        public int start_x, start_y, version;
         public virtual int width { get { return tiles[0].width; } } // width of master layer        
         public virtual int height { get { return tiles[0].height; } } // height of master layer
         public virtual int pixel_width { get { return width * tileset.tilesize; } } // width (in pixels) of master layer (not updated automatically!)
         public virtual int pixel_height { get { return height * tileset.tilesize; } } // height (in pixels) of master layer (not updated automatically!)
-        public int version { get { return _version; } }
         public virtual int num_layers { get { return _num_layers; } }
 
-        public String name, initscript;        
-        public String music { get { return _music; } }
-        public Vector2[] parallax;
-
+        public String name, initscript, default_music;
         public RenderStack renderstack;
         public Tileset tileset;
         public TileLayer[] tiles; // these are ordered according to their order in the MAP file, not their rendering order.
         public TileLayer obstruction_layer;
         public TileLayer zone_layer;
+        protected static String tileset_override_name; // when set, the next map to be instantiated uses the tileset asset with this name. Used by switch_map.
 
         protected int _num_entities;
         public Entity[] entities;
@@ -239,12 +236,12 @@ namespace XNAVERGE {
 
         // ---------------------------------
         // ZONE MANAGEMENT
-
+        
 
         // Creates a new type of zone (which won't exist on the map at the time it's created, of course)
         public Zone create_zone(String name, String script, double chance, bool adj) {
             Zone zone = new Zone(name, script, chance, adj);
-
+            
             if (_num_zones >= zones.Length) {
                 Zone[] new_arr = new Zone[zones.Length * 2];
                 zones.CopyTo(new_arr, 0);
@@ -256,6 +253,30 @@ namespace XNAVERGE {
             return zone;
         }
 
+        // ---------------------------------
+        // MAP HANDLING
+
+        public static Tileset default_tileset { get { return _default_tileset; } }
+
+        protected static Tileset _default_tileset;
+
+        public static Tileset set_default_tileset(String asset_name) {
+            _default_tileset = VERGEGame.game.MapContent.Load<Tileset>("asset_name");
+            return _default_tileset;
+        }
+
+        public static void switch_map(String new_map, String tileset_override) {
+            tileset_override_name = tileset_override;
+            switch_map(new_map);
+        }
+        public static void switch_map(String new_map) {
+            VERGEGame.game.MapContent.Unload();
+            VERGEGame.game.map = VERGEGame.game.MapContent.Load<VERGEMap>(new_map);
+
+            // new camera here?
+            VERGEGame.game.camera.bounds.inherit_from_map();
+        }
+
     }
 
 
@@ -265,8 +286,7 @@ namespace XNAVERGE {
         public CameraMode mode;
         public int x, y;
         public CameraBounds bounds;
-        public bool bounded;
-        public VERGEMap map;
+        public bool bounded;        
         public Sprite following { 
             get {
                 if (mode == CameraMode.Manual) return null;
@@ -276,13 +296,12 @@ namespace XNAVERGE {
         }
         protected Sprite _following;
 
-        public Camera(VERGEMap target_map) {
+        public Camera() {
             x = 0;
             y = 0;
             mode = CameraMode.Manual;
             _following = null;
-            bounded = true;
-            map = target_map;
+            bounded = true;            
             bounds = new CameraBounds();
             bounds.inherit_from_map();
         }

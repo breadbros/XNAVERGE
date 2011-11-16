@@ -12,12 +12,14 @@ namespace XNAVERGE {
         public int width { get { return _width; } }
         public int height { get { return _height; } }
         protected int _width, _height;
+        public double alpha;
         
 
         public TileLayer(int w, int h, Vector2 parallax_vector, String layer_name) : base(parallax_vector, layer_name) {
             _width = w;
             _height = h;
             data = new int[w][];
+            alpha = 1.0;
             for (int x = 0; x < w; x++) {
                 data[x] = new int[h];                
             }            

@@ -27,7 +27,7 @@ namespace XNAVERGE {
 
             if (!File.Exists(filename)) throw new FileNotFoundException("The file \"" + filename + "\" does not exist.");
 
-            try { // Load the map                
+            try { 
                 
                 stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 bin_reader = new BinaryReader(stream);

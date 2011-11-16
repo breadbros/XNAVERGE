@@ -16,9 +16,17 @@ namespace XNAVERGE {
         // when true, the editor will error on an illegal tile index. When false, loads them as 0. 
         // This is false by default because some versions of maped3 have a bug that occasionally
         // saves unobstructed tiles with illegal values, and there are many such maps "in the wild".
-        public static bool STRICT_TILE_LOADING = false; 
+        public static bool STRICT_TILE_LOADING = false;
 
-        public VERGEMap(String filename) {            
+        public VERGEMap(String mapname, int ver, int numlayers, int numzones, int numents) {
+            name = mapname;
+            version = ver;
+            _num_layers = numlayers;
+            _num_zones = numzones;
+            _num_entities = numents;            
+        }
+
+        public VERGEMap(String filename) {
             Stream stream = null;
             BinaryReader bin_reader = null;
             StreamReader str_reader = null;
@@ -45,8 +53,8 @@ namespace XNAVERGE {
 
                 // ...check version (currently only v2 is supported)
                 bin_reader.BaseStream.Seek(6, SeekOrigin.Begin);
-                _version = bin_reader.ReadInt32();
-                if (_version != 2) throw new Exception(filename + " is a version " + _version + " MAP. Currently only version 2 is supported.");
+                version = bin_reader.ReadInt32();
+                if (version != 2) throw new Exception(filename + " is a version " + version + " MAP. Currently only version 2 is supported.");
 
                 // this is the offset that denotes the beginning of the compiled vc code. Since the engine 
                 // can't execute vc code, it's discarded.
@@ -55,7 +63,7 @@ namespace XNAVERGE {
                 str_reader.DiscardBufferedData();
                 name = Utility.read_known_length_string(str_reader, 256);
                 vsp = Utility.read_known_length_string(str_reader, 256);
-                _music = Utility.read_known_length_string(str_reader, 256);
+                default_music = Utility.read_known_length_string(str_reader, 256);
                 renderstring = Utility.read_known_length_string(str_reader, 256);
                 initscript = Utility.read_known_length_string(str_reader, 256);
 
@@ -73,8 +81,7 @@ namespace XNAVERGE {
                 tileset = new Tileset(cur_str + vsp);     
 
                 _num_layers = bin_reader.ReadInt32();
-                if (_num_layers <= 0) throw new Exception(filename + " is specified to have " + _num_layers + " layers.");
-                parallax = new Vector2[_num_layers];
+                if (_num_layers <= 0) throw new Exception(filename + " is specified to have " + _num_layers + " layers.");                
                 tiles = new TileLayer[_num_layers];
                 int lw, lh;
                 for (int i = 0; i < _num_layers; i++) {
