@@ -21,7 +21,6 @@ namespace XNAVERGE {
         
 
         protected int _num_layers;
-        protected String renderstring;
 
         public int start_x, start_y, version;
         public virtual int width { get { return tiles[0].width; } } // width of master layer        
@@ -36,7 +35,7 @@ namespace XNAVERGE {
         public TileLayer[] tiles; // these are ordered according to their order in the MAP file, not their rendering order.
         public TileLayer obstruction_layer;
         public TileLayer zone_layer;
-        protected static String tileset_override_name; // when set, the next map to be instantiated uses the tileset asset with this name. Used by switch_map.
+        protected static String tileset_override; // when set, the next map to be instantiated uses this tileset, then unsets the variable. Used by switch_map.
 
         protected int _num_entities;
         public Entity[] entities;
@@ -257,24 +256,67 @@ namespace XNAVERGE {
         // MAP HANDLING
 
         public static Tileset default_tileset { get { return _default_tileset; } }
+        protected static Tileset _default_tileset = null;
 
-        protected static Tileset _default_tileset;
 
         public static Tileset set_default_tileset(String asset_name) {
-            _default_tileset = VERGEGame.game.MapContent.Load<Tileset>("asset_name");
+            try {
+                _default_tileset = VERGEGame.game.MapContent.Load<Tileset>("asset_name");
+            }
+            catch (Microsoft.Xna.Framework.Content.ContentLoadException e) { // not found
+                _default_tileset = null;
+                throw e;
+            }
             return _default_tileset;
         }
 
-        public static void switch_map(String new_map, String tileset_override) {
-            tileset_override_name = tileset_override;
+        public static void switch_map(String new_map, String tileset_override_name) {
+            tileset_override = tileset_override_name;
             switch_map(new_map);
-        }
+        }        
         public static void switch_map(String new_map) {
-            VERGEGame.game.MapContent.Unload();
-            VERGEGame.game.map = VERGEGame.game.MapContent.Load<VERGEMap>(new_map);
+            VERGEGame game = VERGEGame.game;
+            game.MapContent.Unload();
+            game.map = VERGEGame.game.MapContent.Load<VERGEMap>(new_map);
+            tileset_override = null;
+            game.init_map();
+        }
 
-            // new camera here?
-            VERGEGame.game.camera.bounds.inherit_from_map();
+        // Attempts to load the map's tileset. If there is a manual tileset override specified, it looks for
+        // that and errors if it's not found. Otherwise, it first checks for any content with a name matching 
+        // the map's vsp filename, then tries to match the filename without the .vsp part, then loads the
+        // game's default tileset, erroring out if there isn't one.
+        public Tileset load_tileset(String filename) {
+            int pos;
+            Tileset ts = null;            
+            if (!String.IsNullOrEmpty(tileset_override)) {
+                ts = VERGEGame.game.MapContent.Load<Tileset>(tileset_override);                
+            }
+            else {
+                try { // there doesn't seem to be a way to check if content exists without trying to load it, so let's do that
+                    ts = VERGEGame.game.MapContent.Load<Tileset>(filename);
+                }
+                catch (Microsoft.Xna.Framework.Content.ContentLoadException e) {
+                    // OK, the filename doesn't correspond to an asset name. Let's try it without the extension
+                    try {
+                        pos = filename.LastIndexOf(".");
+                        if (pos < 0) throw e;
+                        ts = VERGEGame.game.MapContent.Load<Tileset>(filename.Substring(0, pos));
+                    }
+                    catch (Microsoft.Xna.Framework.Content.ContentLoadException) { // That didn't work either. Check for a default tileset to use.
+                        if (VERGEMap._default_tileset != null) {
+                            System.Diagnostics.Debug.WriteLine("Couldn't match legacy vsp name to an asset; using the default tileset.");
+                            ts = VERGEMap._default_tileset;
+                        }
+                        else {
+                            throw new ArgumentException("Couldn't find a tileset asset named " + filename +
+                                ", with or without extension, and there was no default tileset or override given.");
+                        }
+                    }
+                }
+            }
+            tileset = ts;
+            return ts;
         }
 
     }

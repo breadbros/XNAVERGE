@@ -79,7 +79,7 @@ namespace XVCX {
         }
 
         public override string GetRuntimeReader(TargetPlatform targetPlatform) {
-            return "XNAVERGE.VERGEMapReader, XNAVERGE";
+            return "XNAVERGE.Content.VERGEMapReader, XNAVERGE";
         }
     }
 }

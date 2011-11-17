@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using TRead = XNAVERGE.VERGEMap;
 
-namespace XNAVERGE.content {
+namespace XNAVERGE.Content {
     /// <summary>
     /// This class will be instantiated by the XNA Framework Content
     /// Pipeline to read the specified data type from binary .xnb format.
@@ -28,17 +28,22 @@ namespace XNAVERGE.content {
             map.start_y = input.ReadInt32();
             
             map.tiles = new TileLayer[map.num_layers];
+            map.load_tileset(vsp);
             for (int i = 0; i < map.num_layers; i++) map.tiles[i] = read_layer(input, true);
+            
+
             map.obstruction_layer = read_layer(input, false);
+            
             map.zone_layer = read_layer(input, false);
             map.zones = new Zone[map.num_zones + 2]; // the +2 gives a bit of room for expansion before the array needs to be expanded
             for (int i = 0; i < map.num_zones; i++) map.zones[i] = read_zone(input);
             
+            if (map.num_entities <= VERGEMap.STARTING_ENTITY_ARRAY_SIZE) map.entities = new Entity[VERGEMap.STARTING_ENTITY_ARRAY_SIZE];
+            else map.entities = new Entity[map.num_entities + 2]; // As with zones, the +2 gives some room for low-cost expansion
+            for (int i = 0; i < map.num_entities; i++) map.entities[i] = read_ent(input, map);
+            
+            map.renderstack = new RenderStack(map, rstring);
 
-
-            // probably need to get the actual tileset here
-
-            // entity definitions
             return map;
         }
 
@@ -66,11 +71,10 @@ namespace XNAVERGE.content {
 
         private Entity read_ent(ContentReader input, VERGEMap map) {
             Entity ent;
-            String name, chr, movestring;
-            int x, y;
+            String name, chr, movestring;            
             name = input.ReadString();
             chr = input.ReadString();
-            ent = new Entity("Content\\raw\\" + chr, name); // haaaack
+            ent = new Entity(chr, name); // haaaack
             ent.x = input.ReadInt32() * map.tileset.tilesize;
             ent.y = input.ReadInt32() * map.tileset.tilesize;
             ent.on_activation = input.ReadString();
@@ -81,11 +85,13 @@ namespace XNAVERGE.content {
             ent.obstructable = input.ReadBoolean();
             movestring = input.ReadString();
             // unimplemented stuff:
-            // movemode (int, cast to WanderMode)
-            // wander delay (int)
-            // wander x1, y1, x2, y2 (four ints)
-
+            input.ReadInt32(); // movemode (int, cast to WanderMode)
+            input.ReadInt32(); // wander delay (int)
+            input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); // wander x1, y1, x2, y2 (four ints)
+            ent.set_movestring(movestring);
             return ent;
         }
+
+
     }
 }

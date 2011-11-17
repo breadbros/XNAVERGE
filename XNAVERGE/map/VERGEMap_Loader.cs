@@ -23,14 +23,14 @@ namespace XNAVERGE {
             version = ver;
             _num_layers = numlayers;
             _num_zones = numzones;
-            _num_entities = numents;            
+            _num_entities = numents;
         }
 
         public VERGEMap(String filename) {
             Stream stream = null;
             BinaryReader bin_reader = null;
             StreamReader str_reader = null;
-            String cur_str, vsp;
+            String cur_str, vsp, renderstring;
             Vector2 cur_parallax;
             int cur_int;
 

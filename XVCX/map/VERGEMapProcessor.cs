@@ -199,7 +199,7 @@ namespace XVCX {
             ent.chr = Utility.read_known_length_string(str_reader, 256); // chr filename
             ent.name = Utility.read_known_length_string(str_reader, 256); // movestring
             ent.actscript = Utility.read_known_length_string(str_reader, 256); // script called when entity is triggered
-
+            
             if (!Enum.IsDefined(typeof(Direction), ent.facing)) {
                 context.Logger.LogImportantMessage("Warning: Entity \"{0}\" has a facing value of {1}, which does not correspond to a valid Direction. Facing has been set to 0 (Down).", ent.name, ent.facing);
                 ent.facing = (int) Direction.Down;

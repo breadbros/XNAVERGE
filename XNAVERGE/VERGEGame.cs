@@ -281,6 +281,12 @@ namespace XNAVERGE {
 
         }
 
+        public void init_map() { // TODO: dehackify this, move to VERGEMap 
+            y_range = map.height * map.tileset.tilesize + _screen.Height * 2;
+            setup_tile_destinations();
+            camera = new Camera();
+            camera.mode = CameraMode.FollowPlayer;
+        }
     }
 
     public class DirectionalButtons {

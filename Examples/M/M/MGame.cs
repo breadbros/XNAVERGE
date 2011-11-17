@@ -32,14 +32,8 @@ namespace M
         }
 
         protected override void LoadContent() {
-            base.LoadContent();            
-            map = new VERGEMap("Content\\raw\\town01.map");
-            map.tileset = Content.Load<Tileset>("town tiles");
-            y_range = map.height * map.tileset.tilesize + _screen.Height * 2;
-            setup_tile_destinations();
-            camera = new Camera();
-            camera.mode = CameraMode.FollowPlayer;
-
+            base.LoadContent();
+            VERGEMap.switch_map("town01", "town tiles");
             // ---------------------
             // BEGIN SILLINESS
 
