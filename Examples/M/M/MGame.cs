@@ -33,7 +33,7 @@ namespace M
 
         protected override void LoadContent() {
             base.LoadContent();
-            VERGEMap.switch_map("town01", "town tiles");
+            VERGEMap.switch_map("town01");
             // ---------------------
             // BEGIN SILLINESS
 
