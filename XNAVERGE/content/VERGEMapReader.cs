@@ -74,7 +74,7 @@ namespace XNAVERGE.Content {
             String name, chr, movestring;            
             name = input.ReadString();
             chr = input.ReadString();
-            ent = new Entity(chr, name); // haaaack
+            ent = Entity.load_from_chr_filename(chr, name);
             ent.x = input.ReadInt32() * map.tileset.tilesize;
             ent.y = input.ReadInt32() * map.tileset.tilesize;
             ent.on_activation = input.ReadString();
@@ -88,10 +88,10 @@ namespace XNAVERGE.Content {
             input.ReadInt32(); // movemode (int, cast to WanderMode)
             input.ReadInt32(); // wander delay (int)
             input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); // wander x1, y1, x2, y2 (four ints)
+            
             ent.set_movestring(movestring);
             return ent;
-        }
-
+        }        
 
     }
 }

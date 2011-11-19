@@ -37,15 +37,15 @@ namespace M
             // ---------------------
             // BEGIN SILLINESS
 
-            player = map.spawn_entity(12, 16, "Content\\raw\\chap.chr");
+            player = map.spawn_entity(12, 16, "chap");
             Entity e;
-            e = map.spawn_entity(21, 14, "Content\\raw\\chap.chr");
+            e = map.spawn_entity(21, 14, "chap");
             e.set_movestring("L2D2R2U2B");
             e.speed = 80;
 
             for (int x = 0; false && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
-                    e = map.spawn_entity(x, y, "Content\\raw\\chap.chr");
+                    e = map.spawn_entity(x, y, "chap");
                     e.set_movestring("L1D1R1U1B");
 
                 }

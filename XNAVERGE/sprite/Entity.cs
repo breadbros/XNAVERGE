@@ -13,12 +13,9 @@ namespace XNAVERGE {
         
         // GENERAL ATTRIBUTES
         public String name;
-        public String chr_name { get { return _chrfile; } } // TODO: add a setter that loads a new chr
         public String on_activation; // activation script        
         public bool autoface;
         public int index; // Index in the map.entities array. Don't twiddle with it! This is needed for a stupid, stupid reason.
-
-        private string _chrfile;
 
         // MOBILITY AND ANIMATION ATTRIBUTES
         public virtual Direction facing {
@@ -53,30 +50,65 @@ namespace XNAVERGE {
             }
         }
 
-        protected int _speed;
-        // Each point of speed translates to 1/100th of a pixel movement per tick, so rather than futzing with doubles         
+        protected int _speed;              
         
 
-        // TODO: Cache SpriteBasis for reuse
-        public Entity(String chr_file, String ent_name) : base(new SpriteBasis(chr_file), "Idle Down") {
-            _chrfile = chr_file;            
-
+        public Entity(SpriteBasis _basis, String ent_name) : base(_basis, "Idle Down") {
             _facing = Direction.Down;
             obstructing = false;
             obstructable = true;
             tile_obstruction = true;
             autoface = true;
-            visible = true;            
+            visible = true;
             name = ent_name;
-            
-            index = -1; // it's up to the map to maintain this            
+
+            index = -1; // it's up to the map to maintain this
             move_animation_prefix = "Walk ";
             idle_animation_prefix = "Idle ";
-            initialize_movement_attributes(); 
+            initialize_movement_attributes();
             // Entities come from chrs, so they all have walk and idle animations defined.
-
         }
-        public Entity(String chr_file) : this(chr_file, chr_file) { }
+        public Entity(SpriteBasis _basis) : this(_basis, "") { }
+        public Entity(String asset_name, String ent_name) : this(VERGEGame.game.MapContent.Load<SpriteBasis>(asset_name), ent_name) { }
+        public Entity(String asset_name) : this(asset_name, asset_name) { }
+
+        // Attempt to load an entity by inferring its asset name from its chr filename.
+        // First checks if the filename matches an asset exactly, then if the filename
+        // sans extension matches, then if the entity name matches (if one is given).
+        public static Entity load_from_chr_filename(String filename) { return Entity.load_from_chr_filename(filename, ""); }
+        public static Entity load_from_chr_filename(String filename, String ent_name) {
+            int pos;
+            SpriteBasis spr = null;
+            try { // there doesn't seem to be a way to check if content exists without trying to load it, so let's do that
+                spr = VERGEGame.game.MapContent.Load<SpriteBasis>(filename);
+            }
+            catch (Microsoft.Xna.Framework.Content.ContentLoadException e) {
+                // OK, the filename doesn't correspond to an asset name. Let's try it without the extension
+                try {
+                    pos = filename.LastIndexOf(".");
+                    if (pos < 0) throw e;
+                    spr = VERGEGame.game.MapContent.Load<SpriteBasis>(filename.Substring(0, pos));
+                }
+                catch (Microsoft.Xna.Framework.Content.ContentLoadException) { // That didn't work either. Check for a default tileset to use.
+                    if (!String.IsNullOrEmpty(ent_name)) {
+                        try {
+                            spr = VERGEGame.game.MapContent.Load<SpriteBasis>(ent_name);
+                        }
+                        catch (Microsoft.Xna.Framework.Content.ContentLoadException) {
+                            throw new ArgumentException("Couldn't find a sprite asset named " + filename +
+                                ", with or without extension, or one matching the entity name \"" + ent_name + "\".");
+                        }
+                    }
+                    else {
+                            throw new ArgumentException("Couldn't find a sprite asset named " + filename +
+                                ", with or without extension.");
+                    }
+                }
+            }
+
+            if (String.IsNullOrEmpty(ent_name)) return new Entity(spr, filename);
+            else return new Entity(spr, ent_name);
+        }
 
         public virtual void idle() { set_animation(idle_animation_prefix + facing); }
         public virtual void walk() { set_animation(move_animation_prefix + facing); }

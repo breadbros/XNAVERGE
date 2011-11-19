@@ -23,7 +23,6 @@ namespace XNAVERGE.Content {
             SpriteBasis spr = new SpriteBasis(input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
             spr.default_hitbox = new Rectangle(input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
             dim = input.ReadInt32();
-            Console.WriteLine("oooo");
             Texture2D image = new Texture2D(VERGEGame.game.GraphicsDevice, dim, dim);
             pixels = new uint[dim * dim];
             for (int i = 0; i < pixels.Length; i++)
@@ -37,7 +36,7 @@ namespace XNAVERGE.Content {
             }
 
             // load animations
-            num_anim = input.ReadInt32();
+            num_anim = input.ReadInt32();            
             for (int i = 0; i < num_anim; i++)
                 read_animation(input, spr.animations);
 

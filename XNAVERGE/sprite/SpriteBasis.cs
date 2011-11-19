@@ -31,6 +31,7 @@ namespace XNAVERGE {
             _frame_height = frame_h;
             _per_row = frames_per_row;
             frame_box = new Rectangle[_num_frames];
+            animations = new Dictionary<String,SpriteAnimation>();
         }
     }
     
