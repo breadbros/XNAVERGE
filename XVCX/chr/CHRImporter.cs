@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 
+// TODO: replace this with the type you want to import.
 using TImport = System.IO.MemoryStream;
 
 namespace XVCX {
@@ -15,8 +16,8 @@ namespace XVCX {
     /// 
     /// This should be part of a Content Pipeline Extension Library project.
     /// </summary>
-    [ContentImporter(".map", DisplayName = "VERGE .map File Importer", DefaultProcessor = "VERGEMapProcessor")]
-    public class VERGEMapImporter : ContentImporter<TImport> {
+    [ContentImporter(".chr", DisplayName = "VERGE CHR Importer", DefaultProcessor = "CHRProcessor")]
+    public class CHRImporter : ContentImporter<TImport> {
         public override TImport Import(string filename, ContentImporterContext context) {
             FileStream fs;
             MemoryStream ms = new MemoryStream();
@@ -30,7 +31,7 @@ namespace XVCX {
             }
             ms.Position = 0;
 
-            return ms;            
+            return ms;
         }
     }
 }

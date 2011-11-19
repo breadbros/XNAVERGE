@@ -19,11 +19,19 @@ namespace XNAVERGE {
         public int num_frames { get { return _num_frames; } }
         public int frame_width { get { return _frame_width; } }
         public int frame_height { get { return _frame_height; } }
-        public int frames_per_row { get { return _per_row; } }
-        public int frames_per_column { get { return _per_column; } }
-        protected int _num_frames, _frame_height, _frame_width, _per_row, _per_column;
+        public int frames_per_row { get { return _per_row; } }        
+        protected int _num_frames, _frame_height, _frame_width, _per_row;
         public Rectangle default_hitbox;
         public Rectangle[] frame_box;
         public Dictionary<String, SpriteAnimation> animations;
+
+        public SpriteBasis(int frame_w, int frame_h, int frames, int frames_per_row) {
+            _num_frames = frames;
+            _frame_width = frame_w;
+            _frame_height = frame_h;
+            _per_row = frames_per_row;
+            frame_box = new Rectangle[_num_frames];
+        }
     }
+    
 }

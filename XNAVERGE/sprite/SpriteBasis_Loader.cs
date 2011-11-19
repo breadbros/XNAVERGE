@@ -96,8 +96,7 @@ namespace XNAVERGE {
                 inflater.SetInput(inbuf);
                 inflater.Inflate(outbuf);
                 dim = Utility.smallest_bounding_square(_frame_width, _frame_height, _num_frames);
-                _per_row = dim / _frame_width;
-                _per_column = dim / _frame_height;
+                _per_row = dim / _frame_width;                
                 uint[] pixels = new uint[dim * dim];
                 int pixels_per_frame = _frame_width * _frame_height;
 
@@ -135,14 +134,15 @@ namespace XNAVERGE {
             SpriteAnimation animation;
             int len = bread.ReadInt32() + 1; // +1 for the null byte at the end, not included in the length
             sread.DiscardBufferedData();            
-            animation = new SpriteAnimation(anim_name, this, Utility.read_known_length_string(sread, len));
+            animation = new SpriteAnimation(anim_name, _num_frames, Utility.read_known_length_string(sread, len));
             bread.BaseStream.Seek(len - 256, SeekOrigin.Current); // streamreader will have gone too far to fill its buffer, so back up a bit
             animations.Add(anim_name, animation);
         }
 
         private void load_idle_frame_from_chr(String anim_name, BinaryReader bread) {
             int idleframe = bread.ReadInt32();
-            animations.Add(anim_name, new SpriteAnimation(anim_name, this, "F" + idleframe.ToString(), AnimationStyle.Once));
+            animations.Add(anim_name, new SpriteAnimation(anim_name, _num_frames, "F" + idleframe.ToString(), AnimationStyle.Once));
         }
+        
     }
 }

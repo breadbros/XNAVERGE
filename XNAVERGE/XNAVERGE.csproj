@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="content\SpriteReader.cs" />
     <Compile Include="content\TilesetReader.cs" />
     <Compile Include="content\VERGEMapReader.cs" />
     <Compile Include="input\InputManager.cs" />

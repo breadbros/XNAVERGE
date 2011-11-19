@@ -50,6 +50,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="chr\CHRImporter.cs" />
+    <Compile Include="chr\CHRProcessor.cs" />
+    <Compile Include="chr\CHRWriter.cs" />
     <Compile Include="map\VERGEMapProcessor.cs" />
     <Compile Include="map\VERGEMapImporter.cs" />
     <Compile Include="map\VERGEMapWriter.cs" />
@@ -68,9 +71,7 @@
       <Name>XNAVERGE</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="chr\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.ContentPipelineExtensions.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

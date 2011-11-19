@@ -8,20 +8,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAVERGE {
     public class SpriteAnimation {
-        public SpriteBasis spritebase;
         public String name;
         public String pattern { get { return _pattern; } }
-        private String _pattern; // the base animation string (not used after the initial parsing)
+        protected String _pattern; // the base animation string (not used after the initial parsing)
         public AnimationStyle style;
         public SpriteAnimation transition_to; // Which animation to switch to when this animation ends. Only used with the "Transition" style.        
         public int length;
         public int[] frame, delay;
         
-        private const String FRAME = "F";
-        private const String WAIT = "W";
+        protected const String FRAME = "F";
+        protected const String WAIT = "W";
 
-        public SpriteAnimation(String anim_name, SpriteBasis spritebase, String anim_pattern) : this(anim_name, spritebase, anim_pattern, AnimationStyle.Looping) { }
-        public SpriteAnimation(String anim_name, SpriteBasis sprbase, String anim_pattern, AnimationStyle anim_style) {
+        public SpriteAnimation(String anim_name, int num_frames, String anim_pattern) : this(anim_name, num_frames, anim_pattern, AnimationStyle.Looping) { }
+        public SpriteAnimation(String anim_name, int num_frames, String anim_pattern, AnimationStyle anim_style) {
             int cur_pos, next_pos, len, cur_val;
             bool expecting_frame;
 
@@ -30,10 +29,10 @@ namespace XNAVERGE {
             Queue<int> wait_queue = new Queue<int>();
             
             name = anim_name;
-            style = anim_style;
-            spritebase = sprbase;
+            style = anim_style;          
             _pattern = SpriteAnimation.clean_pattern(anim_pattern);            
-            len = _pattern.Length;            
+            len = _pattern.Length;
+            transition_to = null;
 
             if (_pattern.Substring(0, 1) != SpriteAnimation.FRAME) throw new MalformedAnimationPatternException(_pattern, "Patterns must begin with \"F\""); 
             cur_pos = 1; 
@@ -56,7 +55,7 @@ namespace XNAVERGE {
                 else {
                     //Console.WriteLine("Frame {0}", cur_val);
                     if (cur_val < 0) throw new MalformedAnimationPatternException(_pattern, "Negative frame specified."); 
-                    if (cur_val >= sprbase.num_frames) throw new MalformedAnimationPatternException(_pattern, "Frame " + cur_val + " specified, but the sprite only has " + sprbase.num_frames + " frames. Note that frames begin at 0."); 
+                    if (cur_val >= num_frames) throw new MalformedAnimationPatternException(_pattern, "Frame " + cur_val + " specified, but the sprite only has " + num_frames + " frames. Note that frames begin at 0."); 
                     frame_queue.Enqueue(cur_val);
                 }
                 expecting_frame = !expecting_frame;
@@ -73,10 +72,19 @@ namespace XNAVERGE {
                 frame[i] = frame_queue.Dequeue();
                 delay[i] = wait_queue.Dequeue();
             }
-
-
-
         }
+        // If the frame and delay array have already been generated (as is the case with sprites saved to file), this is the constructor 
+        // to use. It makes no effort to check that the pattern actually matches the animation arrays given.
+        public SpriteAnimation(String anim_name, String anim_pattern, int[] frame_arr, int[] delay_arr, AnimationStyle anim_style) {
+            name = anim_name;
+            _pattern = anim_pattern;
+            frame = frame_arr;
+            delay = delay_arr;
+            length = frame_arr.Length;
+            style = anim_style;
+            transition_to = null;
+        }
+
 
         // This converts an animation pattern string to all uppercase and strips whitespace. CHR animations are supposed to have this done
         // already, but it can't hurt to be careful, and it's useful if you want to specify custom patterns at runtime.

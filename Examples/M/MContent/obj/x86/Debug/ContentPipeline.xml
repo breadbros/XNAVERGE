@@ -2,6 +2,33 @@
 <XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
   <Asset Type="Pipeline:BuildItemCollection">
     <Item>
+      <Source>chap.chr</Source>
+      <Name>chap</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\chap.xnb</Output>
+      <Time>2011-10-13T14:54:26.9342121-03:00</Time>
+    </Item>
+    <Item>
+      <Source>queen.chr</Source>
+      <Name>queen</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\queen.xnb</Output>
+      <Time>2010-09-16T01:13:24.9507051-03:00</Time>
+    </Item>
+    <Item>
+      <Source>a_guy.chr</Source>
+      <Name>a_guy</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\a_guy.xnb</Output>
+      <Time>2010-09-16T01:13:24.8977021-03:00</Time>
+    </Item>
+    <Item>
       <Source>town01.map.vsp</Source>
       <Name>town01.map.vsp</Name>
       <Importer>VSPImporter</Importer>
@@ -33,11 +60,11 @@
     <Assemblies>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XVCX.dll</Key>
-        <Value>2011-11-17T01:26:58.7699206-04:00</Value>
+        <Value>2011-11-18T22:59:48.89663-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XNAVERGE\bin\x86\Debug\XNAVERGE.dll</Key>
-        <Value>2011-11-17T01:26:58.45792-04:00</Value>
+        <Value>2011-11-18T22:57:30.3527867-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>

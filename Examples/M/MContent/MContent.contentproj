@@ -92,6 +92,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="chap.chr">
+      <Name>chap</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
     <Compile Include="town01.map.vsp">
       <Name>town01.map.vsp</Name>
       <Importer>VSPImporter</Importer>
@@ -103,6 +108,20 @@
       <Name>town01</Name>
       <Importer>VERGEMapImporter</Importer>
       <Processor>VERGEMapProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="queen.chr">
+      <Name>queen</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="a_guy.chr">
+      <Name>a_guy</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
