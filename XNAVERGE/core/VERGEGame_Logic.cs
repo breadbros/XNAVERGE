@@ -23,20 +23,18 @@ namespace XNAVERGE {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
             _tick++;
             input.Update();
             //if (player_controllable && player != null) control_player();
             if (map != null) {
                 for (int i = 0; i < map.num_entities; i++) {
-                    for (int j = i + 1; j < map.num_entities; j++) {
-                        map.entities[i].hitbox.Intersects(map.entities[j].hitbox);
-                    }
                     map.entities[i].Update();
                 }
             }
 
             base.Update(gameTime);
         }
-    }
+
+
+    }    
 }

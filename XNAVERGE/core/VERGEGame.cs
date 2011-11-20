@@ -33,8 +33,8 @@ namespace XNAVERGE {
             
             // Set up graphics
             graphics = new GraphicsDeviceManager(this);
-            _screen = new Rectangle(0, 0, 320, 240);
-            set_scaling_factor(2);
+            camera = null;
+            screen = new Screen(320, 240, 2);
             MapContent = new ContentManager(Services, "Content");
             Content.RootDirectory = "Content";
 
@@ -129,7 +129,8 @@ namespace XNAVERGE {
 
 
         public void init_map() { // TODO: dehackify this, move to VERGEMap 
-            y_range = map.height * map.tileset.tilesize + _screen.Height * 2;
+            y_range = map.height * map.tileset.tilesize + screen.height * 2;
+            Console.WriteLine(y_range);
             setup_tile_destinations();
             camera = new Camera();
             camera.mode = CameraMode.FollowPlayer;

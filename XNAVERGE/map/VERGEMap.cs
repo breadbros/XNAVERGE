@@ -325,6 +325,7 @@ namespace XNAVERGE {
     public class Camera {        
         public CameraMode mode;
         public int x, y;
+        public Rectangle rect { get { return new Rectangle(x, y, VERGEGame.game.screen.width, VERGEGame.game.screen.height); } }
         public CameraBounds bounds;
         public bool bounded;        
         public Sprite following { 
@@ -359,8 +360,8 @@ namespace XNAVERGE {
         // Puts the selected point at the center of the screen, if possible. 
         // If the camera bounds prevent it, just get as close as you can.
         public void center_at(Point pt) {
-            x = pt.X - VERGEGame.game.screen.Width / 2;
-            y = pt.Y - VERGEGame.game.screen.Height / 2;
+            x = pt.X - VERGEGame.game.screen.width / 2;
+            y = pt.Y - VERGEGame.game.screen.height / 2;
         }
 
         // Centers the camera over the specified sprite's hitbox (subject to bounds; see center_at() for details).
@@ -373,9 +374,9 @@ namespace XNAVERGE {
             if (following != null) center_at(following.hitbox.Center);
             if (bounded) {
                 if (x < bounds.x1) x = bounds.x1;
-                else if (x + VERGEGame.game.screen.Width > bounds.x2) x = bounds.x2 - VERGEGame.game.screen.Width;
+                else if (x + VERGEGame.game.screen.width > bounds.x2) x = bounds.x2 - VERGEGame.game.screen.width;
                 if (y < bounds.y1) y = bounds.y1;
-                else if (y + VERGEGame.game.screen.Height > bounds.y2) y = bounds.y2 - VERGEGame.game.screen.Height;
+                else if (y + VERGEGame.game.screen.height > bounds.y2) y = bounds.y2 - VERGEGame.game.screen.height;
             }
 
         }
@@ -390,28 +391,28 @@ namespace XNAVERGE {
         public int x1 {
             get { return bound_rect.X; }
             set {
-                if (value >= x2) throw new ArgumentException("Can't set lefthand bound (" + value + ") greater than or equal to righthand bound (" + x2 + ").");
+                if (value >= x2) throw new ArgumentOutOfRangeException("x1", "Can't set lefthand bound (" + value + ") greater than or equal to righthand bound (" + x2 + ").");
                 bound_rect.X = value; 
             }
         }
         public int y1 {
             get { return bound_rect.Y; }
             set {
-                if (value >= y2) throw new ArgumentException("Can't set upper bound (" + value + ") greater than or equal to lower bound (" + y2 + ").");
+                if (value >= y2) throw new ArgumentOutOfRangeException("y1", "Can't set upper bound (" + value + ") greater than or equal to lower bound (" + y2 + ").");
                 bound_rect.Y = value;
             }
         }
         public int x2 {
             get { return bound_rect.X + bound_rect.Width; }
             set {
-                if (value <= x1) throw new ArgumentException("Can't set righthand bound (" + value + ") less than or equal to lefthand bound (" + x1 + ").");
+                if (value <= x1) throw new ArgumentOutOfRangeException("x2", "Can't set righthand bound (" + value + ") less than or equal to lefthand bound (" + x1 + ").");
                 bound_rect.Width = value - bound_rect.X;
             }
         }
         public int y2 {
             get { return bound_rect.Y + bound_rect.Height; }
             set {
-                if (value <= y1) throw new ArgumentException("Can't set lower bound (" + value + ") less than or equal to upper bound (" + y1 + ").");
+                if (value <= y1) throw new ArgumentOutOfRangeException("y2", "Can't set lower bound (" + value + ") less than or equal to upper bound (" + y1 + ").");
                 bound_rect.Height = value - bound_rect.Y;
             }
         }

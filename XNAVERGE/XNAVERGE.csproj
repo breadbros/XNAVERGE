@@ -95,6 +95,7 @@
     <Compile Include="content\SpriteReader.cs" />
     <Compile Include="content\TilesetReader.cs" />
     <Compile Include="content\VERGEMapReader.cs" />
+    <Compile Include="core\Screen.cs" />
     <Compile Include="core\VERGEGame_Logic.cs" />
     <Compile Include="core\VERGEGame_Draw.cs" />
     <Compile Include="input\InputManager.cs" />
