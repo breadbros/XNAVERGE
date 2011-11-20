@@ -61,8 +61,12 @@ namespace XNAVERGE {
             _pressed = _released = false;
 
             // Determine current state of semantic button (it's down if anything mapped to the button is down)
-            if (manager.gp_state.IsConnected && input.gamepad_buttons.FindIndex(manager.gp_state.IsButtonDown) >= 0) down_now = true;
-            else if (input.keys.FindIndex(manager.kb_state.IsKeyDown) >= 0) down_now = true;
+
+            if (manager.gp_state.IsConnected && input.gamepad_buttons.Any(manager.gp_state.IsButtonDown)) down_now = true;
+            else if (input.keys.Any(manager.kb_state.IsKeyDown)) down_now = true;
+           
+
+            
             else {
                 // TODO: other input types here
                 down_now = false;

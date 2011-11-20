@@ -36,7 +36,7 @@ namespace XNAVERGE.Content {
             }
 
             // load animations
-            num_anim = input.ReadInt32();            
+            num_anim = input.ReadInt32();
             for (int i = 0; i < num_anim; i++)
                 read_animation(input, spr.animations);
 

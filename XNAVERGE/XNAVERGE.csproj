@@ -95,6 +95,8 @@
     <Compile Include="content\SpriteReader.cs" />
     <Compile Include="content\TilesetReader.cs" />
     <Compile Include="content\VERGEMapReader.cs" />
+    <Compile Include="core\VERGEGame_Logic.cs" />
+    <Compile Include="core\VERGEGame_Draw.cs" />
     <Compile Include="input\InputManager.cs" />
     <Compile Include="input\SemanticButton.cs" />
     <Compile Include="map\Zone.cs" />
@@ -105,11 +107,10 @@
     <Compile Include="sprite\Sprite.cs" />
     <Compile Include="sprite\SpriteAnimation.cs" />
     <Compile Include="sprite\SpriteBasis.cs" />
-    <Compile Include="sprite\SpriteBasis_Loader.cs" />
     <Compile Include="map\TileLayer.cs" />
     <Compile Include="map\Tileset.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="VERGEGame.cs" />
+    <Compile Include="core\VERGEGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="map\VERGEMap.cs" />
     <Compile Include="map\VERGEMap_Loader.cs" />

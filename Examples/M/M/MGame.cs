@@ -22,10 +22,10 @@ namespace M
 
     public partial class MGame : VERGEGame {
         static void Main(string[] args) {
-
             (new MGame()).Run();
-            
-        }
+        }    
+        
+
 
         protected override void Initialize() {
             base.Initialize();
@@ -43,7 +43,7 @@ namespace M
             e.set_movestring("L2D2R2U2B");
             e.speed = 80;
 
-            for (int x = 0; false && x < map.width; x++) {
+            for (int x = 0; true && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
                     e = map.spawn_entity(x, y, "chap");
                     e.set_movestring("L1D1R1U1B");

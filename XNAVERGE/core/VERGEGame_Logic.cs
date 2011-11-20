@@ -29,6 +29,9 @@ namespace XNAVERGE {
             //if (player_controllable && player != null) control_player();
             if (map != null) {
                 for (int i = 0; i < map.num_entities; i++) {
+                    for (int j = i + 1; j < map.num_entities; j++) {
+                        map.entities[i].hitbox.Intersects(map.entities[j].hitbox);
+                    }
                     map.entities[i].Update();
                 }
             }

@@ -1,12 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
-using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Zip.Compression;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +7,11 @@ using Microsoft.Xna.Framework.Graphics;
 namespace XNAVERGE {
     // This segment of the class contains the main map functionality. The grody .MAP file loading code is segregated in VERGEMap_Loader.cs.
     public partial class VERGEMap {
+        // when true, an exception is thrown on an illegal tile index. When false, loads them as 0. 
+        // This is false by default because some versions of maped3 have a bug that occasionally
+        // saves unobstructed tiles with illegal values, and there are many such maps "in the wild".
+        public static bool STRICT_TILE_LOADING = false;
+
         public const int STARTING_ENTITY_ARRAY_SIZE = 64; // the default size of the entity array. If you exceed this it will initiate an array copy, so set it as low as is practical.
 
         public static Vector2 NEUTRAL_PARALLAX = new Vector2(1.0f);
@@ -76,8 +74,8 @@ namespace XNAVERGE {
         }
 
         
-        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, Direction facing, String chr_filename, String animation) {
-            Entity ent = new Entity(chr_filename, ent_name);            
+        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, Direction facing, String asset_name, String animation) {
+            Entity ent = new Entity(asset_name, ent_name);            
             ent.move_to_tile(x_coord, y_coord);
             ent.facing = facing;            
 
@@ -104,26 +102,26 @@ namespace XNAVERGE {
             return ent;
         }
         // overload ALL the things!
-        public Entity spawn_entity(int x_coord, int y_coord, Direction facing, String chr_filename, String animation) {
-            return spawn_entity("", x_coord, y_coord, facing, chr_filename, animation);
+        public Entity spawn_entity(int x_coord, int y_coord, Direction facing, String asset_name, String animation) {
+            return spawn_entity("", x_coord, y_coord, facing, asset_name, animation);
         }
-        public Entity spawn_entity(int x_coord, int y_coord, String chr_filename, String animation) {
-            return spawn_entity("", x_coord, y_coord, Direction.Down, chr_filename, animation);
+        public Entity spawn_entity(int x_coord, int y_coord, String asset_name, String animation) {
+            return spawn_entity("", x_coord, y_coord, Direction.Down, asset_name, animation);
         }
-        public Entity spawn_entity(int x_coord, int y_coord, Direction facing, String chr_filename) {
-            return spawn_entity("", x_coord, y_coord, facing, chr_filename, String.Empty);
+        public Entity spawn_entity(int x_coord, int y_coord, Direction facing, String asset_name) {
+            return spawn_entity("", x_coord, y_coord, facing, asset_name, String.Empty);
         }
-        public Entity spawn_entity(int x_coord, int y_coord, String chr_filename) {
-            return spawn_entity("", x_coord, y_coord, Direction.Down, chr_filename, String.Empty);
+        public Entity spawn_entity(int x_coord, int y_coord, String asset_name) {
+            return spawn_entity("", x_coord, y_coord, Direction.Down, asset_name, String.Empty);
         }
-        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, String chr_filename, String animation) {
-            return spawn_entity(ent_name, x_coord, y_coord, Direction.Down, chr_filename, animation);
+        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, String asset_name, String animation) {
+            return spawn_entity(ent_name, x_coord, y_coord, Direction.Down, asset_name, animation);
         }
-        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, Direction facing, String chr_filename) {
-            return spawn_entity(ent_name, x_coord, y_coord, facing, chr_filename, "");
+        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, Direction facing, String asset_name) {
+            return spawn_entity(ent_name, x_coord, y_coord, facing, asset_name, "");
         }
-        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, String chr_filename) {
-            return spawn_entity(ent_name, x_coord, y_coord, Direction.Down, chr_filename, "");
+        public Entity spawn_entity(String ent_name, int x_coord, int y_coord, String asset_name) {
+            return spawn_entity(ent_name, x_coord, y_coord, Direction.Down, asset_name, "");
         }
 
         // Lazy-deletes an entity from the entities array, returning true if successful. 
@@ -226,8 +224,8 @@ namespace XNAVERGE {
             int tile_x, tile_y, pixel_x, pixel_y, tile, tilesize;
             tilesize = tileset.tilesize;
             if (x < 0 || y < 0 || x >= width*tilesize || y >= height*tilesize) return false;
-            tile_x = Math.DivRem(x, tilesize, out pixel_x); // tile_x = x/tilesize, pixel_x = x%tilesize
-            tile_y = Math.DivRem(y, tilesize, out pixel_y); // as above but for y
+            tile_x = Utility.DivRem(x, tilesize, out pixel_x); // tile_x = x/tilesize, pixel_x = x%tilesize
+            tile_y = Utility.DivRem(y, tilesize, out pixel_y); // as above but for y
             tile = obstruction_layer.data[tile_x][tile_y];
             if (tile == 0) return false;
             return tileset.obs[tile][pixel_x][pixel_y];

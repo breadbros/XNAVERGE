@@ -9,6 +9,12 @@ using Microsoft.Xna.Framework;
 
 namespace XNAVERGE {
     public static class Utility {
+        // Mimics the Math.DivRem function, which XNA lacks.
+        public static int DivRem(int num, int denom, out int rem) {
+            rem = num % denom;
+            return num / denom;
+        }
+
         // Converts a uint of the form 0x00RRGGBB to one of the form 0xAABBGGRR.
         // The former is what packed VERGE assets use, while the latter is what
         // XNA expects when writing to a Texture2D.

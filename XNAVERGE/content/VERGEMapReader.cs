@@ -29,12 +29,11 @@ namespace XNAVERGE.Content {
             
             map.tiles = new TileLayer[map.num_layers];
             map.load_tileset(vsp);
-            for (int i = 0; i < map.num_layers; i++) map.tiles[i] = read_layer(input, true);
+            for (int i = 0; i < map.num_layers; i++) map.tiles[i] = read_layer(input, true, map.tileset.num_tiles);
             
-
-            map.obstruction_layer = read_layer(input, false);
+            map.obstruction_layer = read_layer(input, false, map.tileset.num_obs_tiles);
             
-            map.zone_layer = read_layer(input, false);
+            map.zone_layer = read_layer(input, false, map.num_zones);
             map.zones = new Zone[map.num_zones + 2]; // the +2 gives a bit of room for expansion before the array needs to be expanded
             for (int i = 0; i < map.num_zones; i++) map.zones[i] = read_zone(input);
             
@@ -47,8 +46,8 @@ namespace XNAVERGE.Content {
             return map;
         }
 
-        private TileLayer read_layer(ContentReader input, bool tile_layer) {
-            int w, h;
+        private TileLayer read_layer(ContentReader input, bool tile_layer, int num_tiles) {
+            int w, h, cur;
             String name;            
             name = input.ReadString();
             w = input.ReadInt32();
@@ -59,8 +58,14 @@ namespace XNAVERGE.Content {
                 layer.alpha = input.ReadDouble();
             }
             for (int y = 0; y < h; y++) {
-                for (int x = 0; x < w; x++)
-                    layer.data[x][y] = input.ReadInt32();                
+                for (int x = 0; x < w; x++) {
+                    cur = input.ReadInt32();
+                    if (cur < 0 || cur >= num_tiles) { // illegal tile index
+                        if (VERGEMap.STRICT_TILE_LOADING) throw new InvalidTileIndexException(x, y, name, cur, num_tiles);
+                        else layer.data[x][y] = 0; // *whistles nonchalantly*
+                    }
+                    else layer.data[x][y] = cur;
+                }
             }
             return layer;
         }
@@ -93,5 +98,14 @@ namespace XNAVERGE.Content {
             return ent;
         }        
 
+    }
+
+    public class InvalidTileIndexException : Exception {
+        public InvalidTileIndexException(int x, int y, String name, int tile_idx, int num_tiles) :
+            base("Invalid tile index at (" + x + ", " + y + ") of layer \"" + name + "\". The tile has index " +
+                tile_idx + ", but this layer requires values between 0 and " + (num_tiles - 1).ToString() +
+                ".\n\nThis usually means that you are either loading a nonstandard tileset or the map file has been" +
+                " corrupted.\n\nMAPED3 is known to corrupt isolated tiles here and there; in that case you will need" +
+                " to either fix the problem manually, or set VERGEMap.STRICT_TILE_LOADING to false.") { }
     }
 }

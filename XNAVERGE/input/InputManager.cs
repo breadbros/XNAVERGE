@@ -10,9 +10,9 @@ namespace XNAVERGE {
     public class InputManager {
         public Dictionary<String, SemanticButton> button_dict;
         public Dictionary<String, SemanticButton>.ValueCollection semantic_buttons;
-        public SemanticButton[] keymappings; // indices correspond to Keys enumeration values   
+        public Dictionary<Keys,SemanticButton> keymappings; 
         // These stick mappings are used if you want to treat the sticks as "fake d-pads", with four directionals each.
-        public SemanticButton[] gamepad_button_mappings; 
+        public Dictionary<Buttons,SemanticButton> gamepad_button_mappings; 
 
         public KeyboardState kb_state;
         public GamePadState gp_state;
@@ -23,8 +23,8 @@ namespace XNAVERGE {
         public InputManager() {
             button_dict = new Dictionary<string, SemanticButton>();
             semantic_buttons = button_dict.Values;
-            keymappings = new SemanticButton[Enum.GetNames(typeof(Keys)).Length];
-            gamepad_button_mappings = new SemanticButton[Enum.GetNames(typeof(Buttons)).Length];
+            keymappings = new Dictionary<Keys,SemanticButton>();
+            gamepad_button_mappings = new Dictionary<Buttons, SemanticButton>();
             kb_state = Keyboard.GetState();
             gp_state = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
             last_updated = VERGEGame.game.tick;
@@ -37,12 +37,18 @@ namespace XNAVERGE {
             return button;
         }
 
-        // Returns the SemanticButton to which the given key/button is mapped, or null if the key is unmapped.
-        public SemanticButton target(Keys key) {
-            return keymappings[(int)key]; // may be null 
+        // Returns the SemanticButton to which the given key/button is mapped. If safe is false, throws an exception 
+        // when the key is unmapped. If safe is true, returns null.
+        public SemanticButton target(Keys key, bool safe) {
+            if (safe)
+                if (!keymappings.ContainsKey(key)) return null;            
+            return keymappings[key]; 
         }
-        public SemanticButton target(Buttons gamepad_button) {
-            return gamepad_button_mappings[(int)gamepad_button]; // may be null 
+        public SemanticButton target(Buttons gamepad_button, bool safe) {
+            if (safe)
+                if (!gamepad_button_mappings.ContainsKey(gamepad_button)) return null;
+                return gamepad_button_mappings[gamepad_button]; 
+
         }
 
         public void Update() {
