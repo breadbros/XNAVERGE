@@ -51,6 +51,7 @@
     <Compile Include="core\VERGEGame_Logic.cs" />
     <Compile Include="input\InputManager.cs" />
     <Compile Include="input\SemanticButton.cs" />
+    <Compile Include="map\BoundedSpace.cs" />
     <Compile Include="map\Zone.cs" />
     <Compile Include="sprite\Entity_Movement.cs" />
     <Compile Include="sprite\Entity.cs" />

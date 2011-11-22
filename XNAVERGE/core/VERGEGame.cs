@@ -129,8 +129,7 @@ namespace XNAVERGE {
 
 
         public void init_map() { // TODO: dehackify this, move to VERGEMap 
-            y_range = map.height * map.tileset.tilesize + screen.height * 2;
-            Console.WriteLine(y_range);
+            y_range = map.height * map.tileset.tilesize + screen.height * 2;            
             setup_tile_destinations();
             camera = new Camera();
             camera.mode = CameraMode.FollowPlayer;
