@@ -16,7 +16,7 @@ namespace XNAVERGE {
         public Camera camera;
         public Screen screen;
         protected Rectangle[][] dest_rect;                
-        public float y_range; // the total vertical distance in which sprites are drawable, centred on the middle of the map (necessary for technical reasons)
+        //internal float x_range, y_range; // the total vertical distance in which sprites are drawable, centred on the middle of the map (necessary for technical reasons)
 
         private static Vector2 NONSENSE_PARALLAX = new Vector2(float.NegativeInfinity, float.NegativeInfinity); // garbage vector used as a sentinel value for parallax
 

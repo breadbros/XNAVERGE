@@ -23,6 +23,8 @@ namespace XNAVERGE {
         public DirectionalButtons dir;
         public VERGEActions action;
 
+        internal BoundedSpace<Entity> entity_space;
+
         public VERGEGame() : base() {
             VERGEGame.game = this;
 
@@ -128,10 +130,11 @@ namespace XNAVERGE {
 
 
 
-        public void init_map() { // TODO: dehackify this, move to VERGEMap 
-            y_range = map.height * map.tileset.tilesize + screen.height * 2;            
+        public void init_map() { // TODO: dehackify this, move to VERGEMap             
+            entity_space = new BoundedSpace<Entity>(-screen.width, -screen.height, map.pixel_width + 2*screen.width, map.pixel_height + 2*screen.height);            
             setup_tile_destinations();
             camera = new Camera();
+            //camera.bounded = false;
             camera.mode = CameraMode.FollowPlayer;
         }
     }

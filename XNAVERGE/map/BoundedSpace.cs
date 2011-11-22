@@ -18,7 +18,6 @@ namespace XNAVERGE {
         private int num_x, num_y, region_w, region_h;
         private int change; // used by enumerators to detect a change in the underlying collection 
 
-        public BoundedSpace(int x, int y, int w, int h, int partition_w, int partition_h) : this(new Rectangle(x, y, w, h), partition_w, partition_h) { }
         public BoundedSpace(Rectangle bounding_rect, int partition_width, int partition_height) {
             bounds = bounding_rect;
             change = 0;
@@ -27,7 +26,7 @@ namespace XNAVERGE {
             num_x = (bounds.Width - 1) / partition_width + 1;
             num_y = (bounds.Height - 1) / partition_height + 1;
             regions = new Region<T>[num_x][];
-            old_positions = new Dictionary<T,Rectangle>();
+            old_positions = new Dictionary<T, Rectangle>();
             for (int x = 0; x < num_x; x++) {
                 regions[x] = new Region<T>[num_y];
                 for (int y = 0; y < num_y; y++) {
@@ -35,6 +34,7 @@ namespace XNAVERGE {
                 }
             }
         }
+        public BoundedSpace(int x, int y, int w, int h, int partition_w, int partition_h) : this(new Rectangle(x, y, w, h), partition_w, partition_h) { }        
         public BoundedSpace(int x, int y, int w, int h) : this(new Rectangle(x, y, w, h), DEFAULT_REGION_WIDTH, DEFAULT_REGION_WIDTH) { }
         public BoundedSpace(Rectangle bounding_rect) : this(bounding_rect, DEFAULT_REGION_WIDTH, DEFAULT_REGION_WIDTH) { }
 
@@ -99,7 +99,7 @@ namespace XNAVERGE {
             intersection.Height = (intersection.Y + intersection.Height - 1 - bounds.Y) / region_h - intersection.Y + 1; // may be zero
             if (intersection == old) return; // still in all the right sectors
 
-            Remove(element);
+            Remove(element); // this is guaranteed to call changed(), so we needn't call it elsewhere in the function.
 
             // And this part is a flagrant duplication of Add, just to avoid recalculating the intersection or incurring overhead from passing it.
             old_positions.Add(element, intersection);

@@ -122,14 +122,15 @@ namespace XNAVERGE {
 
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used
         // for standard entity blitting. The elaborate y-sorting term will be ignored if you draw outside the entity render phase.
-        public override void Draw() {                        
+        public override void Draw() {
+            VERGEGame game = VERGEGame.game;
 
-            VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[current_frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 
+            game.spritebatch.Draw(basis.image, destination, basis.frame_box[current_frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 
                 // Oh god, what's all this about? For XNA to handle the y-sorting, we need to map y-values to a float ranging from 0 to 1. 
                 // We can divide the pixel coordinate by the range of plausible y-values, but this leads to floating-point flicker when 
                 // entities have the same y-value and overlap. 
                 // Thus, a fractional offset based on the number of entities (to ensure uniqueness) is added to the sort depth.
-                (((float)foot + VERGEGame.game.screen.height)*VERGEGame.game.map.num_entities - index) / (VERGEGame.game.y_range*VERGEGame.game.map.num_entities)
+                (((float)foot - game.entity_space.bounds.X)*game.map.num_entities - index) / (game.entity_space.bounds.Height*game.map.num_entities)
             );
         }
 
@@ -137,3 +138,4 @@ namespace XNAVERGE {
     }
 
 }
+

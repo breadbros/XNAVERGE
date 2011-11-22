@@ -8,7 +8,7 @@ namespace XNAVERGE {
 
     // Sprite contains state information necessary for a sprite instance. Anything that is invariant across
     // different instances of the same sprite is stored in the SpriteBasis to preserve memory.
-    public class Sprite {
+    public class Sprite : IBounded {
 
         public SpriteBasis basis;
 
@@ -64,6 +64,7 @@ namespace XNAVERGE {
         public bool visible, deleted;
         public bool animating { get { return ((fixed_frame < 0) && !_animation_paused && cur_animation != null); } }
         protected bool _animation_paused;
+        Rectangle IBounded.bounds { get { return hitbox; } }
 
         protected bool going_backwards; // Used only with the BackAndForth animation style. When true, the animation is reversing.
         protected int fixed_frame; // If fixed_frame is nonnegative, that frame is displayed preferentially.
