@@ -98,6 +98,7 @@ namespace XNAVERGE {
             entities[_num_entities] = ent;
             ent.index = _num_entities;
             _num_entities++;
+            VERGEGame.game.entity_space.Add(ent);
             //Console.WriteLine("{0} is #{1}", ent.name, ent.index);
             return ent;
         }
@@ -129,6 +130,7 @@ namespace XNAVERGE {
         // If you deleted the player this unsets the "player" variable, but it won't generally
         // clean up other references, and you can't assume the entity won't be GCed eventually.
         public bool delete_entity(Entity entity) {
+            VERGEGame.game.entity_space.Remove(entity);
             for (int i = 0; i < _num_entities; i++) {
                 if (entities[i] == entity) {
                     entity.deleted = true;
