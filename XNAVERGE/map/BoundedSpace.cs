@@ -13,7 +13,7 @@ namespace XNAVERGE {
         readonly public Rectangle bounds;
         Rectangle IBounded.bounds { get { return bounds; } }
 
-        private Region<T>[][] regions;
+        private Dictionary<T, bool>[][] regions;
         private Dictionary<T, Rectangle> old_positions; // stores the old positions, but adjusted to be in region-units for easy array lookup
         private int num_x, num_y, region_w, region_h;
         private int change; // used by enumerators to detect a change in the underlying collection 
@@ -25,12 +25,12 @@ namespace XNAVERGE {
             region_h = partition_height;
             num_x = (bounds.Width - 1) / partition_width + 1;
             num_y = (bounds.Height - 1) / partition_height + 1;
-            regions = new Region<T>[num_x][];
+            regions = new Dictionary<T, bool>[num_x][];
             old_positions = new Dictionary<T, Rectangle>();
             for (int x = 0; x < num_x; x++) {
-                regions[x] = new Region<T>[num_y];
+                regions[x] = new Dictionary<T, bool>[num_y];
                 for (int y = 0; y < num_y; y++) {
-                    regions[x][y] = new Region<T>();
+                    regions[x][y] = new Dictionary<T, bool>();
                 }
             }
         }
@@ -46,6 +46,9 @@ namespace XNAVERGE {
 
         public BoundedElementSet elements_within_bounds(Rectangle bound_rect, bool strict_inclusion) {
             return new BoundedElementSet(this, true, bound_rect);
+        }
+        public BoundedElementSet elements_within_bounds(Rectangle bound_rect, bool strict_inclusion, T exclude) {
+            return new BoundedElementSet(this, true, bound_rect, exclude);
         }
 
         public void Add(T element) {
@@ -116,21 +119,14 @@ namespace XNAVERGE {
             }            
         }
 
-        internal class Region<T> : Dictionary<T, bool>, IBounded {
-            internal Rectangle bounds;
-            Rectangle IBounded.bounds { get { return bounds; } }
-        }
-
-
         public class BoundedElementSet : IEnumerator<T> {
             private BoundedSpace<T> space;
-            private bool strict_inclusion;
+            private bool strict_inclusion, single_region;
             private int x, y, left_bound, right_bound, upper_bound, lower_bound;
-            private Rectangle bounding_rect;
-            private int signature;
-            private Region<T> cur_region;
-            private T cur_element;
-            private Dictionary<T, bool> seen; // records items that have already been seen once (since each item may be in multiple sectors)
+            private Rectangle intersection; // intersection of given boundary and overall space boundary
+            private int signature;            
+            private T cur_element, excluded;
+            private Dictionary<T, bool> cur_region, seen; 
             private Dictionary<T, bool>.KeyCollection.Enumerator elements;
 
             Object System.Collections.IEnumerator.Current { get { return Current; } }
@@ -142,21 +138,29 @@ namespace XNAVERGE {
                 }
             }
 
-            internal BoundedElementSet(BoundedSpace<T> _space, bool strict, Rectangle bound_rect) {
+            internal BoundedElementSet(BoundedSpace<T> _space, bool strict, Rectangle bound_rect) {                
                 space = _space;
+                intersection = Rectangle.Intersect(_space.bounds, bound_rect);
                 signature = _space.change;
                 strict_inclusion = strict;
-                left_bound = Math.Max(bound_rect.X, _space.bounds.X) - space.bounds.X;
-                upper_bound = Math.Max(bound_rect.Y, _space.bounds.Y) - space.bounds.Y;
-                right_bound = Math.Min(bound_rect.X + bound_rect.Width, _space.bounds.X + _space.bounds.Width) - space.bounds.X;
-                lower_bound = Math.Min(bound_rect.Y + bound_rect.Height, _space.bounds.Y + _space.bounds.Height) - space.bounds.Y;
-                bounding_rect = bound_rect;
+                // Get region bounds in terms of array cells
+                left_bound = (intersection.X - _space.bounds.X) / _space.region_w;
+                upper_bound = (intersection.Y - _space.bounds.Y) / _space.region_h;              
+                right_bound = (intersection.X + intersection.Width - 1 - _space.bounds.X) / _space.region_w; 
+                lower_bound = (intersection.Y + intersection.Height - 1 - _space.bounds.Y) / _space.region_h;
+                single_region = ((left_bound == right_bound) && (upper_bound == lower_bound));
                 cur_element = null;
                 cur_region = null;
+                excluded = null;
                 elements = default(Dictionary<T, bool>.KeyCollection.Enumerator);
-                seen = new Dictionary<T, bool>();
+                if (!single_region) seen = new Dictionary<T, bool>();
                 x = left_bound;
-                y = upper_bound;
+                y = upper_bound;                
+            }
+            internal BoundedElementSet(BoundedSpace<T> _space, bool strict, Rectangle bound_rect, T exclude) : 
+                this(_space, strict, bound_rect) {
+                    
+                excluded = exclude;
             }
 
             // this just combines MoveNext and Current for tidiness.
@@ -173,14 +177,14 @@ namespace XNAVERGE {
                 cur_element = null;
                 while (cur_element == null) {                    
                     while (cur_region == null) {                        
-                        if (x < right_bound) {
-                            if (y < lower_bound) { // get next region                                
-                                cur_region = space.regions[x/space.region_w][y/space.region_h];
+                        if (x <= right_bound) {
+                            if (y <= lower_bound) { // get next region                                
+                                cur_region = space.regions[x][y];
                                 elements = cur_region.Keys.GetEnumerator();
-                                y += space.region_h;
+                                y++;
                             }
                             else { // end of column
-                                x += space.region_w;
+                                x++;
                                 y = upper_bound;
                             }
                         }
@@ -188,13 +192,16 @@ namespace XNAVERGE {
                             return false;
                         }
                     }
-                    if (elements.MoveNext()) {                        
+                    if (elements.MoveNext()) {
                         cur_element = elements.Current;
-                        if (seen.ContainsKey(cur_element)) cur_element = null; // we already did this one in a different region
-                        else {                            
-                            seen.Add(cur_element, false);
-                            if (strict_inclusion) { // if strict, confirm that it's actually inside the region
-                                if (!cur_element.bounds.Intersects(bounding_rect)) cur_element = null;
+                        if (cur_element == excluded) cur_element = null;
+                        else {
+                            if (!single_region && seen.ContainsKey(cur_element)) cur_element = null; // we already did this one in a different region
+                            else {
+                                if (!single_region) seen.Add(cur_element, false);
+                                if (strict_inclusion) { // if strict, confirm that it's actually inside the region
+                                    if (!cur_element.bounds.Intersects(intersection)) cur_element = null;
+                                }
                             }
                         }
                     }

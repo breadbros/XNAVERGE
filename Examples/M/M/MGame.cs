@@ -44,11 +44,12 @@ namespace M
             e.set_movestring("L2D2R2U2B");
             e.speed = 80;
 
-            for (int x = 0; false && x < map.width; x++) {
+            for (int x = 0; true && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
-                    e = map.spawn_entity(x, y, "chap");
-                    e.set_movestring("L1D1R1U1B");
-
+                    if (rand.NextDouble() < 0.2) {
+                        e = map.spawn_entity(x, y, "chap");
+                        e.set_movestring("L1D1R1U1B");
+                    }
                 }
             }
 

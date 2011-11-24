@@ -31,7 +31,7 @@ namespace XNAVERGE {
             //if (player_controllable && player != null) control_player();
             if (map != null) {
                 for (int i = 0; i < map.num_entities; i++) {
-                    ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true);
+                    ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true, map.entities[i]);
                     while (ent_enum.GetNext(out ent))
                     {                        
                         //if (ent != map.entities[i] && ent == player) Console.WriteLine("player hit " + i);
