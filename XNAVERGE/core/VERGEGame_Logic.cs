@@ -20,6 +20,9 @@ namespace XNAVERGE {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
+            BoundedSpace<Entity>.BoundedElementSet ent_enum;
+            Entity ent;
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -28,6 +31,11 @@ namespace XNAVERGE {
             //if (player_controllable && player != null) control_player();
             if (map != null) {
                 for (int i = 0; i < map.num_entities; i++) {
+                    ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true);
+                    while (ent_enum.GetNext(out ent))
+                    {                        
+                        //if (ent != map.entities[i] && ent == player) Console.WriteLine("player hit " + i);
+                    }
                     map.entities[i].Update();
                 }
             }

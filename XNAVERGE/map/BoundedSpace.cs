@@ -53,16 +53,19 @@ namespace XNAVERGE {
             if (old_positions.ContainsKey(element)) throw new InvalidOperationException("That item has already been added.");            
             
             intersection = Rectangle.Intersect(bounds, element.bounds);
+            
+            intersection.Width = (intersection.X + intersection.Width - 1 - bounds.X) / region_w; // currently holds the rightmost covered region
+            intersection.Height = (intersection.Y + intersection.Height - 1 - bounds.Y) / region_h; // currently holds the bottom covered region
             intersection.X = (intersection.X - bounds.X) / region_w;
             intersection.Y = (intersection.Y - bounds.Y) / region_h;
-            intersection.Width = (intersection.X + intersection.Width - 1 - bounds.X) / region_w - intersection.X + 1; // may be zero
-            intersection.Height = (intersection.Y + intersection.Height - 1 - bounds.Y) / region_h - intersection.Y + 1; // may be zero
-            old_positions.Add(element, intersection);
-
+            intersection.Width -= intersection.X - 1; // width = rightside - leftside + 1
+            intersection.Height -= intersection.Y - 1; // height = bottom - top + 1
+            old_positions.Add(element, intersection); 
+           
             for (int x = intersection.X; x < intersection.X + intersection.Width; x++) {
                 for (int y = intersection.Y; y < intersection.Y + intersection.Height; y++) {
                     // value = false for no particular reason. We're just using the dictionary as a set of T, since XNA doesn't support HashSet.
-                    regions[x][y].Add(element, false); 
+                    regions[x][y].Add(element, false);                    
                 }
             }
             changed();
@@ -93,20 +96,22 @@ namespace XNAVERGE {
             
             old = old_positions[element];
             intersection = Rectangle.Intersect(bounds, element.bounds);
+            intersection.Width = (intersection.X + intersection.Width - 1 - bounds.X) / region_w; // currently holds the rightmost covered region
+            intersection.Height = (intersection.Y + intersection.Height - 1 - bounds.Y) / region_h; // currently holds the bottom covered region
             intersection.X = (intersection.X - bounds.X) / region_w;
             intersection.Y = (intersection.Y - bounds.Y) / region_h;
-            intersection.Width = (intersection.X + intersection.Width - 1 - bounds.X) / region_w - intersection.X + 1; // may be zero
-            intersection.Height = (intersection.Y + intersection.Height - 1 - bounds.Y) / region_h - intersection.Y + 1; // may be zero
+            intersection.Width -= intersection.X - 1; // width = rightside - leftside + 1
+            intersection.Height -= intersection.Y - 1; // height = bottom - top + 1
             if (intersection == old) return; // still in all the right sectors
 
             Remove(element); // this is guaranteed to call changed(), so we needn't call it elsewhere in the function.
-
+            
             // And this part is a flagrant duplication of Add, just to avoid recalculating the intersection or incurring overhead from passing it.
             old_positions.Add(element, intersection);
             for (int x = intersection.X; x < intersection.X + intersection.Width; x++) {
                 for (int y = intersection.Y; y < intersection.Y + intersection.Height; y++) {
                     // value = false for no particular reason. We're just using the dictionary as a set of T, since XNA doesn't support HashSet.
-                    regions[x][y].Add(element, false);
+                    regions[x][y].Add(element, false);                    
                 }
             }            
         }
@@ -149,6 +154,7 @@ namespace XNAVERGE {
                 cur_element = null;
                 cur_region = null;
                 elements = default(Dictionary<T, bool>.KeyCollection.Enumerator);
+                seen = new Dictionary<T, bool>();
                 x = left_bound;
                 y = upper_bound;
             }
@@ -165,10 +171,10 @@ namespace XNAVERGE {
 
             public bool MoveNext() { 
                 cur_element = null;
-                while (cur_element == null) { 
-                    while (cur_region == null) {
+                while (cur_element == null) {                    
+                    while (cur_region == null) {                        
                         if (x < right_bound) {
-                            if (y < lower_bound) { // get next region
+                            if (y < lower_bound) { // get next region                                
                                 cur_region = space.regions[x/space.region_w][y/space.region_h];
                                 elements = cur_region.Keys.GetEnumerator();
                                 y += space.region_h;
@@ -182,10 +188,10 @@ namespace XNAVERGE {
                             return false;
                         }
                     }
-                    if (elements.MoveNext()) {
+                    if (elements.MoveNext()) {                        
                         cur_element = elements.Current;
                         if (seen.ContainsKey(cur_element)) cur_element = null; // we already did this one in a different region
-                        else {
+                        else {                            
                             seen.Add(cur_element, false);
                             if (strict_inclusion) { // if strict, confirm that it's actually inside the region
                                 if (!cur_element.bounds.Intersects(bounding_rect)) cur_element = null;

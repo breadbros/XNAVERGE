@@ -172,20 +172,22 @@ namespace XNAVERGE {
             tile_movement = DEFAULT_TO_TILE_MOVEMENT;
         }
 
-        // The update function handles the actual movement, and is one of the most important codeblocks in the whole engine.
+        public override void Update() {            movement_handler();            VERGEGame.game.entity_space.Update(this);        }
+
+        // This handler manages the actual movement, and is one of the most important codeblocks in the whole engine.
         // It is called every time the main game's Update() function runs, usually once per tick.
-        public override void Update() {
+        protected virtual void movement_handler() {
             int elapsed;
             
             if (cur_move_action == NO_MOVESCRIPT && this != VERGEGame.game.player) {
-                last_logic_tick = VERGEGame.game.tick;
+                last_logic_tick = VERGEGame.game.tick;                
                 return;
             }
             
             elapsed = speed * (VERGEGame.game.tick - last_logic_tick); 
             last_logic_tick = VERGEGame.game.tick;
             if (this == VERGEGame.game.player) {                
-                control_player(elapsed);
+                control_player(elapsed);            
                 return;
             }
 
@@ -323,7 +325,7 @@ namespace XNAVERGE {
                             + ". If you haven't been changing these values manually, this is some kind of engine bug.");
                 }
             }
-        }        
+        }
 
         // Moves the character as far as it can toward its destination. in the elapsed time (hundredths of ticks), and returns 
         // what remains of the time allotted to it (the elapsed parameter). If the character hits an obstruction it will block,
