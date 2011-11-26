@@ -21,8 +21,8 @@ namespace M
     /// 
 
     public partial class MGame : VERGEGame {
-        static void Main(string[] args) {
-
+        static void Main(string[] args) {            
+            //(new MGame()).Exit();
             (new MGame()).Run();
         }    
         

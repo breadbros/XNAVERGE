@@ -172,7 +172,11 @@ namespace XNAVERGE {
             tile_movement = DEFAULT_TO_TILE_MOVEMENT;
         }
 
-        public override void Update() {            movement_handler();            VERGEGame.game.entity_space.Update(this);        }
+        public override void Update() {
+            movement_handler();
+            VERGEGame.game.entity_space.Update(this);
+        }
+
 
         // This handler manages the actual movement, and is one of the most important codeblocks in the whole engine.
         // It is called every time the main game's Update() function runs, usually once per tick.

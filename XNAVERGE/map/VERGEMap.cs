@@ -155,15 +155,16 @@ namespace XNAVERGE {
             
             for (int cur_dist = 0; cur_dist < pixel_distance; cur_dist++) {
                 if (xs != 0) { // Check for obstructions along the horizontal axis
-                    for (int y = ent.hitbox.Top; y <= ent.hitbox.Bottom; y++) {
+                    for (int y = ent.hitbox.Top; y < ent.hitbox.Bottom; y++) {
                         if (obs_at_pixel(leading_x, y)) return cur_dist * 100;
                     }
                 }
                 if (ys != 0) { // Check for obstructions along the vertical axis
-                    for (int x = ent.hitbox.Left; x <= ent.hitbox.Right; x++) {
-                        if (obs_at_pixel(x, leading_y)) return cur_dist * 100;
-                    }
+                    for (int x = ent.hitbox.Left; x < ent.hitbox.Right; x++) {
+                        if (obs_at_pixel(x, leading_y)) return cur_dist * 100;                        
+                    }                    
                 }
+                
                 leading_x += xs;
                 leading_y += ys;
             }
