@@ -21,8 +21,7 @@ namespace M
     /// 
 
     public partial class MGame : VERGEGame {
-        static void Main(string[] args) {            
-            //(new MGame()).Exit();
+        static void Main(string[] args) {
             (new MGame()).Run();
         }    
         
@@ -39,15 +38,19 @@ namespace M
             // BEGIN SILLINESS
 
             player = map.spawn_entity(12, 16, "chap");
+            player.obstructing = true;            
             Entity e;
             e = map.spawn_entity(21, 14, "chap");
             e.set_movestring("L2D2R2U2B");
             e.speed = 80;
 
-            for (int x = 0; true && x < map.width; x++) {
+            for (int x = 0; false && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
-                    if (rand.NextDouble() < 0.2) {
+                    if (rand.NextDouble() < 0.5) {
                         e = map.spawn_entity(x, y, "chap");
+                        e.speed = 100;
+                        e.obstructing = true;
+                        e.obstructable = true;
                         e.set_movestring("L1D1R1U1B");
                     }
                 }

@@ -147,12 +147,46 @@ namespace XNAVERGE {
         // NOTE: both the distance passed and the distance returned are in hundredths of pixels.
         public int max_unobstructed_distance(int intended_distance, int xs, int ys, Entity ent) {
             VERGEGame game = VERGEGame.game;
+            BoundedSpace<Entity>.BoundedElementSet ent_enum;//VERGEGame.game.entity_space.elements_within_bounds
+            Entity collider;
+            Rectangle collision_zone;
             bool tile_based;
-            int leading_x, leading_y, pixel_distance;
+            int leading_x, leading_y, pixel_distance, best_distance;
             pixel_distance = 1 + (intended_distance - 1) / 100;
             leading_x = ent.hitbox.X + (ent.hitbox.Width - 1 + xs * (ent.hitbox.Width + 1)) / 2; // one pixel beyond the leading sides
             leading_y = ent.hitbox.Y + (ent.hitbox.Height - 1 + ys * (ent.hitbox.Height + 1)) / 2;
+
+            best_distance = _collision_pixel_tester(pixel_distance, xs, ys, leading_x, leading_y, ent); // haaaaack
+
+            collision_zone = ent.hitbox;
+            if (xs != 0) {
+                collision_zone.Width += pixel_distance;
+                if (xs < 0) collision_zone.X -= pixel_distance;
+            }
+            if (ys != 0) {
+                collision_zone.Height += pixel_distance;
+                if (ys < 0) collision_zone.Y -= pixel_distance;
+            }
+
+            ent_enum = VERGEGame.game.entity_space.elements_within_bounds(collision_zone, true, ent);
             
+            while (ent_enum.GetNext(out collider)) {
+                if (collider.obstructing) {
+                    // this is the worst hack. TODO: burn everything.
+                    collision_zone = ent.hitbox; 
+                    for (int cur_dist = 0; cur_dist < best_distance; cur_dist++) {
+                        collision_zone.Offset(xs, ys);
+                        if (collision_zone.Intersects(collider.hitbox)) best_distance = cur_dist;
+                    }
+                }
+            }
+
+            
+            if (best_distance == pixel_distance) return intended_distance; // as many pixels as possible, plus however much more
+            return best_distance; // exactly as many pixels as possible
+        }
+
+        protected virtual int _collision_pixel_tester(int pixel_distance, int xs, int ys, int leading_x, int leading_y, Entity ent) {
             for (int cur_dist = 0; cur_dist < pixel_distance; cur_dist++) {
                 if (xs != 0) { // Check for obstructions along the horizontal axis
                     for (int y = ent.hitbox.Top; y < ent.hitbox.Bottom; y++) {
@@ -161,17 +195,16 @@ namespace XNAVERGE {
                 }
                 if (ys != 0) { // Check for obstructions along the vertical axis
                     for (int x = ent.hitbox.Left; x < ent.hitbox.Right; x++) {
-                        if (obs_at_pixel(x, leading_y)) return cur_dist * 100;                        
-                    }                    
+                        if (obs_at_pixel(x, leading_y)) return cur_dist * 100;
+                    }
                 }
-                
+
                 leading_x += xs;
                 leading_y += ys;
             }
-
-            
-            return intended_distance;
+            return pixel_distance;
         }
+
 
         // Returns true if the specified pixel is obstructed.
         public bool obs_at_pixel(int x, int y) {

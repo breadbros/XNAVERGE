@@ -335,7 +335,7 @@ namespace XNAVERGE {
         // what remains of the time allotted to it (the elapsed parameter). If the character hits an obstruction it will block,
         // using up all the elapsed time while accomplishing nothing.
         protected virtual int try_to_move(int elapsed, bool player_control) {
-            int maxmove, actualmove; // maximum distance possible to move in this iteration, in hundredths of pixels
+            int maxmove, actualmove;
             int dist_to_next_pixel_x = 0, dist_to_next_pixel_y = 0, extra_dist, tilesize;
             Point signs;
             tilesize = VERGEGame.game.map.tileset.tilesize;
@@ -352,9 +352,10 @@ namespace XNAVERGE {
                 extra_dist = Math.Max(dist_to_next_pixel_x, dist_to_next_pixel_y); // one of these will be set, and we want that one
             else // main diagonal movement
                 extra_dist = Math.Min(dist_to_next_pixel_x, dist_to_next_pixel_y); // both are set, and we want the smaller one (even if it's zero)
-            
-            if (extra_dist < maxmove) 
-                actualmove = extra_dist + VERGEGame.game.map.max_unobstructed_distance(maxmove - extra_dist, signs.X, signs.Y, this);            
+
+            if (extra_dist < maxmove) {
+                actualmove = extra_dist + VERGEGame.game.map.max_unobstructed_distance(maxmove - extra_dist, signs.X, signs.Y, this);
+            }
             else actualmove = maxmove;
 
             exact_x += signs.X * actualmove;
