@@ -102,6 +102,8 @@
     <Compile Include="input\SemanticButton.cs" />
     <Compile Include="map\BoundedSpace.cs" />
     <Compile Include="map\Zone.cs" />
+    <Compile Include="script\Delegates.cs" />
+    <Compile Include="script\ScriptBank.cs" />
     <Compile Include="sprite\Entity_Movement.cs" />
     <Compile Include="sprite\Entity.cs" />
     <Compile Include="map\RenderStack.cs" />

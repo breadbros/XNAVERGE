@@ -15,16 +15,12 @@ using XNAVERGE;
 
 namespace M
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
-    /// 
 
     public partial class MGame : VERGEGame {
         static void Main(string[] args) {
+            //(new MGame()).Exit();
             (new MGame()).Run();
-        }    
-        
+        }        
 
 
         protected override void Initialize() {

@@ -12,7 +12,9 @@ using Microsoft.Xna.Framework.Media;
 namespace XNAVERGE {
     public partial class VERGEGame {
         public int tick { get { return _tick; } }
-        protected int _tick; // Centiseconds since app start. This will overflow if you leave the game on for 248 days.        
+        protected int _tick; // Centiseconds since app start. This will overflow if you leave the game on for 248 days.   
+        public ScriptBank global;
+
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -43,6 +45,16 @@ namespace XNAVERGE {
             base.Update(gameTime);
         }
 
+        // Tries to find a delegate matching the specified type in either the map or global script banks.
+        // Checks map scripts first, then global scripts. Returns null if T is not a delegate or if the
+        // script does not exist. Throws AmbiguousMatchException if the script is overloaded within a
+        // single script bank.
+        // TODO: Maybe allow for multiple global script banks?
+        public virtual T script<T>(String name) where T : class {
+            T script = VERGEGame.game.map.scripts.get_script<T>(name);
+            if (script == null) return global.get_script<T>(name);
+            return script;
+        }
 
     }    
 }

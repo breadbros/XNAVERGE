@@ -21,7 +21,7 @@ namespace XNAVERGE {
 
         public InputManager input;
         public DirectionalButtons dir;
-        public VERGEActions action;
+        public VERGEActions action;        
 
         internal BoundedSpace<Entity> entity_space;
 
@@ -45,6 +45,7 @@ namespace XNAVERGE {
             initialize_buttons();
 
             // Initialize other variables
+            global = new ScriptBank();
             map = null;
             player = null;
             player_controllable = true;
@@ -126,8 +127,6 @@ namespace XNAVERGE {
             // TODO: Unload any non ContentManager content here
             map.tileset.image.Dispose();
         }
-
-
 
 
         public void init_map() { // TODO: dehackify this, move to VERGEMap             

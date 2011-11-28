@@ -43,6 +43,7 @@ namespace XNAVERGE {
         public Zone[] zones;
         public int num_zones { get { return _num_zones; } }
         
+        public MapScriptBank scripts;
 
 
         // builds a new renderstack from a verge-style renderstring. Optionally, you can use a delimiter other than
