@@ -56,6 +56,8 @@ namespace M
             }
 
             global.get_script<BasicDelegate>("testing")();
+            map.zones[1].script = script<ZoneDelegate>("zonetrigger");
+            
             
         }
 

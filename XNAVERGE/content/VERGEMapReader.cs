@@ -102,11 +102,11 @@ namespace XNAVERGE.Content {
         protected virtual bool set_script_bank(VERGEMap map, String name) {            
             Type T;
             Object[] param = new Object[1];
-            param[0] = map;
-
-            T = VERGEGame.game.main_assembly.GetType(VERGEMap.SCRIPT_CLASS_PREFIX + name, false);
-            if (T == null)
-                T = VERGEGame.game.main_assembly.GetType(VERGEMap.SCRIPT_CLASS_PREFIX + map.initscript, false);
+            param[0] = map;            
+            T = VERGEGame.game.main_assembly.GetType(VERGEGame.game.main_namespace + "." + VERGEMap.SCRIPT_CLASS_PREFIX + name, false);
+            if (T == null) {                
+                T = VERGEGame.game.main_assembly.GetType(VERGEGame.game.main_namespace + "." + VERGEMap.SCRIPT_CLASS_PREFIX + map.initscript, false);
+            }
             if (T == null) {
                 map.scripts = new MapScriptBank(map);
                 return false;

@@ -7,7 +7,7 @@ using System.Text;
 namespace XNAVERGE {
     public delegate void BasicDelegate();
 
-    public delegate void ZoneDelegate(int x, int y, bool adjacent);
+    public delegate void ZoneDelegate(int tx, int ty, bool adjacent);
 
     public delegate void EntityActivationDelegate(Entity ent);
 

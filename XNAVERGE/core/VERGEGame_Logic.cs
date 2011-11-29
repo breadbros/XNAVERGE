@@ -13,8 +13,7 @@ namespace XNAVERGE {
     public partial class VERGEGame {
         public int tick { get { return _tick; } }
         protected int _tick; // Centiseconds since app start. This will overflow if you leave the game on for 248 days.   
-        public ScriptBank global;
-
+        public ScriptBank global;                
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -22,8 +21,9 @@ namespace XNAVERGE {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            BoundedSpace<Entity>.BoundedElementSet ent_enum;
-            Entity ent;
+            BoundedSpace<Entity>.BoundedElementSet ent_enum;            
+            Point prev_player_coords, cur_player_coords;
+            Entity ent, old_player;            
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -31,6 +31,16 @@ namespace XNAVERGE {
             _tick++;
             input.Update();
             //if (player_controllable && player != null) control_player();
+
+            old_player = player;
+
+            if (old_player != null) { 
+                prev_player_coords = player.hitbox.Center;
+                prev_player_coords.X /= map.tileset.tilesize;
+                prev_player_coords.Y /= map.tileset.tilesize;
+            }
+            else prev_player_coords = default(Point);
+
             if (map != null) {
                 for (int i = 0; i < map.num_entities; i++) {
                     ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true, map.entities[i]);
@@ -40,6 +50,16 @@ namespace XNAVERGE {
                     }
                     map.entities[i].Update();
                 }
+
+                if (player == old_player && player != null) { // update player zone
+                    cur_player_coords = player.hitbox.Center;
+                    cur_player_coords.X /= map.tileset.tilesize;
+                    cur_player_coords.Y /= map.tileset.tilesize;
+                    if (cur_player_coords != prev_player_coords && map.within_bounds(cur_player_coords.X, cur_player_coords.Y, true)) {
+                        map.zones[map.zone_layer.data[cur_player_coords.X][cur_player_coords.Y]].maybe_activate(cur_player_coords.X, cur_player_coords.Y);
+                    }
+                }
+
             }
 
             base.Update(gameTime);

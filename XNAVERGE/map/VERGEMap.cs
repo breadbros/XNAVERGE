@@ -67,6 +67,7 @@ namespace XNAVERGE {
 
         public void set_renderstring(String new_renderstring) { set_renderstring(new_renderstring, ','); }
 
+
         // ---------------------------------
         // ENTITY MANAGEMENT
 
@@ -266,6 +267,19 @@ namespace XNAVERGE {
                 throw e;
             }
             return _default_tileset;
+        }
+
+        // returns true if the x, y pair is within the defined map region. If tile_coordinates is true,
+        // x and y are taken to be tiles, otherwise they're taken to be pixels.
+        public bool within_bounds(int x, int y, bool tile_coordinates) {
+            if (tile_coordinates) {
+                if (x < 0 || y < 0 || x >= width || y >= height) return false;
+                else return true;
+            }
+            else {
+                if (x < 0 || y < 0 || x >= pixel_width || y >= pixel_height) return false;
+                else return true;
+            }
         }
 
         public static void switch_map(String new_map, String tileset_override_name) {

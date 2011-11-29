@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -14,9 +15,10 @@ namespace XNAVERGE {
         public static Random rand = new Random();               
         public ContentManager MapContent; // this is used rather than the standard "Content" contentmanager to handle map-specific data        
 
-        // The assembly to search for map scripts. Silverlight .NET, which is required for the XBox, does not provide any way for me to
-        // get the entry assembly from within a library, so games that use XNAVERGE need to set this themselves when initializing.
-        public System.Reflection.Assembly main_assembly; 
+        // The assembly/namespace to search for map scripts. By default, this is assumed to be the assembly and namespace of the method
+        // that calls the VERGEGame constructor. If you want something different you'll have to set it before VERGEGame.Initialize().
+        public Assembly main_assembly; 
+        public String main_namespace;
 
         public VERGEMap map;
         public Entity player;
@@ -30,8 +32,15 @@ namespace XNAVERGE {
         internal BoundedSpace<Entity> entity_space;
 
         public VERGEGame() : base() {
-            VERGEGame.game = this;
-            main_assembly = null; // this needs to be set by the game assembly due to a stupid reason
+            System.Diagnostics.StackTrace stack = new System.Diagnostics.StackTrace();
+
+            // the assembly/namespace to search for script classes defaults to the one 
+            // from which this constructor was called.
+            Type sourcetype = stack.GetFrame(1).GetMethod().DeclaringType; 
+            main_assembly = sourcetype.Assembly;
+            main_namespace = sourcetype.Namespace;
+
+            VERGEGame.game = this;            
 
             // Set up timing
             this.IsFixedTimeStep = true;

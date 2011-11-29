@@ -52,7 +52,7 @@ namespace XVCX {
 
         private void write_zone(ContentWriter output, Zone zone) {
             output.Write(zone.name); // string
-            output.Write(zone.script); // string
+            output.Write(zone._script); // string
             output.Write(zone.chance); // double
             output.Write(zone.adjacent); // bool
         }
