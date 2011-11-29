@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MGlobalScripts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MGame.cs" />
   </ItemGroup>

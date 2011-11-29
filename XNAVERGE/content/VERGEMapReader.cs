@@ -100,7 +100,9 @@ namespace XNAVERGE.Content {
         }
 
         protected virtual bool set_script_bank(VERGEMap map, String name) {            
-            Type T;            
+            Type T;
+            Object[] param = new Object[1];
+            param[0] = map;
 
             T = VERGEGame.game.main_assembly.GetType(VERGEMap.SCRIPT_CLASS_PREFIX + name, false);
             if (T == null)
@@ -111,7 +113,7 @@ namespace XNAVERGE.Content {
             }
 
             if (T.IsSubclassOf(typeof(MapScriptBank)))
-                map.scripts = (MapScriptBank)Activator.CreateInstance(T);
+                map.scripts = (MapScriptBank)Activator.CreateInstance(T, param);
             else throw new ArgumentException("The class \"" + T.Name + "\" was located, but is not derived from MapScriptBase.");
             return true;
         }

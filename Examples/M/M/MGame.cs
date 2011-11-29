@@ -25,6 +25,7 @@ namespace M
 
         protected override void Initialize() {
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
+            global = new MGlobalScripts();
             base.Initialize();                        
         }
 
@@ -40,7 +41,7 @@ namespace M
             Entity e;
             e = map.spawn_entity(21, 14, "chap");
             e.set_movestring("L2D2R2U2B");
-            e.speed = 80;
+            e.speed = 80;            
 
             for (int x = 0; false && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
@@ -54,8 +55,8 @@ namespace M
                 }
             }
 
-            // END SILLINESS
-            // ---------------------
+            global.get_script<BasicDelegate>("testing")();
+            
         }
 
         protected override void UnloadContent()

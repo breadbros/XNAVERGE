@@ -37,9 +37,9 @@ namespace XNAVERGE {
                 method = this.GetType().GetMethod(name); // null if not found
                 if (method == null) return null;
                 try {
-                    del = Delegate.CreateDelegate(type, method);
+                    del = Delegate.CreateDelegate(type, this, method);
                 }
-                catch (Exception) { // binding error. usually means the signature or permissions are wrong
+                catch (Exception) { // binding error. usually means the signature or permissions are wrong                    
                     return null;
                 }
                 lookup.Add(name, del); 
