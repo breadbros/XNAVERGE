@@ -17,28 +17,29 @@ namespace XNAVERGE.Content {
     /// Extension Library project.
     /// </summary>
     public class VERGEMapReader : ContentTypeReader<TRead> {
-        protected override TRead Read(ContentReader input, TRead nobody_seems_to_know_what_this_argument_is_for) {
+        protected override TRead Read(ContentReader input, TRead nobody_seems_to_know_what_this_argument_is_for) {            
             String vsp, rstring;
+            System.Diagnostics.Debug.WriteLine("DEBUG: Loading map from " + input.AssetName + ".xnb.");            
+
             VERGEMap map = new VERGEMap(input.ReadString(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
-            map.initscript = input.ReadString();
+            map.initscript = input.ReadString(); // currently ignored in lieu of a general initscript for all maps. wise/unwise? consider.
+
+            if (!set_script_bank(map, input.AssetName)) System.Diagnostics.Debug.WriteLine("DEBUG: No script bank found for " + input.AssetName + ". Defaulting to an empty script bank.");
+
             map.default_music = input.ReadString();
             vsp = input.ReadString();
             rstring = input.ReadString();
             map.start_x = input.ReadInt32();
             map.start_y = input.ReadInt32();
-            
-            map.tiles = new TileLayer[map.num_layers];
+                        
             map.load_tileset(vsp);
             for (int i = 0; i < map.num_layers; i++) map.tiles[i] = read_layer(input, true, map.tileset.num_tiles);
             
             map.obstruction_layer = read_layer(input, false, map.tileset.num_obs_tiles);
             
-            map.zone_layer = read_layer(input, false, map.num_zones);
-            map.zones = new Zone[map.num_zones + 2]; // the +2 gives a bit of room for expansion before the array needs to be expanded
+            map.zone_layer = read_layer(input, false, map.num_zones);            
             for (int i = 0; i < map.num_zones; i++) map.zones[i] = read_zone(input);
             
-            if (map.num_entities <= VERGEMap.STARTING_ENTITY_ARRAY_SIZE) map.entities = new Entity[VERGEMap.STARTING_ENTITY_ARRAY_SIZE];
-            else map.entities = new Entity[map.num_entities + 2]; // As with zones, the +2 gives some room for low-cost expansion
             for (int i = 0; i < map.num_entities; i++) map.entities[i] = read_ent(input, map);
             
             map.renderstack = new RenderStack(map, rstring);
@@ -61,7 +62,7 @@ namespace XNAVERGE.Content {
                 for (int x = 0; x < w; x++) {
                     cur = input.ReadInt32();
                     if (cur < 0 || cur >= num_tiles) { // illegal tile index
-                        if (VERGEMap.STRICT_TILE_LOADING) throw new InvalidTileIndexException(x, y, name, cur, num_tiles);
+                        if (VERGEMap.strict_tile_loading) throw new InvalidTileIndexException(x, y, name, cur, num_tiles);
                         else layer.data[x][y] = 0; // *whistles nonchalantly*
                     }
                     else layer.data[x][y] = cur;
@@ -96,7 +97,24 @@ namespace XNAVERGE.Content {
             
             ent.set_movestring(movestring);
             return ent;
-        }        
+        }
+
+        protected virtual bool set_script_bank(VERGEMap map, String name) {            
+            Type T;            
+
+            T = VERGEGame.game.main_assembly.GetType(VERGEMap.SCRIPT_CLASS_PREFIX + name, false);
+            if (T == null)
+                T = VERGEGame.game.main_assembly.GetType(VERGEMap.SCRIPT_CLASS_PREFIX + map.initscript, false);
+            if (T == null) {
+                map.scripts = new MapScriptBank(map);
+                return false;
+            }
+
+            if (T.IsSubclassOf(typeof(MapScriptBank)))
+                map.scripts = (MapScriptBank)Activator.CreateInstance(T);
+            else throw new ArgumentException("The class \"" + T.Name + "\" was located, but is not derived from MapScriptBase.");
+            return true;
+        }
 
     }
 

@@ -13,7 +13,11 @@ namespace XNAVERGE {
         public static VERGEGame game; // points to the last VERGEGame initialized (presumably there would only be one)
         public static Random rand = new Random();               
         public ContentManager MapContent; // this is used rather than the standard "Content" contentmanager to handle map-specific data        
-        
+
+        // The assembly to search for map scripts. Silverlight .NET, which is required for the XBox, does not provide any way for me to
+        // get the entry assembly from within a library, so games that use XNAVERGE need to set this themselves when initializing.
+        public System.Reflection.Assembly main_assembly; 
+
         public VERGEMap map;
         public Entity player;
         public bool player_controllable; // true if player responds to input
@@ -27,6 +31,7 @@ namespace XNAVERGE {
 
         public VERGEGame() : base() {
             VERGEGame.game = this;
+            main_assembly = null; // this needs to be set by the game assembly due to a stupid reason
 
             // Set up timing
             this.IsFixedTimeStep = true;

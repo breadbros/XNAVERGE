@@ -7,16 +7,16 @@ using Microsoft.Xna.Framework.Graphics;
 namespace XNAVERGE {
     // This segment of the class contains the main map functionality. The grody .MAP file loading code is segregated in VERGEMap_Loader.cs.
     public partial class VERGEMap {
+        public const int STARTING_ENTITY_ARRAY_SIZE = 64; // the default size of the entity array. If you exceed this it will initiate an array copy, so set it as low as is practical.
+        public const String SCRIPT_CLASS_PREFIX = "Script_"; // prefixed to asset names when searching for mapscript classes
+
+        public static readonly Vector2 NEUTRAL_PARALLAX = new Vector2(1.0f);
+        public static readonly Vector2 FIXED_PARALLAX = new Vector2(0.0f);
+
         // when true, an exception is thrown on an illegal tile index. When false, loads them as 0. 
         // This is false by default because some versions of maped3 have a bug that occasionally
-        // saves unobstructed tiles with illegal values, and there are many such maps "in the wild".
-        public static bool STRICT_TILE_LOADING = false;
-
-        public const int STARTING_ENTITY_ARRAY_SIZE = 64; // the default size of the entity array. If you exceed this it will initiate an array copy, so set it as low as is practical.
-
-        public static Vector2 NEUTRAL_PARALLAX = new Vector2(1.0f);
-        public static Vector2 FIXED_PARALLAX = new Vector2(0.0f);
-        
+        // saves unobstructed tiles with illegal values, and there are many such maps "in the wild".        
+        public static bool strict_tile_loading = false;
 
         protected int _num_layers;
 
@@ -45,6 +45,18 @@ namespace XNAVERGE {
         
         public MapScriptBank scripts;
 
+        public VERGEMap(String mapname, int ver, int numlayers, int numzones, int numents) {
+            name = mapname;
+            version = ver;
+            _num_layers = numlayers;
+            _num_zones = numzones;
+            _num_entities = numents;
+
+            tiles = new TileLayer[numlayers];
+            zones = new Zone[num_zones + 2]; // the +2 gives a bit of room for expansion before the array needs to be expanded
+            if (numents <= VERGEMap.STARTING_ENTITY_ARRAY_SIZE) entities = new Entity[VERGEMap.STARTING_ENTITY_ARRAY_SIZE];
+            else entities = new Entity[numents + 2];
+        }
 
         // builds a new renderstack from a verge-style renderstring. Optionally, you can use a delimiter other than
         // the comma. Remember, layer numbering is 1-offset in the renderstring!

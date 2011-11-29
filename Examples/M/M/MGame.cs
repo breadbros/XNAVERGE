@@ -17,18 +17,20 @@ namespace M
 {
 
     public partial class MGame : VERGEGame {
-        static void Main(string[] args) {
+        static void Main(string[] args) {            
             //(new MGame()).Exit();
-            (new MGame()).Run();
+            (new MGame()).Run();            
         }        
 
 
         protected override void Initialize() {
-            base.Initialize();
+            main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
+            base.Initialize();                        
         }
 
         protected override void LoadContent() {
             base.LoadContent();
+            
             VERGEMap.switch_map("town01");
             // ---------------------
             // BEGIN SILLINESS

@@ -67,7 +67,6 @@
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="map\VERGEMap.cs" />
-    <Compile Include="map\VERGEMap_Loader.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
