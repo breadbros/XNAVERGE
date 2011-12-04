@@ -35,7 +35,7 @@ namespace XVCX {
             for (int i = 0; i < value.num_layers; i++) write_layer(output, value.layers[i], true);
             write_layer(output, value.obslayer, false);
             write_layer(output, value.zonelayer, false);
-            for (int i = 0; i < value.num_zones; i++) write_zone(output, value.zones[i]);
+            for (int i = 0; i < value.num_zones; i++) write_zone(output, ref value.zones[i]);
             for (int i = 0; i < value.num_ents; i++) write_ent(output, value.entities[i]);
         }
 
@@ -50,11 +50,11 @@ namespace XVCX {
             for (int i = 0; i < layer.tiles.Length; i++) output.Write(layer.tiles[i]);
         }
 
-        private void write_zone(ContentWriter output, Zone zone) {
+        private void write_zone(ContentWriter output, ref ProcessedZone zone) {
             output.Write(zone.name); // string
-            output.Write(zone._script); // string
+            output.Write(zone.script); // string
             output.Write(zone.chance); // double
-            output.Write(zone.adjacent); // bool
+            output.Write(zone.adj); // bool
         }
 
         private void write_ent(ContentWriter output, ProcessedEntity ent) {

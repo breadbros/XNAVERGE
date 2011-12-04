@@ -110,7 +110,7 @@ namespace XVCX {
 
                 context.Logger.LogMessage("Reading zone type specifications...");
                 map.num_zones = bin_reader.ReadInt32();
-                map.zones = new Zone[map.num_zones];
+                map.zones = new ProcessedZone[map.num_zones];
                 for (int i = 0; i < map.num_zones; i++) map.zones[i] = load_zone_from_file(bin_reader, str_reader);
 
                 // ----------------------------------------------------
@@ -166,15 +166,14 @@ namespace XVCX {
             }
         }
 
-        private Zone load_zone_from_file(BinaryReader bin_reader, StreamReader str_reader) {            
-            String name, script;
-            byte chance, adj;
-            name = Utility.read_known_length_string(str_reader, 256); // name
-            script = Utility.read_known_length_string(str_reader, 256); // event
-            chance = bin_reader.ReadByte(); // activation chance
+        private ProcessedZone load_zone_from_file(BinaryReader bin_reader, StreamReader str_reader) {                        
+            ProcessedZone zone = new ProcessedZone();
+            zone.name = Utility.read_known_length_string(str_reader, 256); // name
+            zone.script = Utility.read_known_length_string(str_reader, 256); // event
+            zone.chance = ((double)bin_reader.ReadByte()) / 255; // activation chance
             bin_reader.ReadByte(); // delay (ignored because it's redundant and maped doesnt support it)
-            adj = bin_reader.ReadByte(); // adjacent activation mode (1 or 0)
-            return new Zone(name, script, ((double)chance) / 255, (adj == 1));
+            zone.adj = (bin_reader.ReadByte() != 0); // adjacent activation mode (1 or 0)
+            return zone;
             
         }
 
@@ -214,7 +213,7 @@ namespace XVCX {
         public string name, vsp, music, initscript, renderstring;        
         public ProcessedLayer[] layers;
         public ProcessedLayer obslayer, zonelayer;
-        public Zone[] zones;
+        public ProcessedZone[] zones;
         public ProcessedEntity[] entities;
     }
     public class ProcessedLayer {
@@ -230,5 +229,10 @@ namespace XVCX {
         public bool obstructs, obstructable, autoface;
         public int facing, speed, movemode, delay;
         public Point start, wander_ul, wander_lr;
+    }
+    public class ProcessedZone {
+        public String name, script;
+        public double chance;
+        public bool adj;
     }
 }
