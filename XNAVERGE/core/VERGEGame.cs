@@ -147,11 +147,16 @@ namespace XNAVERGE {
             entity_space = new BoundedSpace<Entity>(-screen.width, -screen.height, map.pixel_width + 2*screen.width, map.pixel_height + 2*screen.height);
             for (int i = 0; i < map.num_entities; i++)
                 entity_space.Add(map.entities[i]);
-            for (int i = 0; i < map.num_zones; i++) //{ }
+            for (int i = 0; i < map.num_zones; i++) 
                 map.zones[i].set_script();            
             camera = new Camera();
             //camera.bounded = false;
             camera.mode = CameraMode.FollowPlayer;
+            if (map.scripts != null) {
+                map.scripts.initialize();
+                // TODO: in-transition here
+                map.scripts.do_after_transition();
+            }
         }
     }
 

@@ -288,6 +288,8 @@ namespace XNAVERGE {
         }        
         public static void switch_map(String new_map) {
             VERGEGame game = VERGEGame.game;
+            // TODO: out-transition here
+            if (game.map != null) game.map.scripts.do_on_exit();
             game.MapContent.Unload();
             game.map = VERGEGame.game.MapContent.Load<VERGEMap>(new_map);
             tileset_override = null;
