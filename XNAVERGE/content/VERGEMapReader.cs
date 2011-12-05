@@ -56,7 +56,7 @@ namespace XNAVERGE.Content {
             TileLayer layer = new TileLayer(w, h, name);
             if (tile_layer) { // layer holds art tiles (as opposed to obstruction tiles or zones)
                 layer.parallax = input.ReadVector2();
-                layer.alpha = input.ReadDouble();
+                layer.alpha = input.ReadDouble();                
             }
             for (int y = 0; y < h; y++) {
                 for (int x = 0; x < w; x++) {

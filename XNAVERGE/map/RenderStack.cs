@@ -64,6 +64,12 @@ namespace XNAVERGE {
                     layer.visible = true;
                 }
         }
+
+        public void Draw() {
+            for (int i = 0; i < list.Length; i++) {
+                if (list[i].visible) list[i].Draw();
+            }
+        }
     }
 
     public class MalformedRenderstringException : Exception {

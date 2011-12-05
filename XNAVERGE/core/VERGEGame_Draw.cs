@@ -26,24 +26,11 @@ namespace XNAVERGE {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            int min_tile_x, min_tile_y, tiles_to_draw_x, tiles_to_draw_y, offset_x, offset_y, parallaxed_camera_x, parallaxed_camera_y;
-            min_tile_x = min_tile_y = tiles_to_draw_x = tiles_to_draw_y = offset_x = offset_y = parallaxed_camera_x = parallaxed_camera_y = 0;
-            Rectangle draw_rect;
+            base.Draw(gameTime); // not sure if this actually does anything
             if (map == null) return;            
 
             draw_background();
-
-            int tilesize = map.tileset.tilesize;
-            int mapwidth = map.width;
-            int mapheight = map.height;     
-
-            camera.update();
-            draw_rect = camera.rect; 
-
-            // We need a range of valid y-values for sprites, since XNA does its sorting using floats between 0 and 1. Sprites can still be visible
-            // when they're off the edge of the map, so to be sure we catch them all, we'll define the drawable sprites as those within a screen's
-            // length of the top/bottom of the map.
-            // This is totally arbitrary, but it's fairly generous; if you need more than that, what on earth are you doing?
+            camera.update();            
 
             if (gameTime.TotalGameTime.Seconds != old_s) {
                 Window.Title = fps.ToString();
@@ -52,64 +39,10 @@ namespace XNAVERGE {
             fps++;
             old_s = gameTime.TotalGameTime.Seconds;
 
-            Vector2 current_parallax = NONSENSE_PARALLAX; // initialize to impossible value to ensure things get set on first iteration
-
-            Matrix neutral_parallax_transform = offset_matrix(camera.x, camera.y, tilesize) * screen.scaling_matrix; // this is the most common case so let's save it
-
             // Update entity frames
             for (int i = 0; i < map.num_entities; i++) { map.entities[i].advance_frame(); }
 
-            foreach (RenderLayer rl in map.renderstack.list) {
-                if (rl.visible) {
-                    if (rl.type == LayerType.Tile) {
-                        if (rl.parallax != current_parallax) {
-                            if (current_parallax != NONSENSE_PARALLAX) spritebatch.End();
-                            current_parallax = rl.parallax;
-                            if (current_parallax == VERGEMap.NEUTRAL_PARALLAX) {
-                                parallaxed_camera_x = camera.x;
-                                parallaxed_camera_y = camera.y;
-                                spritebatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, neutral_parallax_transform);
-                            }
-                            else if (current_parallax == VERGEMap.FIXED_PARALLAX) {
-                                parallaxed_camera_x = 0;
-                                parallaxed_camera_y = 0;
-                                spritebatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, screen.scaling_matrix);
-                            }
-                            else {
-                                parallaxed_camera_x = (int)(camera.x * current_parallax.X);
-                                parallaxed_camera_y = (int)(camera.y * current_parallax.Y);
-                                spritebatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, offset_matrix(parallaxed_camera_x, parallaxed_camera_y, tilesize) * screen.scaling_matrix);
-                            }
-                            min_tile_x = parallaxed_camera_x / tilesize;
-                            min_tile_y = parallaxed_camera_y / tilesize;
-                            tiles_to_draw_x = screen.width / tilesize + 1;
-                            tiles_to_draw_y = screen.height / tilesize + 1;
-                        }
-                        for (int x = Math.Max(0, -min_tile_x); x < Math.Min(tiles_to_draw_x, mapwidth - min_tile_x); x++) {
-                            for (int y = Math.Max(0, -min_tile_y); y < Math.Min(tiles_to_draw_y, mapheight - min_tile_y); y++) {
-                                spritebatch.Draw(map.tileset.image, dest_rect[x][y], map.tileset.tile_frame[((TileLayer)rl).data[min_tile_x + x][min_tile_y + y]], Color.White);
-                            }
-                        }
-                    }
-                    else if (rl.type == LayerType.Entity && map.num_entities > 0) {
-                        if (current_parallax != NONSENSE_PARALLAX) spritebatch.End();
-                        current_parallax = NONSENSE_PARALLAX; // entity layer ignores parallax. this ensures any tile layers above this will be aligned properly.                        
-                        spritebatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-camera.x, -camera.y, 0) * screen.scaling_matrix);
-                        Entity ent;
-                        for (int i = 0; i < map.num_entities; i++) {
-                            ent = map.entities[i];
-                            if (!ent.deleted && ent.visible && ent.destination.Intersects(draw_rect)) {
-                                ent.Draw();
-                            }
-                        }
-                        spritebatch.End();
-                    }
-                }
-            }
-
-            if (current_parallax != NONSENSE_PARALLAX) spritebatch.End();
-
-            base.Draw(gameTime);
+            map.renderstack.Draw();            
         }
 
         public virtual void draw_background() {
