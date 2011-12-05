@@ -14,8 +14,7 @@ namespace XNAVERGE {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spritebatch;
         public Camera camera;
-        public Screen screen;
-        protected Rectangle[][] dest_rect;                
+        public Screen screen;                      
         //internal float x_range, y_range; // the total vertical distance in which sprites are drawable, centred on the middle of the map (necessary for technical reasons)
 
         private static Vector2 NONSENSE_PARALLAX = new Vector2(float.NegativeInfinity, float.NegativeInfinity); // garbage vector used as a sentinel value for parallax
@@ -47,26 +46,6 @@ namespace XNAVERGE {
 
         public virtual void draw_background() {
             GraphicsDevice.Clear(Color.Black);
-        }
-
-        // this needs to be called whenever the resolution or tile size changes.
-        // TODO: Make it actually accomodate different resolutions
-        public void setup_tile_destinations() {
-            dest_rect = new Rectangle[map.width][];
-            int tilesize = map.tileset.tilesize;
-            for (int x = 0; x < screen.width / tilesize + 1; x++) {
-                dest_rect[x] = new Rectangle[map.height];
-                for (int y = 0; y < screen.height / tilesize + 1; y++) {
-                    dest_rect[x][y] = new Rectangle(x * tilesize, y * tilesize, tilesize, tilesize);
-                }
-            }
-        }
-
-        // Returns a translation matrix representing the number of pixels the tile boundary is to the left of and above
-        // the screen edges. This is used internally for determining where to begin drawing the tiles, since the
-        // leftmost/topmost tiles will often be partially off-screen.
-        private Matrix offset_matrix(int upper_left_x, int upper_left_y, int tilesize) {
-            return Matrix.CreateTranslation(-(upper_left_x % tilesize), -(upper_left_y % tilesize), 0);
         }
 
     }

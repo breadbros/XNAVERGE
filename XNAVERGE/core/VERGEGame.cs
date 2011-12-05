@@ -148,8 +148,7 @@ namespace XNAVERGE {
             for (int i = 0; i < map.num_entities; i++)
                 entity_space.Add(map.entities[i]);
             for (int i = 0; i < map.num_zones; i++) //{ }
-                map.zones[i].set_script();
-            setup_tile_destinations();
+                map.zones[i].set_script();            
             camera = new Camera();
             //camera.bounded = false;
             camera.mode = CameraMode.FollowPlayer;
