@@ -62,7 +62,7 @@
     <Compile Include="sprite\Sprite.cs" />
     <Compile Include="sprite\SpriteAnimation.cs" />
     <Compile Include="sprite\SpriteBasis.cs" />
-    <Compile Include="map\TileLayer.cs" />
+    <Compile Include="map\RenderLayer.cs" />
     <Compile Include="map\Tileset.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

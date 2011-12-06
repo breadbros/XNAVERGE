@@ -101,6 +101,7 @@
     <Compile Include="input\InputManager.cs" />
     <Compile Include="input\SemanticButton.cs" />
     <Compile Include="map\BoundedSpace.cs" />
+    <Compile Include="map\RenderLayer.cs" />
     <Compile Include="map\Zone.cs" />
     <Compile Include="script\Delegates.cs" />
     <Compile Include="script\ScriptBank.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="sprite\Sprite.cs" />
     <Compile Include="sprite\SpriteAnimation.cs" />
     <Compile Include="sprite\SpriteBasis.cs" />
-    <Compile Include="map\TileLayer.cs" />
     <Compile Include="map\Tileset.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="core\VERGEGame.cs" />

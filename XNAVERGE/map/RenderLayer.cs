@@ -87,6 +87,9 @@ namespace XNAVERGE {
         }
     }
 
+    //public class ScriptRenderLayer : RenderLayer {
+    //}
+
     public enum LayerType { Tile, Entity, Script }
 
     public class EntityLayer : RenderLayer {
