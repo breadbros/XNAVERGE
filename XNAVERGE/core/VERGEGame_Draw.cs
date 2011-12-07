@@ -14,8 +14,8 @@ namespace XNAVERGE {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spritebatch;
         public Camera camera;
-        public Screen screen;                      
-        //internal float x_range, y_range; // the total vertical distance in which sprites are drawable, centred on the middle of the map (necessary for technical reasons)
+        public Screen screen;
+        protected RenderLayerDelegate hook_render;
 
         private static Vector2 NONSENSE_PARALLAX = new Vector2(float.NegativeInfinity, float.NegativeInfinity); // garbage vector used as a sentinel value for parallax
 
@@ -46,6 +46,10 @@ namespace XNAVERGE {
 
         public virtual void draw_background() {
             GraphicsDevice.Clear(Color.Black);
+        }
+
+        internal virtual void call_render_hook(ScriptRenderLayer layer, Rectangle clipping_region) {
+            if (hook_render != null) hook_render(layer, clipping_region); // this is very wasteful!
         }
 
     }

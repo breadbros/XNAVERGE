@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAVERGE {
-    public class TileLayer : RenderLayer {                
+    public class TileLayer : RenderLayer {
         public int[][] data;
-        public int width { get { return _width; } }
+        public int width { get { return _width; } } // dimensions (in tiles)
         public int height { get { return _height; } }
         protected int _width, _height;
         public double alpha {
@@ -20,7 +20,6 @@ namespace XNAVERGE {
             }
         }
         protected Color blend_color;
-        
 
         public TileLayer(int w, int h, Vector2 parallax_vector, String layer_name) : base(parallax_vector, layer_name, BlendState.AlphaBlend) {
             _width = w;
@@ -87,8 +86,39 @@ namespace XNAVERGE {
         }
     }
 
-    //public class ScriptRenderLayer : RenderLayer {
-    //}
+    public class ScriptRenderLayer : RenderLayer {
+        public RenderLayerDelegate script;
+        public Object data; // miscellaneous data storage, in case you need state        
+
+        public ScriptRenderLayer() : base(VERGEMap.FIXED_PARALLAX, "Hook Render") {
+            script = new RenderLayerDelegate(VERGEGame.game.call_render_hook);
+            data = null;
+        }
+        public ScriptRenderLayer(RenderLayerDelegate script, String name) : this(script, VERGEMap.FIXED_PARALLAX, name) { }
+        public ScriptRenderLayer(RenderLayerDelegate script, bool fixed_pos, String name) : 
+            this(script, ( fixed_pos ? VERGEMap.FIXED_PARALLAX : VERGEMap.NEUTRAL_PARALLAX ), name ) { }
+        public ScriptRenderLayer(RenderLayerDelegate script, Vector2 parallax, String name) : base(parallax, name) {
+            this.script = script;
+            data = null;
+        }
+
+        public override void Draw() {            
+            if (script == null) return;
+
+            Rectangle clipping_rect = VERGEGame.game.camera.rect; // copied by value
+            if (parallax == VERGEMap.FIXED_PARALLAX) {
+                clipping_rect.X = 0;
+                clipping_rect.Y = 0;
+            }
+            else if (parallax != VERGEMap.NEUTRAL_PARALLAX) {
+                clipping_rect.X = (int)(clipping_rect.X * parallax.X);
+                clipping_rect.Y = (int)(clipping_rect.Y * parallax.Y);
+            }
+
+            script(this, clipping_rect);
+        }
+
+    }
 
     public enum LayerType { Tile, Entity, Script }
 
@@ -124,7 +154,7 @@ namespace XNAVERGE {
         public Vector2 parallax;
         
         public BlendState blending;
-
+        
         public RenderLayer(Vector2 parallax_vector, String layer_name) : this(parallax_vector, layer_name, BlendState.AlphaBlend) { }
         public RenderLayer(Vector2 parallax_vector, String layer_name, BlendState blend_state) {
             name = layer_name;

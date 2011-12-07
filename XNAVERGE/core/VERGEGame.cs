@@ -51,6 +51,7 @@ namespace XNAVERGE {
             graphics = new GraphicsDeviceManager(this);
             camera = null;
             screen = new Screen(320, 240, 2);
+            hook_render = null;
             MapContent = new ContentManager(Services, "Content");
             Content.RootDirectory = "Content";
 

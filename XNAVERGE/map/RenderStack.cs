@@ -29,9 +29,9 @@ namespace XNAVERGE {
                 cur_token = str.Substring(cur_pos, next_pos - cur_pos).Trim();
                 //Console.WriteLine(cur_token);
                 switch (cur_token) {
-                    case "R": // rendering script layer
-                        //cur_layer = new RenderLayer(RenderLayer.LayerType.Script);
-                        //layer_queue.Enqueue(cur_layer);
+                    case "R": // rendering script layer (defaults to hook_render and fixed parallax)
+                        cur_layer = new ScriptRenderLayer();
+                        layer_queue.Enqueue(cur_layer);
                         break;
                     case "E": // entity layer
                         cur_layer = new EntityLayer();
