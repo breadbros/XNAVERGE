@@ -22,8 +22,8 @@ namespace XNAVERGE {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
             BoundedSpace<Entity>.BoundedElementSet ent_enum;            
-            Point prev_player_coords, cur_player_coords, facing_pixel;
-            Entity ent, old_player;            
+            Point prev_player_coords, cur_player_coords, facing_coords;
+            Entity ent, old_player;
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -61,14 +61,24 @@ namespace XNAVERGE {
                     if (cur_player_coords != prev_player_coords && map.within_bounds(cur_player_coords.X, cur_player_coords.Y, true)) {
                         map.zones[map.zone_layer.data[cur_player_coords.X][cur_player_coords.Y]].maybe_activate(cur_player_coords.X, cur_player_coords.Y);
                     }
-                }
 
-                // HANDLE ENTITY/ZONE ACTIVATION VIA BUTTON PRESS                
-                if (player != null && player_controllable && action.confirm.pressed) {                    
-                    facing_pixel = player.facing_coordinates(false);
-                    ent_enum = entity_space.elements_within_bounds(new Rectangle(facing_pixel.X, facing_pixel.Y, 1, 1), true, player);
-                    if (ent_enum.GetNext(out ent)) // just take the first match arbitrarily
-                        ent.activate();
+                    // HANDLE ENTITY/ZONE ACTIVATION VIA BUTTON PRESS                
+                    if (player_controllable && action.confirm.pressed) {
+                        facing_coords = player.facing_coordinates(false);
+
+                        // Entity activation
+                        ent_enum = entity_space.elements_within_bounds(new Rectangle(facing_coords.X, facing_coords.Y, 1, 1), true, player);
+                        if (ent_enum.GetNext(out ent)) // just take the first match arbitrarily
+                            ent.activate();
+                        
+                        // Zone activation
+                        // Convert facing_coords to tile coordinates
+                        facing_coords.X /= map.tileset.tilesize;
+                        facing_coords.Y /= map.tileset.tilesize;
+                        if (facing_coords != cur_player_coords && map.within_bounds(facing_coords.X, facing_coords.Y, true) 
+                            && map.zone_at(facing_coords.X, facing_coords.Y, true).adjacent) 
+                                map.zone_at(facing_coords.X, facing_coords.Y, true).activate(facing_coords.X, facing_coords.Y, true);                        
+                    }
                 }
 
             }

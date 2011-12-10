@@ -36,6 +36,7 @@ namespace M
             // ---------------------
             // BEGIN SILLINESS
 
+            map.zones[1].adjacent = true;
             player = map.spawn_entity(12, 16, "chap");
             player.obstructing = true;            
             Entity e;

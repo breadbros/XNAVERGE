@@ -238,6 +238,11 @@ namespace XNAVERGE {
         
 
         // Creates a new type of zone (which won't exist on the map at the time it's created, of course)
+        public Zone zone_at(int x, int y, bool tile_coordinates) {
+            if (tile_coordinates) return zones[zone_layer[x][y]];
+            else return zones[zone_layer[x / tileset.tilesize][y / tileset.tilesize]];
+        }
+
         public Zone create_zone(String name, String script, double chance, bool adj) {
             Zone zone = new Zone(name, script, chance, adj);
             
