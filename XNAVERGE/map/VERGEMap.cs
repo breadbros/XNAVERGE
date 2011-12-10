@@ -91,8 +91,9 @@ namespace XNAVERGE {
         public Entity spawn_entity(String ent_name, int x_coord, int y_coord, Direction facing, String asset_name, String animation) {
             Entity ent = new Entity(asset_name, ent_name);            
             ent.move_to_tile(x_coord, y_coord);
-            ent.facing = facing;            
-
+            ent.facing = facing;
+            ent.set_script();
+            
             // First check for any lazily-deleted entities whose array position can be usurped.
             for (int i = 0; i < _num_entities; i++) {
                 if (entities[i].deleted) {
@@ -248,6 +249,7 @@ namespace XNAVERGE {
 
             zones[_num_zones] = zone;
             _num_zones++;
+            zone.set_script();
             return zone;
         }
 

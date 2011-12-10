@@ -9,7 +9,8 @@ namespace M {
     public class MGlobalScripts : ScriptBank {
         public void testing() {
             Console.WriteLine("MGlobalScripts.testing() was called.");
-        }        
+        }
+        
     }
 
     public class Script_town01 : MapScriptBank {
@@ -34,6 +35,10 @@ namespace M {
 
         public void secret_exit(int x, int y, bool adj) {
             Console.WriteLine("it's a secret to everyone");
+        }
+
+        public void queen(Entity ent) {
+            Console.WriteLine("queen");
         }
     }
 }

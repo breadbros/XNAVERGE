@@ -191,7 +191,7 @@ namespace XNAVERGE {
             elapsed = speed * (VERGEGame.game.tick - last_logic_tick); 
             last_logic_tick = VERGEGame.game.tick;
             if (this == VERGEGame.game.player) {                
-                control_player(elapsed);            
+                if (VERGEGame.game.player_controllable) control_player(elapsed);            
                 return;
             }
 

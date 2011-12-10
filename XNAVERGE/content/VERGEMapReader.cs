@@ -83,7 +83,7 @@ namespace XNAVERGE.Content {
             ent = Entity.load_from_chr_filename(chr, name);
             ent.x = input.ReadInt32() * map.tileset.tilesize;
             ent.y = input.ReadInt32() * map.tileset.tilesize;
-            ent.on_activation = input.ReadString();
+            ent.script_name = input.ReadString();
             ent.speed = input.ReadInt32();
             ent.facing = (Direction)input.ReadInt32();
             ent.autoface = input.ReadBoolean();

@@ -7,7 +7,7 @@ namespace XNAVERGE {
     public class Zone {
         public String name;        
         public ZoneDelegate script;
-        protected readonly String script_name;
+        protected readonly String script_name; // default activation script assigned during creation
         public double chance; // activation chance for non-adjacent activation (between 0 and 1)
         public bool adjacent; // true if the zone can be triggered by standing next to it and hitting the confirm/use button
 

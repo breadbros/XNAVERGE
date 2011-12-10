@@ -146,8 +146,10 @@ namespace XNAVERGE {
 
         public void init_map() { // TODO: dehackify this, move to VERGEMap             
             entity_space = new BoundedSpace<Entity>(-screen.width, -screen.height, map.pixel_width + 2*screen.width, map.pixel_height + 2*screen.height);
-            for (int i = 0; i < map.num_entities; i++)
+            for (int i = 0; i < map.num_entities; i++) {
                 entity_space.Add(map.entities[i]);
+                map.entities[i].set_script();
+            }
             for (int i = 0; i < map.num_zones; i++) 
                 map.zones[i].set_script();            
             camera = new Camera();

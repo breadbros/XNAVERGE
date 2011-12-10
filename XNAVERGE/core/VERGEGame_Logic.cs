@@ -13,7 +13,7 @@ namespace XNAVERGE {
     public partial class VERGEGame {
         public int tick { get { return _tick; } }
         protected int _tick; // Centiseconds since app start. This will overflow if you leave the game on for 248 days.   
-        public ScriptBank global;                
+        public ScriptBank global;
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -22,15 +22,14 @@ namespace XNAVERGE {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
             BoundedSpace<Entity>.BoundedElementSet ent_enum;            
-            Point prev_player_coords, cur_player_coords;
+            Point prev_player_coords, cur_player_coords, facing_pixel;
             Entity ent, old_player;            
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             _tick++;
-            input.Update();
-            //if (player_controllable && player != null) control_player();
+            input.Update();            
 
             old_player = player;
 
@@ -42,6 +41,10 @@ namespace XNAVERGE {
             else prev_player_coords = default(Point);
 
             if (map != null) {
+
+                // HANDLE MOVEMENT AND COLLISIONS
+                // ------------------------------
+
                 for (int i = 0; i < map.num_entities; i++) {
                     ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true, map.entities[i]);
                     while (ent_enum.GetNext(out ent))
@@ -60,6 +63,14 @@ namespace XNAVERGE {
                     }
                 }
 
+                // HANDLE ENTITY/ZONE ACTIVATION VIA BUTTON PRESS                
+                if (player != null && player_controllable && action.confirm.pressed) {                    
+                    facing_pixel = player.facing_coordinates(false);
+                    ent_enum = entity_space.elements_within_bounds(new Rectangle(facing_pixel.X, facing_pixel.Y, 1, 1), true, player);
+                    if (ent_enum.GetNext(out ent)) // just take the first match arbitrarily
+                        ent.activate();
+                }
+
             }
 
             base.Update(gameTime);
@@ -71,6 +82,7 @@ namespace XNAVERGE {
         // single script bank.
         // TODO: Maybe allow for multiple global script banks?
         public virtual T script<T>(String name) where T : class {
+            if (String.IsNullOrEmpty(name)) return null;
             T script = VERGEGame.game.map.scripts.get_script<T>(name);
             if (script == null) return global.get_script<T>(name);
             return script;

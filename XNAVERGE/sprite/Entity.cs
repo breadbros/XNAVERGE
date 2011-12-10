@@ -13,9 +13,10 @@ namespace XNAVERGE {
         
         // GENERAL ATTRIBUTES
         public String name;
-        public String on_activation; // activation script        
+        public EntityActivationDelegate act_script; // activation script        
         public bool autoface;
         internal int index; // Index in the map.entities array. Don't twiddle with it! This is needed for a stupid, stupid reason.
+        internal String script_name; // default activation script assigned during creation
 
         // MOBILITY AND ANIMATION ATTRIBUTES
         public virtual Direction facing {
@@ -119,6 +120,28 @@ namespace XNAVERGE {
             else idle();
         }
 
+        // Set the script based on the given string. If no string is given, resets the script to the value stored in
+        // script_name, which is generally what it was set to in the map, or nothing for entities spawned later.
+        // Note that the script delegate is freely accessible, so it can also be set by hand.
+        public void set_script() { set_script(script_name); } // set using original name
+        public void set_script(String act_script_name) {
+            act_script = VERGEGame.game.script<EntityActivationDelegate>(act_script_name);
+            if (act_script == null && !String.IsNullOrEmpty(act_script_name))
+                System.Diagnostics.Debug.WriteLine("DEBUG: Couldn't find a \"" + act_script_name + "\" EntityActivationDelegate for entity #" + index +
+                    " (" + name + "). Defaulting to a null script.");
+        }
+
+        public void activate() {            
+            if (act_script == null) return;
+            else act_script(this);
+        }
+
+        // Returns the pixel just ahead of the entity's front side, aligned with the center of that side. The "front" side is taken to be whatever
+        // side the entity is facing, irrespective of its movement direction.
+        public Point facing_coordinates(bool include_diagonals) {            
+            Point signs = Utility.signs_from_direction(facing, true);
+            return new Point( hitbox.X + signs.X + (hitbox.Width + signs.X*hitbox.Width)/2, hitbox.Y + signs.Y + (hitbox.Height + signs.Y*hitbox.Height)/2 );
+        }
 
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used
         // for standard entity blitting. The elaborate y-sorting term will be ignored if you draw outside the entity render phase.
