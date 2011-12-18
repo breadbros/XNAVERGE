@@ -11,10 +11,16 @@ using Microsoft.Xna.Framework.Media;
 
 namespace XNAVERGE {
     public partial class VERGEGame {
+        public static int tick_length { // tick length, in milliseconds. Can be altered during play to speed up/slow down the engine.
+            get { return _tick_length_in_timespan_ticks; }
+            set { _tick_length_in_timespan_ticks = value * 10000; } // 10000 timespan "ticks" in a millisecond
+        }
+        internal static int _tick_length_in_timespan_ticks; // tick length, in timespan "ticks", which are each 100 nanoseconds
         public int tick { get { return _tick; } }
-        protected int _tick; // Centiseconds since app start. This will overflow if you leave the game on for 248 days.   
+        protected int _tick;
+        protected long _last_tick_time; // Time of the last tick, measured in System.TimeSpan's "ticks" (each 100 nanoseconds)        
         public ScriptBank global;
-
+        
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -24,63 +30,70 @@ namespace XNAVERGE {
             BoundedSpace<Entity>.BoundedElementSet ent_enum;            
             Point prev_player_coords, cur_player_coords, facing_coords;
             Entity ent, old_player;
+            int elapsed;
 
-            // Allows the game to exit
+            // Back button instantly quits. TODO: take this out when it transitions from convenient to obnoxious.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-            _tick++;
-            input.Update();            
+                this.Exit();            
+            elapsed = (int)(gameTime.TotalGameTime.Ticks - _last_tick_time); // won't overflow unless Updates are more than 2 seconds apart            
+            if (elapsed >= _tick_length_in_timespan_ticks) {                
+                elapsed /= _tick_length_in_timespan_ticks; // convert elapsed from ms to ticks, rounding down
+                _tick += elapsed;
+                _last_tick_time += elapsed * _tick_length_in_timespan_ticks;
 
-            old_player = player;
+                // IF TICKS HAVE ELAPSED, DO THE ACTUAL UPDATING
 
-            if (old_player != null) { 
-                prev_player_coords = player.hitbox.Center;
-                prev_player_coords.X /= map.tileset.tilesize;
-                prev_player_coords.Y /= map.tileset.tilesize;
-            }
-            else prev_player_coords = default(Point);
+                if (map != null) {
+                    input.Update();
 
-            if (map != null) {
-
-                // HANDLE MOVEMENT AND COLLISIONS
-                // ------------------------------
-
-                for (int i = 0; i < map.num_entities; i++) {
-                    ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true, map.entities[i]);
-                    while (ent_enum.GetNext(out ent))
-                    {                        
-                        //if (ent != map.entities[i] && ent == player) Console.WriteLine("player hit " + i);
+                    // HANDLE MOVEMENT AND COLLISIONS
+                    // ------------------------------
+                    old_player = player;
+                    if (old_player != null) {
+                        prev_player_coords = player.hitbox.Center;
+                        prev_player_coords.X /= map.tileset.tilesize;
+                        prev_player_coords.Y /= map.tileset.tilesize;
                     }
-                    map.entities[i].Update();
+                    else prev_player_coords = default(Point);
+
+
+                    for (int i = 0; i < map.num_entities; i++) {
+                        ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true, map.entities[i]);
+                        while (ent_enum.GetNext(out ent)) {
+                            //if (ent != map.entities[i] && ent == player) Console.WriteLine("player hit " + i);
+                        }
+                        map.entities[i].Update();
+                    }
+
+                    if (player == old_player && player != null) { // update player zone
+                        cur_player_coords = player.hitbox.Center;
+                        cur_player_coords.X /= map.tileset.tilesize;
+                        cur_player_coords.Y /= map.tileset.tilesize;
+                        if (cur_player_coords != prev_player_coords && map.within_bounds(cur_player_coords.X, cur_player_coords.Y, true)) {
+                            map.zones[map.zone_layer.data[cur_player_coords.X][cur_player_coords.Y]].maybe_activate(cur_player_coords.X, cur_player_coords.Y);
+                        }
+
+                        // HANDLE ENTITY/ZONE ACTIVATION VIA BUTTON PRESS                
+                        if (player_controllable && action.confirm.pressed) {
+                            facing_coords = player.facing_coordinates(false);
+
+                            // Entity activation
+                            ent_enum = entity_space.elements_within_bounds(new Rectangle(facing_coords.X, facing_coords.Y, 1, 1), true, player);
+                            if (ent_enum.GetNext(out ent)) // just take the first match arbitrarily
+                                ent.activate();
+
+                            // Zone activation
+                            // Convert facing_coords to tile coordinates
+                            facing_coords.X /= map.tileset.tilesize;
+                            facing_coords.Y /= map.tileset.tilesize;
+                            if (facing_coords != cur_player_coords && map.within_bounds(facing_coords.X, facing_coords.Y, true)
+                                && map.zone_at(facing_coords.X, facing_coords.Y, true).adjacent)
+                                map.zone_at(facing_coords.X, facing_coords.Y, true).activate(facing_coords.X, facing_coords.Y, true);
+                        }
+                    }
+
+                    // END OF UPDATING
                 }
-
-                if (player == old_player && player != null) { // update player zone
-                    cur_player_coords = player.hitbox.Center;
-                    cur_player_coords.X /= map.tileset.tilesize;
-                    cur_player_coords.Y /= map.tileset.tilesize;
-                    if (cur_player_coords != prev_player_coords && map.within_bounds(cur_player_coords.X, cur_player_coords.Y, true)) {
-                        map.zones[map.zone_layer.data[cur_player_coords.X][cur_player_coords.Y]].maybe_activate(cur_player_coords.X, cur_player_coords.Y);
-                    }
-
-                    // HANDLE ENTITY/ZONE ACTIVATION VIA BUTTON PRESS                
-                    if (player_controllable && action.confirm.pressed) {
-                        facing_coords = player.facing_coordinates(false);
-
-                        // Entity activation
-                        ent_enum = entity_space.elements_within_bounds(new Rectangle(facing_coords.X, facing_coords.Y, 1, 1), true, player);
-                        if (ent_enum.GetNext(out ent)) // just take the first match arbitrarily
-                            ent.activate();
-                        
-                        // Zone activation
-                        // Convert facing_coords to tile coordinates
-                        facing_coords.X /= map.tileset.tilesize;
-                        facing_coords.Y /= map.tileset.tilesize;
-                        if (facing_coords != cur_player_coords && map.within_bounds(facing_coords.X, facing_coords.Y, true) 
-                            && map.zone_at(facing_coords.X, facing_coords.Y, true).adjacent) 
-                                map.zone_at(facing_coords.X, facing_coords.Y, true).activate(facing_coords.X, facing_coords.Y, true);                        
-                    }
-                }
-
             }
 
             base.Update(gameTime);

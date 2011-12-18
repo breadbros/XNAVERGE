@@ -23,7 +23,8 @@ namespace M
         }        
 
 
-        protected override void Initialize() {
+        protected override void Initialize() {            
+
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new MGlobalScripts();
             base.Initialize();                        
@@ -31,7 +32,7 @@ namespace M
 
         protected override void LoadContent() {
             base.LoadContent();
-            
+            Console.WriteLine("game loadcontent");
             VERGEMap.switch_map("town01");
             // ---------------------
             // BEGIN SILLINESS
@@ -73,6 +74,7 @@ namespace M
 
         protected override void Draw(GameTime gameTime) {
             base.Draw(gameTime);
+            draw_rect(new Rectangle(20, 20, 100, 100), Color.Red);
         }
     }
 }

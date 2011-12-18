@@ -43,14 +43,15 @@ namespace XNAVERGE {
             VERGEGame.game = this;            
 
             // Set up timing
-            this.IsFixedTimeStep = true;
-            this.TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 10); // 100 ticks per second
+            this.IsFixedTimeStep = false;
+            tick_length = 10; // VERGE standard is 100 ticks per second
+            _last_tick_time = 0;
             _tick = 0;            
             
             // Set up graphics
-            graphics = new GraphicsDeviceManager(this);
-            camera = null;
-            screen = new Screen(320, 240, 2);
+            graphics = new GraphicsDeviceManager(this);            
+            
+            camera = null;            
             hook_render = null;
             MapContent = new ContentManager(Services, "Content");
             Content.RootDirectory = "Content";
@@ -73,10 +74,13 @@ namespace XNAVERGE {
         /// related content. Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize() {
-            // TODO: Add your initialization logic here            
-            base.Initialize();            
-
+        protected override void Initialize() {                        
+            screen = new Screen(320, 240, 2);
+            RasterizerState rstate = new RasterizerState();
+            rstate.CullMode = CullMode.None; // culling not needed for 2D
+            rstate.FillMode = FillMode.Solid;
+            GraphicsDevice.RasterizerState = rstate;
+            base.Initialize();
         }
 
         protected virtual void initialize_buttons() {
@@ -128,10 +132,7 @@ namespace XNAVERGE {
         /// </summary>
         protected override void LoadContent() {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spritebatch = new SpriteBatch(GraphicsDevice);
-            // load a map here
-            
-            // TODO: use this.Content to load your game content here
+            spritebatch = new SpriteBatch(GraphicsDevice);                                    
         }
 
         /// <summary>
@@ -144,7 +145,8 @@ namespace XNAVERGE {
         }
 
 
-        public void init_map() { // TODO: dehackify this, move to VERGEMap             
+        public virtual void init_map() { // TODO: dehackify this, move to VERGEMap                         
+
             entity_space = new BoundedSpace<Entity>(-screen.width, -screen.height, map.pixel_width + 2*screen.width, map.pixel_height + 2*screen.height);
             for (int i = 0; i < map.num_entities; i++) {
                 entity_space.Add(map.entities[i]);
