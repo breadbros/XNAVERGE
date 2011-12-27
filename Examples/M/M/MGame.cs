@@ -59,8 +59,9 @@ namespace M
 
             global.get_script<BasicDelegate>("testing")();
             map.zones[1].script = script<ZoneDelegate>("zonetrigger");
-            
-            
+
+            this.hook_render = script<RenderLayerDelegate>("draw_UI");
+            system_font = Content.Load<SpriteFont>("Garamond");
         }
 
         protected override void UnloadContent()
@@ -74,7 +75,6 @@ namespace M
 
         protected override void Draw(GameTime gameTime) {
             base.Draw(gameTime);
-            draw_rect(new Rectangle(20, 20, 100, 100), Color.Red);
         }
     }
 }

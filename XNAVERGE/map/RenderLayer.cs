@@ -70,7 +70,7 @@ namespace XNAVERGE {
             tiles_per_row = Math.Min(VERGEGame.game.map.width - min_x, (screen.width + tileset.tilesize - 1) / tileset.tilesize + 1);
             tiles_per_column = Math.Min(VERGEGame.game.map.height - min_y, (screen.height + tileset.tilesize - 1) / tileset.tilesize + 1);
             
-            spritebatch.Begin(SpriteSortMode.Deferred, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-offset.X, -offset.Y, 0.0f)*screen.scaling_matrix);
+            spritebatch.Begin(SpriteSortMode.Deferred, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-offset.X, -offset.Y, 0.0f));
 
             dest_rect.Y = min_y * dest_rect.Height;
             for (int y = 0; y < tiles_per_column; y++) {
@@ -134,7 +134,7 @@ namespace XNAVERGE {
             Entity[] ents = VERGEGame.game.map.entities;
             int num_ents = VERGEGame.game.map.num_entities;
 
-            spritebatch.Begin(SpriteSortMode.BackToFront, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-VERGEGame.game.camera.x, -VERGEGame.game.camera.y, 0.0f) * VERGEGame.game.screen.scaling_matrix);
+            spritebatch.Begin(SpriteSortMode.BackToFront, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-VERGEGame.game.camera.x, -VERGEGame.game.camera.y, 0.0f));
 
             for (int i = 0; i < num_ents; i++) {
                 cur_ent = ents[i];

@@ -44,15 +44,21 @@ namespace XNAVERGE {
 
             // Set up timing
             this.IsFixedTimeStep = false;
+            
             tick_length = 10; // VERGE standard is 100 ticks per second
             _last_tick_time = 0;
             _tick = 0;            
             
             // Set up graphics
-            graphics = new GraphicsDeviceManager(this);            
+            graphics = new GraphicsDeviceManager(this);
+            
+
+            // Uncomment this line to remove fps throttling: 
+            graphics.SynchronizeWithVerticalRetrace = false;
             
             camera = null;            
             hook_render = null;
+            system_font = null;
             MapContent = new ContentManager(Services, "Content");
             Content.RootDirectory = "Content";
 

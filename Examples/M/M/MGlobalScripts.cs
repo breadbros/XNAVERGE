@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 
 using XNAVERGE;
+using Microsoft.Xna.Framework;
 
 namespace M {
     public class MGlobalScripts : ScriptBank {
         public void testing() {
             Console.WriteLine("MGlobalScripts.testing() was called.");
         }
-        
+
+        public void draw_UI(ScriptRenderLayer layer, Rectangle clipping_region) {
+            VERGEGame.game.print_center("Hello world!", 100, Color.White, true);
+        }
     }
 
     public class Script_town01 : MapScriptBank {
