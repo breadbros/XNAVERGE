@@ -31,3 +31,4 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\chap.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\queen.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\a_guy.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\Garamond.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\textbox.xnb

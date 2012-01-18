@@ -13,7 +13,8 @@ namespace M {
         }
 
         public void draw_UI(ScriptRenderLayer layer, Rectangle clipping_region) {
-            VERGEGame.game.print_center("Hello world!", 100, Color.White, true);
+            Textbox.Draw();
+
         }
     }
 

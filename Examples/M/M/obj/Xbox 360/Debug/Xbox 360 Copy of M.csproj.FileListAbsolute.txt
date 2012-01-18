@@ -12,3 +12,4 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\XNAVERGE.pdb
 C:\games\dev\XNAVERGE.git\Examples\M\M\obj\Xbox 360\Debug\M.exe
 C:\games\dev\XNAVERGE.git\Examples\M\M\obj\Xbox 360\Debug\M.pdb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\Garamond.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\textbox.xnb

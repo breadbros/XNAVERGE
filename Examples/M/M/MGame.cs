@@ -22,7 +22,6 @@ namespace M
             (new MGame()).Run();            
         }        
 
-
         protected override void Initialize() {            
 
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
@@ -32,8 +31,10 @@ namespace M
 
         protected override void LoadContent() {
             base.LoadContent();
-            Console.WriteLine("game loadcontent");
+            init_ui();
             VERGEMap.switch_map("town01");
+            this.hook_render = script<RenderLayerDelegate>("draw_UI");            
+
             // ---------------------
             // BEGIN SILLINESS
 
@@ -59,22 +60,39 @@ namespace M
 
             global.get_script<BasicDelegate>("testing")();
             map.zones[1].script = script<ZoneDelegate>("zonetrigger");
-
-            this.hook_render = script<RenderLayerDelegate>("draw_UI");
+            
             system_font = Content.Load<SpriteFont>("Garamond");
-        }
+        }        
 
+        private void init_ui() {
+            Textbox.image = Content.Load<Texture2D>("textbox");
+            Textbox.bounds = new Rectangle(0, 0, Textbox.image.Width, Textbox.image.Height);
+            Textbox.bounds.Offset((screen.width - Textbox.bounds.Width) / 2, screen.height / 3 - Textbox.bounds.Height);
+            Textbox.inner_bounds = Textbox.bounds; // copy value            
+            Textbox.inner_bounds.Inflate(-Textbox.horizontal_padding, -Textbox.vertical_padding);
+            textbox("vargulfs vargulfs", "", "vargulfs?");
+        }
+        
         protected override void UnloadContent()
         {
  	        base.UnloadContent();
         }
-
+        
         protected override void Update(GameTime gameTime) {
             base.Update(gameTime);
+            if (Textbox.state != TextboxState.Hidden) Textbox.Update();
         }
 
         protected override void Draw(GameTime gameTime) {
             base.Draw(gameTime);
+        }
+
+        public void textbox(String str_1, String str_2, String str_3) {
+            Textbox.reset();
+            Textbox.lines.Add(str_1);
+            Textbox.lines.Add(str_2);
+            Textbox.lines.Add(str_3);
+            Textbox.state = TextboxState.Waiting;
         }
     }
 }

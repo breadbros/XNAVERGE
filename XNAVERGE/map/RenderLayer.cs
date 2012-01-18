@@ -134,7 +134,7 @@ namespace XNAVERGE {
             Entity[] ents = VERGEGame.game.map.entities;
             int num_ents = VERGEGame.game.map.num_entities;
 
-            spritebatch.Begin(SpriteSortMode.BackToFront, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-VERGEGame.game.camera.x, -VERGEGame.game.camera.y, 0.0f));
+            spritebatch.Begin(SpriteSortMode.FrontToBack, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-VERGEGame.game.camera.x, -VERGEGame.game.camera.y, 0.0f));
 
             for (int i = 0; i < num_ents; i++) {
                 cur_ent = ents[i];
