@@ -12,18 +12,19 @@ namespace M {
         public static TextboxState state;
         public static Texture2D image;
         public static Rectangle bounds, inner_bounds;
-        public static int num_lines, cur_line, cur_pos, vertical_padding, horizontal_padding;
+        public static int cur_line, cur_pos, vertical_padding, horizontal_padding;
         public static int short_step, long_step;
 
         public static List<String> lines;
-        public static String line_printing;
+
+        private static int last_anim_tick;
         
         static Textbox() {
             lines = new List<String>(3);
             vertical_padding = 1;
             horizontal_padding = 4; 
-            long_step = 20;
-            short_step = 4;
+            long_step = 6;
+            short_step = 2;
             reset();
         }
 
@@ -31,25 +32,66 @@ namespace M {
             lines.Clear();
             state = TextboxState.Hidden;
             cur_line = cur_pos = 0;
+            last_anim_tick = VERGEGame.game.tick;
         }        
 
         public static void Update() {
-
+            MGame game = (MGame)VERGEGame.game;
+            int step;
+            switch (Textbox.state) {
+                case TextboxState.Waiting: // The textbox has finished scrolling and is awaiting input
+                    if (game.action.confirm.pressed || game.action.cancel.pressed) {
+                        game.action.confirm.unpress();
+                        game.action.cancel.unpress();
+                        reset();
+                    }
+                    break;
+                case TextboxState.Printing: { // The textbox is currently scrolling text
+                    if (lines.Count == 0 || game.action.cancel.pressed) {
+                        state = TextboxState.Waiting;
+                        last_anim_tick = game.tick;
+                    }
+                    else {
+                        if (game.action.confirm.down) step = short_step;
+                        else step = long_step;
+                        while (game.tick - last_anim_tick >= step) {
+                            last_anim_tick += step;
+                            cur_pos++;
+                            while (cur_line < lines.Count && cur_pos >= lines[cur_line].Length) {
+                                cur_line++;
+                                cur_pos = 0;
+                            }
+                            if (cur_line >= lines.Count) {
+                                state = TextboxState.Waiting;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
         }
 
         public static void Draw() {
             MGame game = (MGame)VERGEGame.game;
             int height, length;
             length = lines.Count;
-            if (state != TextboxState.Hidden) {
-                height = game.system_font.LineSpacing;
-
+            height = game.system_font.LineSpacing;
+            if (state != TextboxState.Hidden) {                
                 game.spritebatch.Begin();
                 game.spritebatch.Draw(Textbox.image, Textbox.bounds, Color.White);
 
-                for (int i=0; i<length; i++) {
-                    game.print_string(lines[i], Textbox.inner_bounds.X, Textbox.inner_bounds.Y+i*height, Color.White, false);
-                }                
+                if (state == TextboxState.Waiting) { // finished printing the full contents
+                    for (int i = 0; i < length; i++) {
+                        game.print_string(lines[i], Textbox.inner_bounds.X, Textbox.inner_bounds.Y + i * height, Color.White, false);
+                    }
+                }
+                else { // still scrolling text
+                    for (int i = 0; i < cur_line; i++) {
+                        game.print_string(lines[i], Textbox.inner_bounds.X, Textbox.inner_bounds.Y + i * height, Color.White, false);
+                    }
+                    game.print_string(lines[cur_line].Substring(0,cur_pos+1), Textbox.inner_bounds.X, Textbox.inner_bounds.Y + cur_line * height, Color.White, false);
+                }          
+
                 game.spritebatch.End();
             }
         }

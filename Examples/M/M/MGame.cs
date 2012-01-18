@@ -70,7 +70,6 @@ namespace M
             Textbox.bounds.Offset((screen.width - Textbox.bounds.Width) / 2, screen.height / 3 - Textbox.bounds.Height);
             Textbox.inner_bounds = Textbox.bounds; // copy value            
             Textbox.inner_bounds.Inflate(-Textbox.horizontal_padding, -Textbox.vertical_padding);
-            textbox("vargulfs vargulfs", "", "vargulfs?");
         }
         
         protected override void UnloadContent()
@@ -92,7 +91,7 @@ namespace M
             Textbox.lines.Add(str_1);
             Textbox.lines.Add(str_2);
             Textbox.lines.Add(str_3);
-            Textbox.state = TextboxState.Waiting;
+            Textbox.state = TextboxState.Printing;
         }
     }
 }

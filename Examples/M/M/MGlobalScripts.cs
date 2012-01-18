@@ -43,7 +43,7 @@ namespace M {
         }
 
         public void queen(Entity ent) {
-            Console.WriteLine("queen");
+            ((MGame)VERGEGame.game).textbox("vargulfs vargulfs", "", "vargulfs?");
         }
     }
 }
