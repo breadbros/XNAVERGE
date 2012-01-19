@@ -14,6 +14,7 @@ namespace M {
         public static Rectangle bounds, inner_bounds;
         public static int cur_line, cur_pos, vertical_padding, horizontal_padding;
         public static int short_step, long_step;
+        public static BasicDelegate callback;
 
         public static List<String> lines;
 
@@ -30,6 +31,7 @@ namespace M {
 
         public static void reset() {
             lines.Clear();
+            callback = null;
             state = TextboxState.Hidden;
             cur_line = cur_pos = 0;
             last_anim_tick = VERGEGame.game.tick;
@@ -41,9 +43,9 @@ namespace M {
             switch (Textbox.state) {
                 case TextboxState.Waiting: // The textbox has finished scrolling and is awaiting input
                     if (game.action.confirm.pressed || game.action.cancel.pressed) {
-                        game.action.confirm.unpress();
-                        game.action.cancel.unpress();
                         reset();
+                        if (callback != null) callback();
+                        VERGEGame.game.player_controllable = true;
                     }
                     break;
                 case TextboxState.Printing: { // The textbox is currently scrolling text

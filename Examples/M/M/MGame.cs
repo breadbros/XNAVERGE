@@ -87,11 +87,12 @@ namespace M
         }
 
         public void textbox(String str_1, String str_2, String str_3) {
+            player_controllable = false;
             Textbox.reset();
             Textbox.lines.Add(str_1);
             Textbox.lines.Add(str_2);
             Textbox.lines.Add(str_3);
-            Textbox.state = TextboxState.Printing;
+            Textbox.state = TextboxState.Printing;            
         }
     }
 }
