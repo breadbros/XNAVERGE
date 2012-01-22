@@ -45,7 +45,7 @@ namespace M {
                     if (game.action.confirm.pressed || game.action.cancel.pressed) {
                         reset();
                         if (callback != null) callback();
-                        VERGEGame.game.player_controllable = true;
+                        VERGEGame.game.unlock_player();
                     }
                     break;
                 case TextboxState.Printing: { // The textbox is currently scrolling text

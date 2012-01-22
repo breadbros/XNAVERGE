@@ -21,8 +21,7 @@ namespace XNAVERGE {
         public String main_namespace;
 
         public VERGEMap map;
-        public Entity player;
-        public bool player_controllable; // true if player responds to input
+        public Entity player;        
         public bool player_tile_obstruction; // true if player uses tile-based, rather than pixel-based, obstruction
 
         public InputManager input;
@@ -70,7 +69,8 @@ namespace XNAVERGE {
             global = new ScriptBank();
             map = null;
             player = null;
-            player_controllable = true;
+            player_controllable_stack = new Stack<bool>();
+            player_controllable = PLAYER_CONTROLLABLE_DEFAULT;
             player_tile_obstruction = true;
         }
 

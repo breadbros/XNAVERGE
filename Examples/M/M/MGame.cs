@@ -87,7 +87,7 @@ namespace M
         }
 
         public void textbox(String str_1, String str_2, String str_3) {
-            player_controllable = false;
+            VERGEGame.game.lock_player();
             Textbox.reset();
             Textbox.lines.Add(str_1);
             Textbox.lines.Add(str_2);

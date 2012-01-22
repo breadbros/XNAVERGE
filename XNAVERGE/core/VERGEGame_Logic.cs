@@ -20,6 +20,10 @@ namespace XNAVERGE {
         protected int _tick;
         protected long _last_tick_time; // Time of the last tick, measured in System.TimeSpan's "ticks" (each 100 nanoseconds)        
         public ScriptBank global;
+
+        public const bool PLAYER_CONTROLLABLE_DEFAULT = true;
+        public bool player_controllable; // true if player responds to input
+        public Stack<bool> player_controllable_stack; // a stack of previous player_controllable states
         
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -109,6 +113,26 @@ namespace XNAVERGE {
             T script = VERGEGame.game.map.scripts.get_script<T>(name);
             if (script == null) return global.get_script<T>(name);
             return script;
+        }
+
+        // Suppresses player input. This sets player_controllable to false, but unlike doing that 
+        // directly, it also saves the previous state of that variable in the player_controllable_stack.
+        // That previous state is returned by lock_player.
+        public virtual bool lock_player() {
+            bool previous = player_controllable;
+            player_controllable_stack.Push(previous);
+            player_controllable = false;
+            return previous;
+        }
+
+        // Restores player_controllable to the state it was in when lock_player was last called. 
+        // This pops the top player_controllable value off the stack into player_controllable, 
+        // and returns that value for good measure. If the stack is empty, it sets the value to
+        // match PLAYER_CONTROLLABLE_DEFAULT.
+        public virtual bool unlock_player() {
+            if (player_controllable_stack.Count > 0) player_controllable = player_controllable_stack.Pop();
+            else player_controllable = PLAYER_CONTROLLABLE_DEFAULT;
+            return player_controllable;
         }
 
     }    
