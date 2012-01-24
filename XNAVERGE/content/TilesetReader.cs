@@ -38,9 +38,11 @@ namespace XNAVERGE.Content {
                 pixels[i] = input.ReadUInt32();
             image.SetData<uint>(pixels);           
 
-            tileset = new Tileset(tilesize, numtiles, image, numobs, input.ReadBytes(tilesize * tilesize * numobs));
+            tileset = new Tileset(tilesize, numtiles, image, numobs, input.ReadBytes(tilesize * tilesize * numobs), numanim);
             tileset.version = ver;
-            // discard animation data for the time being
+
+            for (int i = 0; i < numanim; i++)
+                tileset.add_animation(input.ReadString(), (TilesetAnimationMode)input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
 
             return tileset;
         }

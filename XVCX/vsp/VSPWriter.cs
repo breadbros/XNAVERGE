@@ -32,10 +32,10 @@ namespace XVCX {
             output.Write(value.obsdata);
             for (int i = 0; i < value.num_animations; i++) {
                 output.Write(value.animations[i].name);
+                output.Write(value.animations[i].mode);
                 output.Write(value.animations[i].start);
                 output.Write(value.animations[i].end);
-                output.Write(value.animations[i].delay);
-                output.Write(value.animations[i].mode);
+                output.Write(value.animations[i].delay);                
             }
 
         }

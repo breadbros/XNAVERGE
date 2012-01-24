@@ -105,8 +105,7 @@ namespace XNAVERGE {
 
             // No free positions, so we'll have to add one. Need we expand the array?
             if (_num_entities >= entities.Length) { 
-                Entity[] new_array;
-                new_array = new Entity[entities.Length * 2];
+                Entity[] new_array = new Entity[entities.Length * 2];
                 entities.CopyTo(new_array, 0);
                 entities = new_array;
             }

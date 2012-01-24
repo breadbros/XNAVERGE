@@ -29,15 +29,6 @@
       <Time>2010-09-16T01:13:24.8977021-03:00</Time>
     </Item>
     <Item>
-      <Source>town01.map.vsp</Source>
-      <Name>town01.map.vsp</Name>
-      <Importer>VSPImporter</Importer>
-      <Processor>VSPProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.map.vsp.xnb</Output>
-      <Time>2011-11-28T13:31:58.3278558-04:00</Time>
-    </Item>
-    <Item>
       <Source>town01.map</Source>
       <Name>town01</Name>
       <Importer>VERGEMapImporter</Importer>
@@ -64,6 +55,15 @@
       <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\textbox.xnb</Output>
       <Time>2011-12-30T16:23:32.0508225-04:00</Time>
     </Item>
+    <Item>
+      <Source>town01.map.vsp</Source>
+      <Name>town01.map.vsp</Name>
+      <Importer>VSPImporter</Importer>
+      <Processor>VSPProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.map.vsp.xnb</Output>
+      <Time>2011-11-28T13:31:58.3278558-04:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
@@ -78,11 +78,11 @@
     <Assemblies>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XVCX.dll</Key>
-        <Value>2012-01-22T19:16:38.0262062-04:00</Value>
+        <Value>2012-01-24T07:46:41.0455281-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\games\dev\XNAVERGE.git\XNAVERGE\bin\x86\Debug\XNAVERGE.dll</Key>
-        <Value>2012-01-22T19:16:37.7391898-04:00</Value>
+        <Value>2012-01-24T07:46:40.7575116-04:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>

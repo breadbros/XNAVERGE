@@ -26,9 +26,9 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\Microsoft.Xna.Framework.Run
 C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\M.exe
 C:\games\dev\XNAVERGE.git\Examples\M\M\obj\x86\Debug\M.pdb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.xnb
-C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.map.vsp.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\chap.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\queen.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\a_guy.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\Garamond.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\textbox.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.map.vsp.xnb

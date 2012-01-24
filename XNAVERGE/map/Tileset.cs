@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAVERGE {
-   public class Tileset {        
+    public class Tileset {        
 
         public const int VSP_HEADER = 5264214; // the first four bytes of a VERGE VSP file is set to this value
         protected int _tilesize, _num_tiles, _num_obs_tiles, _num_animations, _per_row;
@@ -23,12 +23,29 @@ namespace XNAVERGE {
         public bool[][][] obs; // [obstile][x][y]
 
         public int num_animations { get { return _num_animations; } }
+        public TileAnimation[] animations;
 
         public Texture2D image;
 
-        public Tileset(int new_tilesize, int new_num_tiles, Texture2D tile_texture_atlas, int new_num_obs_tiles, byte[] obsdata) {
+        public Tileset(int new_tilesize, int new_num_tiles, Texture2D tile_texture_atlas, int new_num_obs_tiles, byte[] obsdata, int num_animations) {
             set_tile_data(new_num_tiles, new_tilesize, tile_texture_atlas);
             set_obs_data(new_num_obs_tiles, obsdata);
+            _num_animations = 0;
+            animations = new TileAnimation[Math.Min(1,num_animations)];
+        }
+
+        public void add_animation(string name, TilesetAnimationMode mode, int start, int end, int delay) {
+            if (start < 0) throw new ArgumentOutOfRangeException("start", "Error in Tileset.add_animation: The animation's starting index was specified as " + start + ".");
+            else if (end < 0) throw new ArgumentOutOfRangeException("end", "Error in Tileset.add_animation: The animation's ending index (" + end + ") is less than its starting index (" + start + ").");
+            if (delay < 0) throw new ArgumentOutOfRangeException("delay", "Error in Tileset.add_animation: The animation's frame delay was specified as " + delay + ".");
+            
+            if (_num_animations >= animations.Length) { // Outgrown the original array. Copy to a larger one.
+                TileAnimation[] new_array = new TileAnimation[animations.Length * 2];
+                animations.CopyTo(new_array, 0);
+                animations = new_array;
+            }
+            animations[_num_animations] = new TileAnimation(name, mode, start, end, delay);
+            _num_animations++;
         }
 
         protected void set_tile_data(int new_num_tiles, int new_tilesize, Texture2D new_image) {
@@ -95,4 +112,22 @@ namespace XNAVERGE {
 
 
     }
+
+    
+    // Defines a VERGE-style tile animation, which must have a fixed framerate and run through a contiguous sequence of tiles in the tile atlas.
+    // An animation with a delay of 0 is ignored by the system.
+    public struct TileAnimation {
+        public string name;
+        public TilesetAnimationMode mode;
+        public int delay, start, end; // these aren't validated because I'm lazy
+        public TileAnimation(string name, TilesetAnimationMode mode, int start, int end, int delay) {
+            this.name = name;
+            this.mode = mode;
+            this.start = start;
+            this.end = end;
+            this.delay = delay;
+        }
+    }
+
+    public enum TilesetAnimationMode { Forward, Reverse, Random, BackAndForth }
 }

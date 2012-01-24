@@ -3,7 +3,6 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\obj\Xbox 360\Debug\Microsoft.Xna.Framewor
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\chap.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\queen.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\a_guy.xnb
-C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\town01.map.vsp.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\town01.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\M.exe
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\M.pdb
@@ -13,3 +12,4 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\obj\Xbox 360\Debug\M.exe
 C:\games\dev\XNAVERGE.git\Examples\M\M\obj\Xbox 360\Debug\M.pdb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\Garamond.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\textbox.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\town01.map.vsp.xnb
