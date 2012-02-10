@@ -32,3 +32,6 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\a_guy.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\Garamond.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\textbox.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\town01.map.vsp.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\crystal.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\animtest.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\x86\Debug\Content\animtest.vsp.xnb

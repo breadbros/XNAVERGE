@@ -32,21 +32,7 @@ namespace XNAVERGE {
             set_obs_data(new_num_obs_tiles, obsdata);
             _num_animations = 0;
             animations = new TileAnimation[Math.Min(1,num_animations)];
-        }
-
-        public void add_animation(string name, TilesetAnimationMode mode, int start, int end, int delay) {
-            if (start < 0) throw new ArgumentOutOfRangeException("start", "Error in Tileset.add_animation: The animation's starting index was specified as " + start + ".");
-            else if (end < 0) throw new ArgumentOutOfRangeException("end", "Error in Tileset.add_animation: The animation's ending index (" + end + ") is less than its starting index (" + start + ").");
-            if (delay < 0) throw new ArgumentOutOfRangeException("delay", "Error in Tileset.add_animation: The animation's frame delay was specified as " + delay + ".");
-            
-            if (_num_animations >= animations.Length) { // Outgrown the original array. Copy to a larger one.
-                TileAnimation[] new_array = new TileAnimation[animations.Length * 2];
-                animations.CopyTo(new_array, 0);
-                animations = new_array;
-            }
-            animations[_num_animations] = new TileAnimation(name, mode, start, end, delay);
-            _num_animations++;
-        }
+        }        
 
         protected void set_tile_data(int new_num_tiles, int new_tilesize, Texture2D new_image) {
             int x=0, y=0;
@@ -110,24 +96,124 @@ namespace XNAVERGE {
             }
         }
 
+        // Animation handlers
 
+        public void add_animation(string name, TilesetAnimationMode mode, int start, int end, int delay) {
+            if (start < 0) throw new ArgumentOutOfRangeException("start", "Error in Tileset.add_animation: The animation's starting index was specified as " + start + ".");
+            else if (end < 0) throw new ArgumentOutOfRangeException("end", "Error in Tileset.add_animation: The animation's ending index (" + end + ") is less than its starting index (" + start + ").");
+            if (delay < 0) throw new ArgumentOutOfRangeException("delay", "Error in Tileset.add_animation: The animation's frame delay was specified as " + delay + ".");
+            
+            if (_num_animations >= animations.Length) { // Outgrown the original array. Copy to a larger one.
+                TileAnimation[] new_array = new TileAnimation[animations.Length * 2];
+                animations.CopyTo(new_array, 0);
+                animations = new_array;
+            }
+            animations[_num_animations] = new TileAnimation(name, mode, start, end, delay, this);
+            _num_animations++;
+        }
+
+        public void reset_animations() {
+            for (int i = 0; i < _num_animations; i++)
+                animations[i].reset();
+        }
+
+        public void update_animations() {
+            TileAnimation cur_anim;
+            for (int i = 0; i < _num_animations; i++) {
+                cur_anim = animations[i];
+                if (cur_anim.update()) tile_frame[cur_anim.start].Location = cur_anim.cur_frame_coords();
+            }
+        }
     }
 
     
     // Defines a VERGE-style tile animation, which must have a fixed framerate and run through a contiguous sequence of tiles in the tile atlas.
     // An animation with a delay of 0 is ignored by the system.
-    public struct TileAnimation {
+    // The TileAnimation class maintains animation state, but it doesn't do anything with it. It's up to the Tileset class to use that information to
+    // actually adjust the tiles accordingly.
+    public class TileAnimation {
         public string name;
         public TilesetAnimationMode mode;
-        public int delay, start, end; // these aren't validated because I'm lazy
-        public TileAnimation(string name, TilesetAnimationMode mode, int start, int end, int delay) {
+        public int delay; // in ticks
+        public readonly int start, end;
+        public readonly Point[] frame_coord; // upper lefthand pixel coordinates of each frame, within the tile atlas        
+
+        // statefulness
+        public int last_update; // tick that the frame last changed
+        public int cur_frame;
+        protected bool reversed; // Used only for the BackAndForth animation mode. When true, animation is going backwards.
+
+        public TileAnimation(string name, TilesetAnimationMode mode, int start, int end, int delay, Tileset tileset) {
             this.name = name;
             this.mode = mode;
             this.start = start;
             this.end = end;
             this.delay = delay;
+            frame_coord = new Point[end - start + 1];
+
+            for (int i = 0; i < frame_coord.Length; i++)
+                frame_coord[i] = tileset.tile_frame[start + i].Location;
+
+            reset();
         }
+
+        // Reverts animation state to its initial configuration.
+        public void reset() {
+            cur_frame = start;
+            last_update = VERGEGame.game.tick;
+            reversed = false;
+        }
+
+        // Adjusts the current frame to account for the passage of time, returning true if the frame has changed.
+        public bool update() {
+            bool changed = false;
+            if (delay == 0 || start == end) return false;            
+
+            while (VERGEGame.game.tick - last_update >= delay) {
+                advance_frame();
+                last_update += delay;
+                changed = true;
+            }
+
+            return changed;
+        }
+
+        // Moves cur_frame by one step in accordance with the animation mode.
+        public void advance_frame() {
+            switch (mode) {
+                case TilesetAnimationMode.Forward:
+                    cur_frame++;
+                    if (cur_frame > end ) cur_frame = start;
+                    break;
+                case TilesetAnimationMode.Reverse:
+                    cur_frame--;
+                    if (cur_frame < start) cur_frame = end;
+                    break;
+                case TilesetAnimationMode.Random:
+                    cur_frame = start + (int) (VERGEGame.rand.NextDouble() * (end - start + 1));
+                    break;
+                case TilesetAnimationMode.BackAndForth:
+                    if (!reversed) { // forward
+                        if (cur_frame >= end) {
+                            reversed = true;
+                            cur_frame--;
+                        }
+                        else cur_frame++;
+                    }
+                    else { // backward
+                        if (cur_frame <= start) { 
+                            reversed = false;
+                            cur_frame++;
+                        }
+                        else cur_frame--;
+                    }
+                break;                
+            }
+        }
+
+        public Point cur_frame_coords() { return frame_coord[cur_frame-start]; }
     }
+    
 
     public enum TilesetAnimationMode { Forward, Reverse, Random, BackAndForth }
 }

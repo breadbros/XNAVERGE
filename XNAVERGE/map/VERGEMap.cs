@@ -292,7 +292,7 @@ namespace XNAVERGE {
             tileset_override = tileset_override_name;
             switch_map(new_map);
         }        
-        public static void switch_map(String new_map) {
+        public static void  switch_map(String new_map) {
             VERGEGame game = VERGEGame.game;
             // TODO: out-transition here
             if (game.map != null) game.map.scripts.do_on_exit();

@@ -13,3 +13,6 @@ C:\games\dev\XNAVERGE.git\Examples\M\M\obj\Xbox 360\Debug\M.pdb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\Garamond.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\textbox.xnb
 C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\town01.map.vsp.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\crystal.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\animtest.xnb
+C:\games\dev\XNAVERGE.git\Examples\M\M\bin\Xbox 360\Debug\Content\animtest.vsp.xnb

@@ -30,7 +30,8 @@ namespace XNAVERGE {
             if (map == null) return;
 
             Rectangle blit_rect = new Rectangle(0, 0, screen.width, screen.height);
-            
+
+            map.tileset.update_animations();
             draw_background();
             camera.update();            
 
