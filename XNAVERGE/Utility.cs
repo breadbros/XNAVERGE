@@ -126,22 +126,22 @@ namespace XNAVERGE {
         // For converting the other way, see direction_to_movestring_face(), below.
         public static Direction movestring_face_to_direction(int facing) {
             switch (facing) {
-                case Entity.MOVESTRING_FACECODE_DOWN:
+                case Movestring.FACECODE_DOWN:
                     return Direction.Down;                   
-                case Entity.MOVESTRING_FACECODE_UP:
+                case Movestring.FACECODE_UP:
                     return Direction.Up;
-                case Entity.MOVESTRING_FACECODE_LEFT:
+                case Movestring.FACECODE_LEFT:
                     return Direction.Left;
-                case Entity.MOVESTRING_FACECODE_RIGHT:
-                    return Direction.Right;
-                case Entity.MOVESTRING_FACECODE_DOWNLEFT:
+                case Movestring.FACECODE_RIGHT:
+                    return Direction.Right;/*
+                case Movestring.FACECODE_DOWNLEFT:
                     return Direction.DownLeft;
-                case Entity.MOVESTRING_FACECODE_DOWNRIGHT:
+                case Movestring.FACECODE_DOWNRIGHT:
                     return Direction.DownRight;
-                case Entity.MOVESTRING_FACECODE_UPLEFT:
+                case Movestring.FACECODE_UPLEFT:
                     return Direction.UpLeft;
-                case Entity.MOVESTRING_FACECODE_UPRIGHT:
-                    return Direction.UpRight;
+                case Movestring.FACECODE_UPRIGHT:
+                    return Direction.UpRight;*/
             }
             throw new ArgumentException("Movestring facing is only defined for numbers 0-7 (was passed " + facing + ".");
         }
@@ -151,21 +151,21 @@ namespace XNAVERGE {
         public static int direction_to_movestring_face(Direction dir) {
             switch (dir) {
                 case Direction.Down:
-                    return Entity.MOVESTRING_FACECODE_DOWN;                    
+                    return Movestring.FACECODE_DOWN;                    
                 case Direction.Up:
-                    return Entity.MOVESTRING_FACECODE_UP;
+                    return Movestring.FACECODE_UP;
                 case Direction.Left:
-                    return Entity.MOVESTRING_FACECODE_LEFT;
+                    return Movestring.FACECODE_LEFT;
                 case Direction.Right:
-                    return Entity.MOVESTRING_FACECODE_RIGHT;
-                case Direction.DownLeft:
-                    return Entity.MOVESTRING_FACECODE_DOWNLEFT;
+                    return Movestring.FACECODE_RIGHT;
+                /*case Direction.DownLeft:
+                    return Movestring.FACECODE_DOWNLEFT;
                 case Direction.DownRight:
-                    return Entity.MOVESTRING_FACECODE_DOWNRIGHT;
+                    return Movestring.FACECODE_DOWNRIGHT;
                 case Direction.UpLeft:
-                    return Entity.MOVESTRING_FACECODE_UPLEFT;
+                    return Movestring.FACECODE_UPLEFT;
                 case Direction.UpRight:
-                    return Entity.MOVESTRING_FACECODE_UPRIGHT;
+                    return Movestring.FACECODE_UPRIGHT;*/
             }
             throw new ArgumentException("Invalid direction passed to direction_to_movestring_face.");
         }

@@ -2,36 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAVERGE {
     public partial class Entity {
-        public const int NO_NUMBER = Int32.MinValue; // indicates no number is associated with a movecode
+        
         public const int NO_MOVESCRIPT = Int32.MinValue; // indicates that a character is done moving or has no movescript
-        public const int DEFAULT_MOVE_ARRAY_LENGTH = 10; // starting movestring action array size (will be expanded as necessary).
-        public const bool DEFAULT_TO_TILE_MOVEMENT = true; // assume tile movement if a movestring does not specify
+        public const int DEFAULT_MOVE_ARRAY_LENGTH = 10; // starting movestring action array size (will be expanded as necessary).        
 
-        // constants for the weird custom format this uses
-        public const int MOVESTRING_FACECODE_UP = 1;
-        public const int MOVESTRING_FACECODE_DOWN = 0;
-        public const int MOVESTRING_FACECODE_LEFT = 2;
-        public const int MOVESTRING_FACECODE_RIGHT = 3;
-        // VERGE only has 1-3, but we can safely add diagonals as well
-        public const int MOVESTRING_FACECODE_DOWNLEFT = 4;
-        public const int MOVESTRING_FACECODE_DOWNRIGHT = 5;
-        public const int MOVESTRING_FACECODE_UPLEFT = 6;
-        public const int MOVESTRING_FACECODE_UPRIGHT = 7;
-
-        public static Regex movestring_regex = new Regex(
-                @"([ulrdxyptzwfb])\s*(\d*)",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         // MOVESTRING-SPECIFIC VARIABLES
-        public MovestringCommand[] move_actions;
-        public int[] move_params;
         public bool tile_movement;
         
         // align_to_tile influences how an entity behaves when told to move a fixed number of tiles -- that is, when 
@@ -368,16 +350,11 @@ namespace XNAVERGE {
     }
 
     
-    // An enumeration of movestring actions. "Stop" is not actually used in movestrings -- it indicates a non-looping end and is inserted by the loader.
-    public enum MovestringCommand { Up, Down, Left, Right, Wait, Frame, Face, Loop, PixelMode, TileMode, ToX, ToY, Stop } 
 
     // An enumeration of wander styles. The first, "scripted", covers both the "static" and "scripted" modes in normal VERGE and denotes an entity
     // that does not wander at random.
     public enum WanderMode { Scripted, Zone, Rectangle };
 
-    public class MalformedMovestringException : Exception {
-        public MalformedMovestringException(String movestring) : base("\"" + movestring + "\" is not a valid movestring. Each term must be one of U, D, L, R, W, Z, F, or B followed by a nonnegative number, or one of Z, B, P, or T by itself. For more information, consult http://verge-rpg.com/docs/the-verge-3-manual/entity-functions/entitymove/.") {}
-    }
 
 
 }

@@ -12,6 +12,8 @@ namespace XNAVERGE {
 
     public delegate void EntityActivationDelegate(Entity ent);
 
+    public delegate void EntityLogicDelegate(Entity ent);
+
     public delegate void MovescriptDelegate(Entity ent, bool aborted);
 
     public delegate void RenderLayerDelegate(ScriptRenderLayer layer, Rectangle clipping_region);
