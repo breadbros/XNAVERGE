@@ -26,7 +26,7 @@ namespace XNAVERGE {
             set {
                 destination.X += value - hitbox.X;
                 hitbox.X = value;
-                _exact_x = value; // implicit cast to double
+                _exact_pos.X = (float) value; 
             }
         }
         public virtual int y {
@@ -34,7 +34,7 @@ namespace XNAVERGE {
             set {
                 destination.Y += value - hitbox.Y;
                 hitbox.Y = value;
-                _exact_y = value; // implicit cast to double
+                _exact_pos.Y = (float) value; 
             }
         }
         public virtual int w { get { return hitbox.Width; } }
@@ -42,25 +42,34 @@ namespace XNAVERGE {
 
         // Precision coordinates, for handling slow movement. 
         // Truncated when converting to pixel coordinates.
-        protected double _exact_x, _exact_y; 
-        public double exact_x {
-            get { return _exact_x; }
+        protected Vector2 _exact_pos;
+        public Vector2 exact_pos {
+            get { return _exact_pos; }
+            set {
+                exact_x = value.X;
+                exact_y = value.Y;
+            }
+        }
+        public float exact_x {
+            get { return _exact_pos.X; }
             set {
                 int pixel_val = (int) value;
-                _exact_x = value;
+                _exact_pos.X = value;
                 destination.X += pixel_val - hitbox.X;
                 hitbox.X = pixel_val;
             }
         }
-        public double exact_y {
-            get { return _exact_y; }
+        public float exact_y {
+            get { return _exact_pos.Y; }
             set {
-                int pixel_val = (int) value;
-                _exact_y = value;                
+                int pixel_val = (int)value;
+                _exact_pos.Y = value;
                 destination.Y += pixel_val - hitbox.Y;
-                hitbox.Y = pixel_val;                
+                hitbox.Y = pixel_val;
             }
         }
+
+        public Vector2 velocity, acceleration;
 
         // --------------------------------------------
         //  ANIMATiON/DRAWING VARIABLES AND PROPERTIES
@@ -103,15 +112,22 @@ namespace XNAVERGE {
         public Sprite(SpriteBasis spr_basis, String anim) : this(spr_basis, anim, 0, 0, false) { }
         public Sprite(SpriteBasis spr_basis, String anim, int x_coord, int y_coord, bool visibility) {
             basis = spr_basis;
-            hitbox = new Rectangle(x_coord, y_coord, spr_basis.default_hitbox.Width, spr_basis.default_hitbox.Height);
-            destination = new Rectangle(x_coord - spr_basis.default_hitbox.X, y_coord - spr_basis.default_hitbox.Y, spr_basis.frame_width, spr_basis.frame_height);
-            opacity = 1.0f;            
             deleted = false;
+
+            // Positioning stuff
+            hitbox = new Rectangle(x_coord, y_coord, spr_basis.default_hitbox.Width, spr_basis.default_hitbox.Height);
+            exact_pos = new Vector2((float) x_coord, (float) y_coord);
+            velocity = acceleration = Vector2.Zero;
+            destination = new Rectangle(x_coord - spr_basis.default_hitbox.X, y_coord - spr_basis.default_hitbox.Y, spr_basis.frame_width, spr_basis.frame_height);
+
+            // Display stuff
+            opacity = 1.0f;                        
             rate = 1.0f;
             fixed_frame = -1;
             time_to_next = 0;
             visible = visibility;
             set_animation(anim);
+
             last_draw_tick = last_logic_tick = VERGEGame.game.tick;
         }
 
