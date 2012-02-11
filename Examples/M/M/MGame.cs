@@ -32,16 +32,16 @@ namespace M
         protected override void LoadContent() {
             base.LoadContent();
             init_ui();
-            VERGEMap.switch_map("animtest");
+            VERGEMap.switch_map("town01");
             this.hook_render = script<RenderLayerDelegate>("draw_UI");            
 
             // ---------------------
             // BEGIN SILLINESS
 
-            //map.zones[1].adjacent = true;
-            player = map.spawn_entity(2, 2  , "chap");
+            map.zones[1].adjacent = true;
+            player = map.spawn_entity(10, 12, "chap");
             player.obstructing = true;            
-            /*Entity e;
+            Entity e;
             e = map.spawn_entity(21, 14, "chap");
             e.set_movestring("L2D2R2U2B");
             e.speed = 80;            
@@ -60,7 +60,7 @@ namespace M
 
             global.get_script<BasicDelegate>("testing")();
             map.zones[1].script = script<ZoneDelegate>("zonetrigger");
-            */
+            
             system_font = Content.Load<SpriteFont>("Garamond");
         }        
 
