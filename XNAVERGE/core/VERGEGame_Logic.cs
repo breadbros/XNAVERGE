@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -52,6 +52,10 @@ namespace XNAVERGE {
 
                     // HANDLE MOVEMENT AND COLLISIONS
                     // ------------------------------
+
+                        
+
+                    /*
                     old_player = player;
                     if (old_player != null) {
                         prev_player_coords = player.hitbox.Center;
@@ -95,7 +99,7 @@ namespace XNAVERGE {
                                 map.zone_at(facing_coords.X, facing_coords.Y, true).activate(facing_coords.X, facing_coords.Y, true);
                         }
                     }
-
+                    */
                     // END OF UPDATING
                 }
             }

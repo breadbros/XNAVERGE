@@ -41,10 +41,7 @@ namespace XNAVERGE {
             Queue<MovestringCommand> command_queue = new Queue<MovestringCommand>();
             Queue<int> param_queue = new Queue<int>();
 
-            step = 0;
-            wait_time = 0;
-            last_updated = VERGEGame.game.tick;
-            tile_movement = Movestring.DEFAULT_TO_TILE_MOVEMENT;
+            restart();
 
             if (String.IsNullOrEmpty(movestring)) {
                 commands = new MovestringCommand[1];
@@ -53,9 +50,7 @@ namespace XNAVERGE {
                 parameters[0] = NO_NUMBER;
                 done = true;
                 return;
-            }
-
-            done = false;
+            }            
 
             MovestringCommand command;
             int parameter;
@@ -180,7 +175,7 @@ namespace XNAVERGE {
                         break;
                     case MovestringCommand.Stop:
                         done = true;
-                        return 0;
+                        return 0; // being stopped absorbs all time spent, like an infinite wait
                     case MovestringCommand.Loop:
                         if (parameters[step] != NO_NUMBER) { // finite loop
                             parameters[step]--;

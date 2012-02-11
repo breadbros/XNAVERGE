@@ -95,7 +95,7 @@ namespace XNAVERGE.Content {
             input.ReadInt32(); // wander delay (int)
             input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); // wander x1, y1, x2, y2 (four ints)
             
-            ent.set_movestring(movestring);
+            ent.movestring = new Movestring(movestring);
             return ent;
         }
 

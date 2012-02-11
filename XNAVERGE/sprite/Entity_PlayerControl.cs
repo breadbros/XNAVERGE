@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace XNAVERGE {
-    public partial class Entity {
+    public partial class Entity {/*
         protected virtual void control_player(int elapsed) {
             int x = 0, y = 0;
             if (VERGEGame.game.dir.left.down) x--;
@@ -20,6 +20,6 @@ namespace XNAVERGE {
                 movement_direction = Utility.direction_from_signs(x, y, true);
                 try_to_move(elapsed, true);
             }
-        }
+        }*/
     }
 }

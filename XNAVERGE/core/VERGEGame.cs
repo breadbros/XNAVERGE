@@ -39,12 +39,13 @@ namespace XNAVERGE {
             main_assembly = sourcetype.Assembly;
             main_namespace = sourcetype.Namespace;
 
-            VERGEGame.game = this;            
+            VERGEGame.game = this;
+            Default_Handlers.game = this;
 
             // Set up timing
             this.IsFixedTimeStep = false;
             
-            tick_length = 10; // VERGE standard is 100 ticks per second
+            tick_length = 10; // In milliseconds. VERGE standard is 100 ticks per second
             _last_tick_time = 0;
             _tick = 0;            
             

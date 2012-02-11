@@ -12,24 +12,23 @@ namespace XNAVERGE {
         public const int NO_MOVESCRIPT = Int32.MinValue; // indicates that a character is done moving or has no movescript
         public const int DEFAULT_MOVE_ARRAY_LENGTH = 10; // starting movestring action array size (will be expanded as necessary).        
 
+        public Movestring movestring;
 
-        // MOVESTRING-SPECIFIC VARIABLES
-        public bool tile_movement;
-        
-        // align_to_tile influences how an entity behaves when told to move a fixed number of tiles -- that is, when 
-        // it's given a U/D/L/R move action in tile-based movement mode. 
-        //    * If align_to_grid is false, it will move a number of pixels equal to 
-        //      (tiles you told it to move)*(map's tilesize). 
-        //    * If align_to_grid is true, it will move (tiles you told it to move-1)*(map's tilesize), then move
-        //      however much farther is necessary for it to end on a tile boundary. 
-        // In other words, the modes are equivalent when the entity is on a tile boundary to begin with. When 
-        // align_to_grid is true, the entity may move less distance than you tell it to, but never by more than
-        // (tilesize - 1) pixels.
-        // This is false by default, since it's slower and will almost never come up under the default configuration.
-        public bool align_to_grid; 
-        
-        protected int wait_time; // time left to wait, in hundredths of (speed-adjusted) ticks. 0 if not waiting.
-        protected int cur_move_action; // current position in the move_actions/move_params array. 
+
+        // CURRENTLY THIS DOES NOTHING AND THE DESCRIPTION OF IT IS ALL LIES
+        // BEGIN LIES:
+            // align_to_tile influences how an entity behaves when told to move a fixed number of tiles -- that is, when 
+            // it's given a U/D/L/R move action in tile-based movement mode. 
+            //    * If align_to_grid is false, it will move a number of pixels equal to 
+            //      (tiles you told it to move)*(map's tilesize). 
+            //    * If align_to_grid is true, it will move (tiles you told it to move-1)*(map's tilesize), then move
+            //      however much farther is necessary for it to end on a tile boundary. 
+            // In other words, the modes are equivalent when the entity is on a tile boundary to begin with. When 
+            // align_to_grid is true, the entity may move less distance than you tell it to, but never by more than
+            // (tilesize - 1) pixels.
+            // This is false by default, since it's slower and will almost never come up under the default configuration.
+        //public bool align_to_grid; 
+        // END LIES
         
         protected int movement_left; // the remaining movement allotment when moving automatically
         protected Direction movement_direction; // movement direction, which may differ from facing direction (e.g. Michael Jackson's Moonwalker Gaiden)
@@ -38,14 +37,10 @@ namespace XNAVERGE {
         protected virtual void initialize_movement_attributes() {
             speed = DEFAULT_SPEED;
             _moving = false;
-            move_actions = new MovestringCommand[DEFAULT_MOVE_ARRAY_LENGTH];
-            move_params = new int[DEFAULT_MOVE_ARRAY_LENGTH];
-            tile_movement = DEFAULT_TO_TILE_MOVEMENT;
-            set_movestring("");
-            align_to_grid = false;
-            wait_time = 0;            
+            
+            movestring = new Movestring("");            
         }
-
+        /*
         // gets the appropriate distance to move (in hundredths of pixels) when in tile mode with align_to_grid true, assuming the 
         // given starting point (in pixels) and nominal move distance (in tiles). The function also takes a boolean to indicate if 
         // the movement is in the positive (down/right) or negative (left/up) direction.
@@ -62,98 +57,7 @@ namespace XNAVERGE {
                 else return 100 * (dist * tilesize + start % tilesize);
             }                
         }
-
-        // Doubles the length of the movestring storage arrays to accomodate a longer string.
-        protected void expand_move_arrays() {
-            MovestringCommand[] new_actions = new MovestringCommand[move_actions.Length * 2];
-            int[] new_params = new int[new_actions.Length];
-            move_actions.CopyTo(new_actions, 0);
-            move_params.CopyTo(new_params, 0);
-            move_actions = new_actions;
-            move_params = new_params;
-        }        
-
-        public void set_movestring(String str) {
-            if (String.IsNullOrEmpty(str)) {
-                move_actions[0] = MovestringCommand.Stop;
-                set_walk_state(false);
-                cur_move_action = NO_MOVESCRIPT;
-                return;
-            }
-            MatchCollection matches = movestring_regex.Matches(str);
-            GroupCollection groups;
-            int parameter, len, step;
-            
-            len = move_actions.Length;
-            step = 0;
-            foreach (Match match in matches) {
-                groups = match.Groups;
-                parameter = NO_NUMBER;
-                if (!String.IsNullOrEmpty(groups[2].Value)) parameter = Int32.Parse(groups[2].Value);
-                move_params[step] = parameter;
-                switch (groups[1].Value) {
-                    case "B": // loop back to start. 
-                        // This normally takes no number parameter, but unlike VERGE, you can include one, in which case
-                        // it will loop that many times, then stop.
-                        if (parameter > 0 || parameter == NO_NUMBER) move_actions[step] = MovestringCommand.Loop;
-                        else move_actions[step] = MovestringCommand.Stop;
-                        break;
-                    case "T": // switch to pixel coordinates
-                        move_actions[step] = MovestringCommand.TileMode;
-                        break;
-                    case "P": // switch to tile coordinates
-                        move_actions[step] = MovestringCommand.PixelMode;
-                        break;
-                    case "Z": // frame switch (may or may not have a number parameter)
-                        // This locks the entity into the specified frame, suppressing animation during movement. In VERGE, setting it to 0
-                        // restored the entity to normal animation, but this is a problem if you want to lock it at frame 0. Thus, I'm changing
-                        // the rule: Z0 locks the entity at frame 0, and Z with no number after it restores normal animation.
-                        // Be warned that this may mess up the occasional .MAP-embedded movestring.
-                        move_actions[step] = MovestringCommand.Frame;                        
-                        break;
-                    case "F": // face (not necessary, since a distance-0 move accomplishes the same thing)
-                        move_actions[step] = MovestringCommand.Face;                        
-                        break;
-                    case "U": // move up
-                        move_actions[step] = MovestringCommand.Up;
-                        break;
-                    case "D": // move down
-                        move_actions[step] = MovestringCommand.Down;
-                        break;
-                    case "L": // move left
-                        move_actions[step] = MovestringCommand.Left;
-                        break;
-                    case "R": // move right
-                        move_actions[step] = MovestringCommand.Right;
-                        break;
-                    case "W": // wait
-                        move_actions[step] = MovestringCommand.Wait;
-                        break;
-                    case "X": // walk straight to specific x
-                        move_actions[step] = MovestringCommand.ToX;
-                        break;
-                    case "Y": // walk straight to specific y
-                        move_actions[step] = MovestringCommand.ToY;
-                        break;
-                    default:
-                        break;
-                }
-                step++;
-                if (step >= len) expand_move_arrays();
-            }
-            move_actions[step] = MovestringCommand.Stop;
-            if (step == 0) {
-                cur_move_action = NO_MOVESCRIPT; // no movescript (obviously something was passed, but the regexp didn't catch any of it)
-                set_walk_state(false);
-            }
-            else {
-                cur_move_action = -1;
-                wait_time = 0;
-                movement_left = 0;
-            }
-            tile_movement = DEFAULT_TO_TILE_MOVEMENT;
-        }
-
+        
         public override void Update() {
             movement_handler();
             VERGEGame.game.entity_space.Update(this);
@@ -347,6 +251,8 @@ namespace XNAVERGE {
             return elapsed - actualmove;
         }
 
+        */
+        
     }
 
     
