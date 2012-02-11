@@ -12,6 +12,13 @@ namespace XNAVERGE {
 
         public SpriteBasis basis;
 
+        // --------------------------------------------
+        //  POSITION/MOVEMENT VARIABLES AND PROPERTIES
+        // --------------------------------------------
+        
+        public Rectangle destination, hitbox; // It's not recommended that you twiddle with destination/hitbox directly, but you can!
+        public virtual int foot { get { return hitbox.Y + hitbox.Height - 1; } } // lower edge of hitbox (used for y-sorting)
+
         // Use these setters to move the entity, rather than manipulating the hitbox directly, if you want to have it update
         // the draw destination and fractional-pixel coordinates automatically (which you probably do).
         public virtual int x {
@@ -19,7 +26,7 @@ namespace XNAVERGE {
             set {
                 destination.X += value - hitbox.X;
                 hitbox.X = value;
-                _exact_x = value*100;
+                _exact_x = value; // implicit cast to double
             }
         }
         public virtual int y {
@@ -27,44 +34,47 @@ namespace XNAVERGE {
             set {
                 destination.Y += value - hitbox.Y;
                 hitbox.Y = value;
-                _exact_y = value*100;
+                _exact_y = value; // implicit cast to double
             }
         }
         public virtual int w { get { return hitbox.Width; } }
         public virtual int h { get { return hitbox.Height; } }
-        protected int _exact_x, _exact_y; // these are 100 times the pixel coordinates: the amount 1 speed moves you in 1 tick
-        public virtual int exact_x {
+
+        // Precision coordinates, for handling slow movement. 
+        // Truncated when converting to pixel coordinates.
+        protected double _exact_x, _exact_y; 
+        public double exact_x {
             get { return _exact_x; }
             set {
-                int pixel_val = value / 100;
+                int pixel_val = (int) value;
                 _exact_x = value;
                 destination.X += pixel_val - hitbox.X;
                 hitbox.X = pixel_val;
             }
         }
-        public virtual int exact_y {
+        public double exact_y {
             get { return _exact_y; }
             set {
-                int pixel_val = value / 100;
+                int pixel_val = (int) value;
                 _exact_y = value;                
                 destination.Y += pixel_val - hitbox.Y;
                 hitbox.Y = pixel_val;                
             }
         }
+
+        // --------------------------------------------
+        //  ANIMATiON/DRAWING VARIABLES AND PROPERTIES
+        // --------------------------------------------
         
-        public virtual int foot { get { return hitbox.Y + hitbox.Height - 1; } } // lower edge of hitbox (used for y-sorting)
-        public Rectangle destination, hitbox; // It's not recommended that you twiddle with destination/hitbox directly, but you can!
         public SpriteAnimation cur_animation;
         public int cur_step; // current step within the animation string
         protected float rate; // A multiplier applied to the animation speed. At 1.0, the animation moves at 1 tick per centisecond/game tick. TODO: actually implement this
         public int last_draw_tick; // the last tick at which the sprite was drawn
-        public int last_logic_tick; // the last tick at which the sprite's logic was updated
         //public int cur_frame { get { return cur_animation.frame[cur_step]; } }
         public float opacity;
         public bool visible, deleted;
         public bool animating { get { return ((fixed_frame < 0) && !_animation_paused && cur_animation != null); } }
-        protected bool _animation_paused;
-        Rectangle IBounded.bounds { get { return hitbox; } }
+        protected bool _animation_paused;        
 
         protected bool going_backwards; // Used only with the BackAndForth animation style. When true, the animation is reversing.
         protected int fixed_frame; // If fixed_frame is nonnegative, that frame is displayed preferentially.
@@ -78,6 +88,17 @@ namespace XNAVERGE {
                 return cur_animation.frame[cur_step];
             }
         }
+
+        // ----------------------------------------
+        //  MISCELLANEOUS VARIABLES AND PROPERTIES
+        // ----------------------------------------
+
+        public int last_logic_tick; // the last tick at which the sprite's logic was updated
+        Rectangle IBounded.bounds { get { return hitbox; } } // used by BoundedSpace
+
+        // ---------
+        //  METHODS
+        // ---------
 
         public Sprite(SpriteBasis spr_basis, String anim) : this(spr_basis, anim, 0, 0, false) { }
         public Sprite(SpriteBasis spr_basis, String anim, int x_coord, int y_coord, bool visibility) {
