@@ -53,7 +53,10 @@ namespace XNAVERGE {
                     // HANDLE MOVEMENT AND COLLISIONS
                     // ------------------------------
 
-                        
+                    for (int i = 0; i < map.num_entities; i++) {
+                        Default_Handlers.Entity_Movescript_Handler(map.entities[i]);
+                        map.entities[i].Update();
+                    }
 
                     /*
                     old_player = player;

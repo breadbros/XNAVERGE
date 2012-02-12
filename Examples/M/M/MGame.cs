@@ -39,11 +39,11 @@ namespace M
             // BEGIN SILLINESS
 
             map.zones[1].adjacent = true;
-            player = map.spawn_entity(10, 12, "chap");
+            player = map.spawn_entity(24, 12, "chap");
             player.obstructing = true;            
             Entity e;
             e = map.spawn_entity(21, 14, "chap");
-            e.set_movestring("L2D2R2U2B");
+            e.movestring = new Movestring("L2D2R2U2B");
             e.speed = 80;            
 
             for (int x = 0; false && x < map.width; x++) {
@@ -53,7 +53,7 @@ namespace M
                         e.speed = 100;
                         e.obstructing = true;
                         e.obstructable = true;
-                        e.set_movestring("L1D1R1U1B");
+                        e.movestring = new Movestring("L1D1R1U1B");
                     }
                 }
             }

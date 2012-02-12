@@ -13,8 +13,8 @@ namespace XNAVERGE {
     public static class Default_Handlers {
         internal static VERGEGame game;
 
-        public static void Entity_Movescript_Handler(Entity ent) {
-            if (VERGEGame.game.player == ent) { return; }
+        public static void Entity_Movescript_Handler(Entity ent) {            
+            if (game.player == ent) { return; }
 
             ent.velocity = new Vector2(0.25f, 0.25f);
         }

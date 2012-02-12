@@ -235,6 +235,22 @@ namespace XNAVERGE {
             VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[current_frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
         }
 
-        public virtual void Update() {}
+        public virtual void Update() {
+            int pixel_val;
+            float elapsed = (float)(VERGEGame.game.tick - last_logic_tick);
+            Vector2 velocity_change = elapsed * acceleration;
+            _exact_pos += elapsed * (velocity + velocity_change / 2); // s = A(t^2)/2 + Vt + s_old, assuming constant A
+            velocity += velocity_change;
+
+            // Update pixel coordinates
+            pixel_val = (int)_exact_pos.X;            
+            destination.X += pixel_val - hitbox.X;
+            hitbox.X = pixel_val;
+            pixel_val = (int)_exact_pos.Y;
+            destination.Y += pixel_val - hitbox.Y;
+            hitbox.Y = pixel_val;
+
+            last_logic_tick = VERGEGame.game.tick;
+        }
     }
 }
