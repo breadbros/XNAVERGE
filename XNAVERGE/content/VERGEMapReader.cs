@@ -39,8 +39,11 @@ namespace XNAVERGE.Content {
             
             map.zone_layer = read_layer(input, false, map.num_zones);            
             for (int i = 0; i < map.num_zones; i++) map.zones[i] = read_zone(input);
-            
-            for (int i = 0; i < map.num_entities; i++) map.entities[i] = read_ent(input, map);
+
+            for (int i = 0; i < map.num_entities; i++) {
+                map.entities[i] = read_ent(input, map);
+                map.entities[i].index = i;
+            }
             
             map.renderstack = new RenderStack(map, rstring);
 
