@@ -33,7 +33,7 @@ namespace XNAVERGE {
         public bool done;
         public int step;
 
-        protected int wait_time; // time left to wait, in hundredths of ticks. 0 if not waiting.        
+        protected int wait_time; // time left to wait, in hundredths of ticks. 0 if not waiting.
 
         public Movestring(String movestring) {
             MatchCollection matches = regex.Matches(movestring);
@@ -163,8 +163,10 @@ namespace XNAVERGE {
             while (true) {
                 switch (commands[step]) {
                     case MovestringCommand.Wait:
+                        if (wait_time == 0) wait_time = parameters[step] * 100;
                         wait_time -= elapsed;
-                        if (wait_time >= 0) return 0; // still waiting
+                        Console.WriteLine(wait_time);
+                        if (wait_time > 0) return 0; // still waiting
                         else {
                             elapsed = -wait_time;
                             wait_time = 0;

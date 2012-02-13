@@ -30,8 +30,8 @@ namespace XNAVERGE {
         //public bool align_to_grid; 
         // END LIES
         
-        protected int movement_left; // the remaining movement allotment when moving automatically
-        protected Direction movement_direction; // movement direction, which may differ from facing direction (e.g. Michael Jackson's Moonwalker Gaiden)
+        public int movement_left; // the remaining movement allotment when moving automatically (measured in hundredths of pixels)
+        public Direction movement_direction; // movement direction, which may differ from facing direction (e.g. in Michael Jackson's Moonwalker Gaiden)
 
         // Sets the default values for the many, many movement-related members each entity possesses.
         protected virtual void initialize_movement_attributes() {

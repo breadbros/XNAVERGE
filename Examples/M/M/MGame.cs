@@ -43,7 +43,7 @@ namespace M
             player.obstructing = true;            
             Entity e;
             e = map.spawn_entity(21, 14, "chap");
-            e.movestring = new Movestring("L2D2R2U2B");
+            e.movestring = new Movestring("L2D2R2U2B");            
             e.speed = 80;            
 
             for (int x = 0; false && x < map.width; x++) {

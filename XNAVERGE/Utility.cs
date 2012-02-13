@@ -9,10 +9,61 @@ using Microsoft.Xna.Framework;
 
 namespace XNAVERGE {
     public static class Utility {
-        // Mimics the Math.DivRem function, which XNA lacks.
+        public static readonly float SQRT2;
+        public static readonly float INV_SQRT2;
+
+        static Utility() {
+            SQRT2 = (float)Math.Sqrt(2);
+            INV_SQRT2 = 1 / SQRT2;
+        }
+
+
+        // Mimics the Math.DivRem function, which Xbox XNA lacks.
         public static int DivRem(int num, int denom, out int rem) {
             rem = num % denom;
             return num / denom;
+        }
+
+        // Returns the velocity needed to travel the given distance in the given number of ticks
+        // along the given direction, assuming zero acceleration.
+        // TODO: Make this less stupid? Maybe someday. Who can say what the future holds
+        public static Vector2 velocity_from_direction(Direction dir, float distance, int ticks) {
+            Vector2 value;
+            float factor;
+            switch (dir) {
+                case Direction.Up:
+                    value = new Vector2(0, -1);
+                    break;
+                case Direction.Down:
+                    value = new Vector2(0, 1);
+                    break;
+                case Direction.Left:
+                    value = new Vector2(-1, 0);
+                    break;
+                case Direction.Right:
+                    value = new Vector2(1, 0);
+                    break;
+                case Direction.UpLeft:
+                    value = new Vector2(-1, -1);
+                    break;
+                case Direction.UpRight:
+                    value = new Vector2(1, -1);
+                    break;
+                case Direction.DownLeft:
+                    value = new Vector2(-1, 1);
+                    break;
+                case Direction.DownRight:
+                    value = new Vector2(1, 1);
+                    break;
+                default:
+                    value = Vector2.Zero;
+                    break;
+            }
+            if ((int)dir < 4) factor = distance;  // cardinal direction
+            else factor = distance * INV_SQRT2;    // diagonal direction
+
+            if (ticks != 1) factor /= ticks;
+            return value * factor;
         }
 
         // Converts a uint of the form 0x00RRGGBB to one of the form 0xAABBGGRR.
