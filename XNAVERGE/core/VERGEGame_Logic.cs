@@ -53,9 +53,18 @@ namespace XNAVERGE {
                     // HANDLE MOVEMENT AND COLLISIONS
                     // ------------------------------
 
+                    if (player != null) {
+                        if (player_controllable) Default_Handlers.VERGEStyle_Player_Movement_Handler(player);
+                        else {
+                            player.velocity = player.acceleration = Vector2.Zero;
+                        }
+                        player.Update();
+                    }                    
                     for (int i = 0; i < map.num_entities; i++) {
-                        Default_Handlers.Entity_Movescript_Handler(map.entities[i]);
-                        map.entities[i].Update();
+                        if (map.entities[i] != player) {
+                            Default_Handlers.Entity_Movescript_Handler(map.entities[i]);
+                            map.entities[i].Update();
+                        }
                     }
 
                     /*

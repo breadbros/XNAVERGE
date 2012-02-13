@@ -13,9 +13,34 @@ namespace XNAVERGE {
     public static class Default_Handlers {
         internal static VERGEGame game;
 
+        // Moves the entity in accordance with the player's inputs. This works like VERGE player input
+        // EXCEPT that, when diagonals are enabled, it moves the player at the same speed overall 
+        // (unlike VERGE, which moved them both vertically and horizontally as fast as if they were 
+        //  moving in that direction alone)
+        public static void VERGEStyle_Player_Movement_Handler(Entity ent) {
+            int x = 0, y = 0;
+            float factor;
+            if (VERGEGame.game.dir.left.down) x--;
+            if (VERGEGame.game.dir.right.down) x++;
+            if (VERGEGame.game.dir.up.down) y--;
+            if (VERGEGame.game.dir.down.down) y++;
+            ent.velocity = new Vector2((float)x, (float)y);
+            ent.acceleration = Vector2.Zero;
+            if (x == 0 && y == 0) {
+                if (ent.moving) ent.set_walk_state(false);
+            }
+            else {                
+                if (!ent.moving) ent.set_walk_state(true);
+                ent.facing = Utility.direction_from_signs(x, y, false);
+                ent.movement_direction = Utility.direction_from_signs(x, y, true);                
+                factor = ent.speed / 100f;
+                if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.INV_SQRT2; // diagonal movement
+                ent.velocity *= factor;
+            }
+        }
+
         public static void Entity_Movescript_Handler(Entity ent) {
-            int cur_param, elapsed, adjusted_time;
-            float movedist;
+            int cur_param, elapsed, adjusted_time;            
             Movestring movestring;
             elapsed = game.tick - ent.last_logic_tick;
 
@@ -23,12 +48,16 @@ namespace XNAVERGE {
             ent.acceleration = Vector2.Zero;
             adjusted_time = ent.speed * elapsed; // hundredths of "virtual" ticks elapsed (accounting for speed)
 
-            if (game.player == ent) { return; }
+            if (game.player == ent) {
+                VERGEStyle_Player_Movement_Handler(ent);
+                return; 
+            }
             movestring = ent.movestring;
 
             while (adjusted_time > 0) {
                 //Console.WriteLine("{0} {1}", ent.index, adjusted_time);
-                adjusted_time = movestring.ready(adjusted_time);                
+                adjusted_time = movestring.ready(adjusted_time);
+                if (adjusted_time <= 0 && ent.moving) ent.set_walk_state(false);
                     
                 if (ent.movement_left <= 0) { // If not currently walking
                     cur_param = movestring.parameters[movestring.step];
@@ -97,6 +126,7 @@ namespace XNAVERGE {
             ent.facing = ent.movement_direction = dir;
             if (distance > 0) {
                 ent.movement_left = distance * 100;
+                ent.set_walk_state(true);
                 if (in_tiles) ent.movement_left *= game.map.tileset.tilesize;
             }
             else { // distance 0: no movement, just change facing

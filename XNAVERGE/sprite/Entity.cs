@@ -114,7 +114,7 @@ namespace XNAVERGE {
         public virtual void idle() { set_animation(idle_animation_prefix + facing); }
         public virtual void walk() { set_animation(move_animation_prefix + facing); }
 
-        protected virtual void set_walk_state(bool val) {
+        public virtual void set_walk_state(bool val) {
             _moving = val;
             if (val) walk();
             else idle();
