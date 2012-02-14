@@ -19,6 +19,7 @@ namespace M
     public partial class MGame : VERGEGame {
         static void Main(string[] args) {            
             //(new MGame()).Exit();
+
             (new MGame()).Run();            
         }        
 
@@ -29,7 +30,7 @@ namespace M
             base.Initialize();                        
         }
 
-        protected override void LoadContent() {
+        protected override void LoadContent() {                        
             base.LoadContent();
             init_ui();
             VERGEMap.switch_map("town01");

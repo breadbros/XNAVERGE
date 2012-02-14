@@ -125,6 +125,13 @@ namespace XNAVERGE {
             return System.Text.RegularExpressions.Regex.Replace(str, WHITESPACE, "");
         }
 
+        private static readonly char[] path_sep = {'/', '\\'};
+        public static String strip_path(String str) {
+            int pos = Math.Max(0, str.LastIndexOfAny(path_sep));
+            return str.Substring(pos);
+        }
+
+
         // Returns a Direction based on the signs of the x and y values given. ++ is DownRight, -0 is Left, etc.
         // If both signs are 0, returns Down. 
         public static Direction direction_from_signs(int x, int y, bool include_diagonals) {

@@ -308,7 +308,8 @@ namespace XNAVERGE {
         // game's default tileset, erroring out if there isn't one.
         public Tileset load_tileset(String filename) {
             int pos;
-            Tileset ts = null;            
+            Tileset ts = null;
+            filename = Utility.strip_path(filename);
             if (!String.IsNullOrEmpty(tileset_override)) {
                 ts = VERGEGame.game.MapContent.Load<Tileset>(tileset_override);                
             }

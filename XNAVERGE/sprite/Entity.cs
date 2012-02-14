@@ -80,6 +80,7 @@ namespace XNAVERGE {
         public static Entity load_from_chr_filename(String filename, String ent_name) {
             int pos;
             SpriteBasis spr = null;
+            filename = Utility.strip_path(filename);
             try { // there doesn't seem to be a way to check if content exists without trying to load it, so let's do that
                 spr = VERGEGame.game.MapContent.Load<SpriteBasis>(filename);
             }
