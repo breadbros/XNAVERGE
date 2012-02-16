@@ -53,30 +53,45 @@ namespace XNAVERGE {
             }
         }
 
+        public override void DrawBaseLayer() {
+            __Draw( false );
+        }
+
         public override void Draw() {
-            SpriteBatch spritebatch = VERGEGame.game.spritebatch;                     
-            
+            __Draw( true );
+        }
+
+        public void __Draw( Boolean isOverlayLayer = false ) {
+            SpriteBatch spritebatch = VERGEGame.game.spritebatch;
+
             int min_x, min_y, tiles_per_row, tiles_per_column;
             Tileset tileset = VERGEGame.game.map.tileset;
             Camera camera = VERGEGame.game.camera;
             Screen screen = VERGEGame.game.screen;
-            Rectangle dest_rect = default(Rectangle);            
+            Rectangle dest_rect = default( Rectangle );
 
             dest_rect.Width = dest_rect.Height = tileset.tilesize;
-            Vector2 offset = new Vector2(camera.x * parallax.X, camera.y * parallax.Y); // parallax-adjusted camera coordinates for this layer            
-            min_x = Math.Max(0, (int)(offset.X/tileset.tilesize)); // round down to integer
-            min_y = Math.Max(0, (int)(offset.Y/tileset.tilesize));
-            
-            tiles_per_row = Math.Min(VERGEGame.game.map.width - min_x, (screen.width + tileset.tilesize - 1) / tileset.tilesize + 1);
-            tiles_per_column = Math.Min(VERGEGame.game.map.height - min_y, (screen.height + tileset.tilesize - 1) / tileset.tilesize + 1);
-            
-            spritebatch.Begin(SpriteSortMode.Deferred, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(-offset.X, -offset.Y, 0.0f));
+            Vector2 offset = new Vector2( camera.x * parallax.X, camera.y * parallax.Y ); // parallax-adjusted camera coordinates for this layer            
+            min_x = Math.Max( 0, (int)( offset.X / tileset.tilesize ) ); // round down to integer
+            min_y = Math.Max( 0, (int)( offset.Y / tileset.tilesize ) );
+
+            tiles_per_row = Math.Min( VERGEGame.game.map.width - min_x, ( screen.width + tileset.tilesize - 1 ) / tileset.tilesize + 1 );
+            tiles_per_column = Math.Min( VERGEGame.game.map.height - min_y, ( screen.height + tileset.tilesize - 1 ) / tileset.tilesize + 1 );
+
+            spritebatch.Begin( SpriteSortMode.Deferred, blending, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation( -offset.X, -offset.Y, 0.0f ) );
 
             dest_rect.Y = min_y * dest_rect.Height;
-            for (int y = 0; y < tiles_per_column; y++) {
+            for( int y = 0; y < tiles_per_column; y++ ) {
                 dest_rect.X = min_x * dest_rect.Width;
-                for (int x = 0; x < tiles_per_row; x++) {                    
-                    spritebatch.Draw(tileset.image, dest_rect, tileset.tile_frame[data[min_x + x][min_y + y]], blend_color);
+                for( int x = 0; x < tiles_per_row; x++ ) {
+
+                    if( isOverlayLayer && data[min_x + x][min_y + y] == 0 ) {
+
+                    } else {
+                        spritebatch.Draw( tileset.image, dest_rect, tileset.tile_frame[data[min_x + x][min_y + y]], blend_color );
+                    }
+
+                    //spritebatch.Draw(tileset.image, dest_rect, tileset.tile_frame[data[min_x + x][min_y + y]], blend_color);
                     dest_rect.X += dest_rect.Width;
                 }
                 dest_rect.Y += dest_rect.Height;
@@ -166,7 +181,8 @@ namespace XNAVERGE {
         public RenderLayer(String layer_name) : this(VERGEMap.NEUTRAL_PARALLAX, layer_name) {}
 
         public abstract void Draw();
+        public virtual void DrawBaseLayer() {
+            Draw();
+        }
     }
-
-
 }

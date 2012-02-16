@@ -1,9 +1,0 @@
-C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XVCX.dll
-C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XVCX.pdb
-C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\SharpZlib.dll
-C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XNAVERGE.dll
-C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\SharpZlib.pdb
-C:\games\dev\XNAVERGE.git\XVCX\bin\x86\Debug\XNAVERGE.pdb
-C:\games\dev\XNAVERGE.git\XVCX\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\games\dev\XNAVERGE.git\XVCX\obj\x86\Debug\XVCX.dll
-C:\games\dev\XNAVERGE.git\XVCX\obj\x86\Debug\XVCX.pdb
