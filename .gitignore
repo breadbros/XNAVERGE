@@ -26,5 +26,5 @@ MapedPreferences.xml
 *.sbr
 *.sdf
 
-debug/
+[Dd]ebug/
 obj/
