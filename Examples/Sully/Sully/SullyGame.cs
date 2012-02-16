@@ -38,7 +38,11 @@ namespace Sully
         protected override void LoadContent()
         {
             base.LoadContent();
-            
+
+            MediaPlayer.IsRepeating = true;
+            Song song = Content.Load<Song>( "troupe_-_cabedge_sailing" );
+            MediaPlayer.Play( song );
+
             VERGEMap.switch_map( "paradise_isle2" );
 
             player = map.spawn_entity( 24, 12, "darin" );

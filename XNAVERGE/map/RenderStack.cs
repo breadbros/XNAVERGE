@@ -82,6 +82,4 @@ namespace XNAVERGE {
     public class MalformedRenderstringException : Exception {
         public MalformedRenderstringException(String rstring) : base("\"" + rstring + "\" is not a valid renderstring.") {}
     }
-
-
 }
