@@ -14,22 +14,23 @@ namespace XNAVERGE {
 
         public Movestring movestring;
 
+        public bool test;
+
         // Returns the path up to the first obstruction (or the original path, if unobstructed)
         public virtual Vector2 try_to_move(Vector2 path) {
             VERGEMap map = VERGEGame.game.map;            
             Vector2 target;
             Point closest_obs = hitbox.Location;
             int max_distance;
-            Point pixel_path, sign, farthest;
-            
-            target = exact_pos + path;            
+            Point pixel_path, sign, farthest;            
+            target = _exact_pos + path;            
             // The target pixel is where the character's upper-left hitbox pixel will be if it 
             // moves the full possible distance.
             pixel_path = new Point(((int)Math.Floor(target.X)) - hitbox.X, ((int)Math.Floor(target.Y)) - hitbox.Y);            
             sign = new Point(Math.Sign(pixel_path.X), Math.Sign(pixel_path.Y));
             if (sign.X == 0 && sign.Y == 0) return path; // no between-pixel movement;            
             
-            farthest = new Point(hitbox.X + pixel_path.X, hitbox.Y + pixel_path.Y);
+            farthest = new Point(hitbox.X + pixel_path.X, hitbox.Y + pixel_path.Y);            
             max_distance = Int32.MaxValue;
 
             if (sign.X != 0) { // moving horizontally -- check collision with left or right side
@@ -39,12 +40,13 @@ namespace XNAVERGE {
                 _try_move_project_side(pixel_path, false, ref max_distance, ref farthest);
             }
 
-            if (max_distance < Int32.MaxValue) { // obstructed
+            if (max_distance < Int32.MaxValue) { // obstructed                
+                //return Vector2.Zero;
                 target.X = exact_pos.X + (float)(farthest.X - hitbox.X);
                 target.Y = exact_pos.Y + (float)(farthest.Y - hitbox.Y);
                 return target - exact_pos;
             }
-            else return path;            
+            else return path;
         }
 
         // A helper function for try_to_move. Projects one side of the entity toward the target
@@ -52,10 +54,12 @@ namespace XNAVERGE {
         // the side being projected is the left or right (i.e. the vertically aligned sides).
         private void _try_move_project_side(Point path, bool vertical_side, ref int max_distance, ref Point farthest) {
             VERGEMap map = VERGEGame.game.map;
-            Point cur_pixel, ray_goal, ray_result;
+            Point cur_pixel, ray_goal, ray_result, test;
             int side_length, max_distance_so_far, cur_distance;
             cur_pixel = ray_goal = ray_result = default(Point);
-            
+
+            test = hitbox.Location;
+
             if (vertical_side) { // Projecting the left or right side of the hitbox
                 cur_pixel.X = hitbox.X + (1 + Math.Sign(path.X)) * (hitbox.Width - 1) / 2; // leading side of hitbox                
                 cur_pixel.Y = hitbox.Y;
@@ -71,10 +75,10 @@ namespace XNAVERGE {
             max_distance_so_far = max_distance;
 
             for (int i = 0; i < side_length; i++) {
-                cur_distance = max_distance;
+                cur_distance = max_distance_so_far;
                 ray_result = map.cast_ray(cur_pixel, ray_goal, ref cur_distance);
-                if (cur_distance < max_distance) { // obstruction encountered
-                    max_distance = cur_distance;
+                if (cur_distance < max_distance_so_far) { // obstruction encountered                    
+                    max_distance_so_far = cur_distance;
                     // Adjust "farthest" pixel appropriately. Note that, since
                     // the farthest pixel corresponds to the top-left of the 
                     // farthest hitbox, we have to adjust ray_result based on its
@@ -91,7 +95,7 @@ namespace XNAVERGE {
                     ray_goal.X++;
                 }
             }
-
+            if (max_distance_so_far < max_distance) max_distance = max_distance_so_far;
         }
 
         // CURRENTLY THIS DOES NOTHING AND THE DESCRIPTION OF IT IS ALL LIES

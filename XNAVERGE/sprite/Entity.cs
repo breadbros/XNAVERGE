@@ -151,8 +151,8 @@ namespace XNAVERGE {
             velocity_change = elapsed * acceleration;
             path = elapsed * (velocity + velocity_change / 2); // s = A(t^2)/2 + Vt + s_old, assuming constant A            
             velocity += velocity_change;            
-            if (false && this == VERGEGame.game.player) {
-                path = try_to_move(path);                
+            if (this.obstructable) {                
+                path = try_to_move(path);
             }
             _exact_pos += path;
         }

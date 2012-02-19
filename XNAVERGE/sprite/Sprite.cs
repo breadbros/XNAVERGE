@@ -240,10 +240,10 @@ namespace XNAVERGE {
             handle_movement();
 
             // Update pixel coordinates
-            pixel_val = (int)_exact_pos.X;            
+            pixel_val = (int)Math.Floor(_exact_pos.X);
             destination.X += pixel_val - hitbox.X;
             hitbox.X = pixel_val;
-            pixel_val = (int)_exact_pos.Y;
+            pixel_val = (int)Math.Floor(_exact_pos.Y);
             destination.Y += pixel_val - hitbox.Y;
             hitbox.Y = pixel_val;
 
