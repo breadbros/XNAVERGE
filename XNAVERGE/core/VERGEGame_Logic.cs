@@ -49,11 +49,15 @@ namespace XNAVERGE {
 
                 if (map != null) {
                     input.Update();
+                    prev_player_coords = default(Point);
 
                     // HANDLE MOVEMENT AND COLLISIONS
                     // ------------------------------
 
                     if (player != null) {
+                        prev_player_coords = player.hitbox.Center;
+                        prev_player_coords.X /= map.tileset.tilesize;
+                        prev_player_coords.Y /= map.tileset.tilesize;
                         if (player_controllable) Default_Handlers.VERGEStyle_Player_Movement_Handler(player);
                         else {
                             player.velocity = player.acceleration = Vector2.Zero;
@@ -66,7 +70,7 @@ namespace XNAVERGE {
                             map.entities[i].Update();
                         }
                     }
-
+                    
                     /*
                     old_player = player;
                     if (old_player != null) {
@@ -84,8 +88,8 @@ namespace XNAVERGE {
                         }
                         map.entities[i].Update();
                     }
-
-                    if (player == old_player && player != null) { // update player zone
+                    */
+                    if (player != null) { // update player zone
                         cur_player_coords = player.hitbox.Center;
                         cur_player_coords.X /= map.tileset.tilesize;
                         cur_player_coords.Y /= map.tileset.tilesize;
@@ -111,7 +115,7 @@ namespace XNAVERGE {
                                 map.zone_at(facing_coords.X, facing_coords.Y, true).activate(facing_coords.X, facing_coords.Y, true);
                         }
                     }
-                    */
+                    
                     // END OF UPDATING
                 }
             }

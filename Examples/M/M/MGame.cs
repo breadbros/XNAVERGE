@@ -30,7 +30,7 @@ namespace M
             base.Initialize();                        
         }
 
-        protected override void LoadContent() {                        
+        protected override void LoadContent() {            
             base.LoadContent();
             init_ui();
             VERGEMap.switch_map("town01");

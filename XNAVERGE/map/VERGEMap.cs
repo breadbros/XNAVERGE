@@ -155,6 +155,60 @@ namespace XNAVERGE {
             return false;
         }
 
+        // ---------------------------------
+        // OBSTRUCTION MANAGEMENT
+
+        // Follows a ray from the source pixel to the target pixel, stopping when it gets to the target 
+        // or encounters an obstructed pixel. Returns the furthest unobstructed pixel along the ray.
+        // Thus, it will return the target if the ray is completely unobstructed.
+        // The max_distance variable imposes a maximum distance the ray can travel. If the ray hits an
+        // obstruction, it edits max_distance to indicate how far it was able to go.
+        // This can be used to trim the end of the ray without having to alter the target point. 
+        public virtual Point cast_ray(Point source, Point target, ref int max_distance) {
+            Point diff, sign, prev = default(Point);
+            int diff_diff, diff_sum, error, distance, limit;
+            diff = new Point(target.X - source.X, target.Y - source.Y);
+            sign = new Point(Math.Sign(diff.X), Math.Sign(diff.Y));
+            diff_diff = Math.Abs(Math.Abs(diff.X) - Math.Abs(diff.Y));
+            diff_sum = Math.Abs(diff.X + diff.Y);            
+            limit = Math.Min(max_distance, diff_sum);
+            if (limit <= 0) return source;
+
+            // Bresenham's algorithm
+            // Note: the smaller difference = (diff_diff - diff_sum)/2
+            //       the larger difference = (diff_diff + diff_sum)/2
+            error = 0;            
+            distance = 0;
+            while (distance < limit) {                
+                if (distance != 0 && obs_at_pixel(source.X, source.Y)) { // don't check the starting point                    
+                    max_distance = distance - 1;                    
+                    return prev;
+                }
+                prev = source;
+                // Increment only the longer dimension until error passes threshold
+                // (this case never occurs when moving on a perfect diagonal)
+                if (error < 3 * diff_diff - diff_sum) { // error + 4*smaller_diff < 2*larger_diff                    
+                    if (diff.X > diff.Y) source.X += sign.X;
+                    else source.Y += sign.Y;
+                    error += 2 * (diff_sum - diff_diff); // error + 4*smaller_diff
+                    distance++;
+                }
+                // When error passes threshold, reduce it and increment both dimensions
+                // (this case never occurs when moving horizontally or vertically)
+                else {
+                    source.X += sign.X;
+                    source.Y += sign.Y;
+                    error -= 4*diff_diff;
+                    distance += 2;
+                }                
+            }            
+            return source;             
+        }        
+        public virtual Point cast_ray(Point source, Point target) {
+            int temp = Int32.MaxValue;
+            return cast_ray(source, target, ref temp);
+        }
+
         // Given an entity, a direction, and a distance, returns how far the entity can move 
         // in that direction before being obstructed, to a maximum of the distance given.
         // Does not check whether the entity is obstructable beforehand.
