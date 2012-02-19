@@ -115,6 +115,7 @@
     <Compile Include="sprite\SpriteAnimation.cs" />
     <Compile Include="sprite\SpriteBasis.cs" />
     <Compile Include="map\Tileset.cs" />
+    <Compile Include="sprite\VergeFont.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="core\VERGEGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

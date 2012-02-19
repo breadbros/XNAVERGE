@@ -13,6 +13,18 @@ using XNAVERGE;
 
 namespace Sully
 {
+    public class _ {
+        public static SullyGame sg;
+
+        public static void init( SullyGame sg ) {
+            _.sg = sg;
+        }
+
+        public static void textbox( string s1, string s2, string s3 ) {
+            _.sg.textbox( s1, s2, s3 );
+        }
+    }
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -27,6 +39,7 @@ namespace Sully
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _.init( this );
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new SullyGlobalScripts();
             base.Initialize();
@@ -43,21 +56,24 @@ namespace Sully
             // always do this first
             base.LoadContent();
 
+            //load the tetxbox resources
+            init_textbox();
+
             // music stuff
-            //MediaPlayer.IsRepeating = true;
-            //Song song = Content.Load<Song>( "troupe_-_cabedge_sailing" );
-            //MediaPlayer.Play( song );
+            MediaPlayer.IsRepeating = true;
+            Song song = Content.Load<Song>( "troupe_-_cabedge_sailing" );
+            MediaPlayer.Play( song );
 
             // load up the map
             VERGEMap.switch_map( "paradise_isle2" );
 
             /// spawn the player
-            player = map.spawn_entity( 24, 12, "darin" );
+            player = map.spawn_entity( 13, 19, "darin" );
 
             //
             this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
 
-            system_font = Content.Load<SpriteFont>( "Garamond" );
+            system_font = Content.Load<SpriteFont>( "RondaSeven" );
         }
 
         /// <summary>
@@ -77,6 +93,7 @@ namespace Sully
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            if( Textbox.state != TextboxState.Hidden ) Textbox.Update();
         }
 
         /// <summary>
@@ -95,6 +112,16 @@ namespace Sully
             Textbox.lines.Add( str_2 );
             Textbox.lines.Add( str_3 );
             Textbox.state = TextboxState.Printing;
+        }
+
+        private void init_textbox() {
+            Textbox.image = Content.Load<Texture2D>( "textbox" );
+            Textbox.bounds = new Rectangle( 0, 0, Textbox.image.Width, Textbox.image.Height );
+            Textbox.bounds.Offset( ( screen.width - Textbox.bounds.Width ) / 2, screen.height - Textbox.bounds.Height - 4 );
+            Textbox.inner_bounds = Textbox.bounds; // copy value            
+            Textbox.color_bounds = Textbox.bounds;
+            Textbox.inner_bounds.Inflate( -Textbox.horizontal_padding, -Textbox.vertical_padding );
+            Textbox.color_bounds.Inflate( -2, -2 );
         }
     }
 }

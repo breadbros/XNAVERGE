@@ -52,11 +52,12 @@ namespace Sully {
         }
  */
         public void sully( int x, int y, bool adj ) {
-            ( (SullyGame)VERGEGame.game ).textbox( "vargulfs vargulfs", "", "vargulfs?" );
+
+            _.textbox ( "\"when a girl walks in with an itty-bitty","waist and a round thing in your face", "you get sprung.\"" );
         }
 
         public void sancho( int x, int y, bool adj ) {
-            ( (SullyGame)VERGEGame.game ).textbox( "vargulfs vargulfs", "", "vargulfs?" );
+            _.textbox( "vargulfs vargulfs", "", "vargulfs?" );
         }
 
         public void undersea( int x, int y, bool adj ) {
