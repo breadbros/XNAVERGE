@@ -61,7 +61,7 @@ namespace XNAVERGE {
             __Draw( true );
         }
 
-        public void __Draw( Boolean isOverlayLayer = false ) {
+        public void __Draw( Boolean isOverlayLayer) {
             SpriteBatch spritebatch = VERGEGame.game.spritebatch;
 
             int min_x, min_y, tiles_per_row, tiles_per_column;

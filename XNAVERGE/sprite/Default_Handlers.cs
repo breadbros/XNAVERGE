@@ -120,6 +120,7 @@ namespace XNAVERGE {
             }
         }
 
+
         // A helper function for entity movement. Sets up the entity to go a certain distance in a certain cardinal direction.
         // The distance is either pixels or tiles, depending on the value of in_tiles.
         public static void set_up_cardinal_movement(Entity ent, Direction dir, int distance, bool in_tiles) {

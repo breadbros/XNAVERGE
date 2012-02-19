@@ -14,6 +14,85 @@ namespace XNAVERGE {
 
         public Movestring movestring;
 
+        // Returns the path up to the first obstruction (or the original path, if unobstructed)
+        public virtual Vector2 try_to_move(Vector2 path) {
+            VERGEMap map = VERGEGame.game.map;            
+            Vector2 target;
+            Point closest_obs = hitbox.Location;
+            int max_distance;
+            Point pixel_path, sign, farthest;
+            
+            target = exact_pos + path;            
+            // The target pixel is where the character's upper-left hitbox pixel will be if it 
+            // moves the full possible distance.
+            pixel_path = new Point(((int)Math.Floor(target.X)) - hitbox.X, ((int)Math.Floor(target.Y)) - hitbox.Y);            
+            sign = new Point(Math.Sign(pixel_path.X), Math.Sign(pixel_path.Y));
+            if (sign.X == 0 && sign.Y == 0) return path; // no between-pixel movement;            
+            
+            farthest = new Point(hitbox.X + pixel_path.X, hitbox.Y + pixel_path.Y);
+            max_distance = Int32.MaxValue;
+
+            if (sign.X != 0) { // moving horizontally -- check collision with left or right side
+                _try_move_project_side(pixel_path, true, ref max_distance, ref farthest);
+            }
+            if (sign.Y != 0) { // moving vertically -- check collision with top or bottom
+                _try_move_project_side(pixel_path, false, ref max_distance, ref farthest);
+            }
+
+            if (max_distance < Int32.MaxValue) { // obstructed
+                target.X = exact_pos.X + (float)(farthest.X - hitbox.X);
+                target.Y = exact_pos.Y + (float)(farthest.Y - hitbox.Y);
+                return target - exact_pos;
+            }
+            else return path;            
+        }
+
+        // A helper function for try_to_move. Projects one side of the entity toward the target
+        // along the given (integer-valued) path vector. The "vertical" parameter is true if 
+        // the side being projected is the left or right (i.e. the vertically aligned sides).
+        private void _try_move_project_side(Point path, bool vertical_side, ref int max_distance, ref Point farthest) {
+            VERGEMap map = VERGEGame.game.map;
+            Point cur_pixel, ray_goal, ray_result;
+            int side_length, max_distance_so_far, cur_distance;
+            cur_pixel = ray_goal = ray_result = default(Point);
+            
+            if (vertical_side) { // Projecting the left or right side of the hitbox
+                cur_pixel.X = hitbox.X + (1 + Math.Sign(path.X)) * (hitbox.Width - 1) / 2; // leading side of hitbox                
+                cur_pixel.Y = hitbox.Y;
+                side_length = hitbox.Height;
+            }
+            else { // Projecting the top or bottom of the hitbox
+                cur_pixel.X = hitbox.X;
+                cur_pixel.Y = hitbox.Y + (1 + Math.Sign(path.Y)) * (hitbox.Height - 1) / 2; // leading side of hitbox                                
+                side_length = hitbox.Width;
+            }
+            ray_goal.X = cur_pixel.X + path.X;
+            ray_goal.Y = cur_pixel.Y + path.Y;
+            max_distance_so_far = max_distance;
+
+            for (int i = 0; i < side_length; i++) {
+                cur_distance = max_distance;
+                ray_result = map.cast_ray(cur_pixel, ray_goal, ref cur_distance);
+                if (cur_distance < max_distance) { // obstruction encountered
+                    max_distance = cur_distance;
+                    // Adjust "farthest" pixel appropriately. Note that, since
+                    // the farthest pixel corresponds to the top-left of the 
+                    // farthest hitbox, we have to adjust ray_result based on its
+                    // location within the hitbox.
+                    farthest = new Point(ray_result.X + hitbox.X - cur_pixel.X,
+                                         ray_result.Y + hitbox.Y - cur_pixel.Y);
+                }
+                if (vertical_side) {
+                    cur_pixel.Y++;
+                    ray_goal.Y++;
+                }
+                else {
+                    cur_pixel.X++;
+                    ray_goal.X++;
+                }
+            }
+
+        }
 
         // CURRENTLY THIS DOES NOTHING AND THE DESCRIPTION OF IT IS ALL LIES
         // BEGIN LIES:

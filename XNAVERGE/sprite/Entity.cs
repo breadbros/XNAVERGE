@@ -114,7 +114,7 @@ namespace XNAVERGE {
 
         public virtual void idle() { set_animation(idle_animation_prefix + facing); }
         public virtual void walk() { set_animation(move_animation_prefix + facing); }
-
+        
         public virtual void set_walk_state(bool val) {
             _moving = val;
             if (val) walk();
@@ -142,6 +142,19 @@ namespace XNAVERGE {
         public Point facing_coordinates(bool include_diagonals) {            
             Point signs = Utility.signs_from_direction(facing, true);
             return new Point( hitbox.X + signs.X + (hitbox.Width + signs.X*hitbox.Width)/2, hitbox.Y + signs.Y + (hitbox.Height + signs.Y*hitbox.Height)/2 );
+        }
+
+
+        public override void handle_movement() {
+            float elapsed = (float)(VERGEGame.game.tick - last_logic_tick);
+            Vector2 velocity_change, path;
+            velocity_change = elapsed * acceleration;
+            path = elapsed * (velocity + velocity_change / 2); // s = A(t^2)/2 + Vt + s_old, assuming constant A            
+            velocity += velocity_change;            
+            if (false && this == VERGEGame.game.player) {
+                path = try_to_move(path);                
+            }
+            _exact_pos += path;
         }
 
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used
