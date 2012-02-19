@@ -16,12 +16,31 @@ namespace Sully
     public class _ {
         public static SullyGame sg;
 
+        public static int
+            T_DARIN = 1,
+            T_SARA = 2,
+            T_DEXTER = 3,
+            T_CRYSTAL = 4,
+            T_GALFREY = 5,
+            T_STAN = 6,
+            T_SULLY = 7,
+            T_BUNNY = 8,
+            T_BIRD = 9,
+            T_BUBBA = 10,
+            T_SANCHO = 11,
+            T_LANCE = 12,
+            T_PAXTON = 13;
+
         public static void init( SullyGame sg ) {
             _.sg = sg;
         }
 
+        public static void textbox( int port, string s1, string s2, string s3 ) {
+            sg.textbox( s1, s2, s3, port );
+        }
+
         public static void textbox( string s1, string s2, string s3 ) {
-            _.sg.textbox( s1, s2, s3 );
+            sg.textbox( s1, s2, s3 );
         }
     }
 
@@ -105,19 +124,27 @@ namespace Sully
             base.Draw(gameTime);
         }
 
-        public void textbox( String str_1, String str_2, String str_3 ) {
+        public void textbox( String str_1, String str_2, String str_3, int speechIdx = 0 ) {
             VERGEGame.game.lock_player();
             Textbox.reset();
             Textbox.lines.Add( str_1 );
             Textbox.lines.Add( str_2 );
             Textbox.lines.Add( str_3 );
+            Textbox.activeSpeechIdx = speechIdx;
             Textbox.state = TextboxState.Printing;
         }
 
         private void init_textbox() {
             Textbox.image = Content.Load<Texture2D>( "textbox" );
+            Textbox.speechPortraits = Content.Load<Texture2D>( "speech" );
             Textbox.bounds = new Rectangle( 0, 0, Textbox.image.Width, Textbox.image.Height );
-            Textbox.bounds.Offset( ( screen.width - Textbox.bounds.Width ) / 2, screen.height - Textbox.bounds.Height - 4 );
+
+            int yloc = screen.height - Textbox.bounds.Height - 4;
+
+            Textbox.bounds.Offset( ( screen.width - Textbox.bounds.Width ) / 2, yloc );
+
+            Textbox.speech_bounds = new Rectangle( 2, yloc - 33, 32, 32 ); 
+
             Textbox.inner_bounds = Textbox.bounds; // copy value            
             Textbox.color_bounds = Textbox.bounds;
             Textbox.inner_bounds.Inflate( -Textbox.horizontal_padding, -Textbox.vertical_padding );

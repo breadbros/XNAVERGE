@@ -11,11 +11,13 @@ namespace Sully {
     public static class Textbox {
         public static TextboxState state;
         public static Texture2D image;
-        public static Rectangle bounds, inner_bounds, color_bounds;
+        public static Rectangle bounds, inner_bounds, color_bounds, speech_bounds;
         public static int cur_line, cur_pos, vertical_padding, horizontal_padding;
         public static int short_step, long_step;
         public static BasicDelegate callback;
         public static Texture2D bgColor;
+        public static Texture2D speechPortraits;
+        public static int activeSpeechIdx = 0;
 
         public static List<String> lines;
 
@@ -99,6 +101,14 @@ namespace Sully {
 
                 game.spritebatch.Draw( bgColor, Textbox.color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( Textbox.image, Textbox.bounds, Color.White );
+
+                if( activeSpeechIdx > 0 ) {
+                    game.spritebatch.Draw( Textbox.speechPortraits, 
+                                           speech_bounds, 
+                                           new Rectangle( 0, 32 * activeSpeechIdx, 32, 32 ), 
+                                           Color.White 
+                    );
+                }
 
                 if( state == TextboxState.Waiting ) { // finished printing the full contents
                     for( int i = 0; i < length; i++ ) {

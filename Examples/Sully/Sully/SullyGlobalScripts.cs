@@ -53,11 +53,11 @@ namespace Sully {
  */
         public void sully( int x, int y, bool adj ) {
 
-            _.textbox ( "\"when a girl walks in with an itty-bitty","waist and a round thing in your face", "you get sprung.\"" );
+            _.textbox ( _.T_SULLY, "\"when a girl walks in with an itty-bitty","waist and a round thing in your face", "you get sprung.\"" );
         }
 
         public void sancho( int x, int y, bool adj ) {
-            _.textbox( "vargulfs vargulfs", "", "vargulfs?" );
+            _.textbox( _.T_SANCHO, "*SIGH*", "", "...hi." );
         }
 
         public void undersea( int x, int y, bool adj ) {
