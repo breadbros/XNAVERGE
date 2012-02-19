@@ -23,6 +23,10 @@ namespace Sully {
     //{Sully.Script_paradise_isle2}
     public class Script_paradise_isle2 : MapScriptBank {
 
+        public void start() {
+            int i = 0;
+        }
+
         public Script_paradise_isle2( VERGEMap map ) : base( map ) {
            Console.WriteLine( "Paradise Isle scripts loaded." );
         }

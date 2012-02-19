@@ -169,6 +169,10 @@ namespace XNAVERGE {
                 // TODO: in-transition here
                 map.scripts.do_after_transition();
             }
+
+            BasicDelegate initscript = VERGEGame.game.script<BasicDelegate>( map.initscript );
+            if( initscript != null )
+                initscript();
         }
     }
 
