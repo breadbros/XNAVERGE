@@ -14,7 +14,6 @@ namespace M {
 
         public void draw_UI(ScriptRenderLayer layer, Rectangle clipping_region) {
             Textbox.Draw();
-
         }
     }
 

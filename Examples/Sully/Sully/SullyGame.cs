@@ -27,7 +27,8 @@ namespace Sully
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
+            global = new SullyGlobalScripts();
             base.Initialize();
         }
 
@@ -37,15 +38,26 @@ namespace Sully
         /// </summary>
         protected override void LoadContent()
         {
+            Console.WriteLine( "SullyGmae::LoadContent(), mothafuckas!" );
+
+            // always do this first
             base.LoadContent();
 
-            MediaPlayer.IsRepeating = true;
-            Song song = Content.Load<Song>( "troupe_-_cabedge_sailing" );
-            MediaPlayer.Play( song );
+            // music stuff
+            //MediaPlayer.IsRepeating = true;
+            //Song song = Content.Load<Song>( "troupe_-_cabedge_sailing" );
+            //MediaPlayer.Play( song );
 
+            // load up the map
             VERGEMap.switch_map( "paradise_isle2" );
 
+            /// spawn the player
             player = map.spawn_entity( 24, 12, "darin" );
+
+            //
+            this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
+
+            system_font = Content.Load<SpriteFont>( "Garamond" );
         }
 
         /// <summary>
@@ -74,6 +86,15 @@ namespace Sully
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+        }
+
+        public void textbox( String str_1, String str_2, String str_3 ) {
+            VERGEGame.game.lock_player();
+            Textbox.reset();
+            Textbox.lines.Add( str_1 );
+            Textbox.lines.Add( str_2 );
+            Textbox.lines.Add( str_3 );
+            Textbox.state = TextboxState.Printing;
         }
     }
 }
