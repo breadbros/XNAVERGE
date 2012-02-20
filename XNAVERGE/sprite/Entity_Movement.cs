@@ -18,19 +18,25 @@ namespace XNAVERGE {
 
         // Returns the path up to the first obstruction (or the original path, if unobstructed)
         public virtual Vector2 try_to_move(Vector2 path) {
-            VERGEMap map = VERGEGame.game.map;            
+            return try_to_move_ent(try_to_move_obs(path));            
+        }
+
+        // A helper for try_to_move(). This checks the prospective path for map obstructions 
+        // and returns a new path indicating how far the entity can move before being
+        // obstructed. 
+        protected virtual Vector2 try_to_move_obs(Vector2 path) {
             Vector2 target;
             Point closest_obs = hitbox.Location;
             int max_distance;
-            Point pixel_path, sign, farthest;            
-            target = _exact_pos + path;            
+            Point pixel_path, sign, farthest;
+            target = _exact_pos + path;
             // The target pixel is where the character's upper-left hitbox pixel will be if it 
             // moves the full possible distance.
-            pixel_path = new Point(((int)Math.Floor(target.X)) - hitbox.X, ((int)Math.Floor(target.Y)) - hitbox.Y);            
+            pixel_path = new Point(((int)Math.Floor(target.X)) - hitbox.X, ((int)Math.Floor(target.Y)) - hitbox.Y);
             sign = new Point(Math.Sign(pixel_path.X), Math.Sign(pixel_path.Y));
             if (sign.X == 0 && sign.Y == 0) return path; // no between-pixel movement;            
-            
-            farthest = new Point(hitbox.X + pixel_path.X, hitbox.Y + pixel_path.Y);            
+
+            farthest = new Point(hitbox.X + pixel_path.X, hitbox.Y + pixel_path.Y);
             max_distance = Int32.MaxValue;
 
             if (sign.X != 0) { // moving horizontally -- check collision with left or right side
@@ -40,8 +46,7 @@ namespace XNAVERGE {
                 _try_move_project_side(pixel_path, false, ref max_distance, ref farthest);
             }
 
-            if (max_distance < Int32.MaxValue) { // obstructed                
-                //return Vector2.Zero;
+            if (max_distance < Int32.MaxValue) { // obstructed                             
                 target.X = exact_pos.X + (float)(farthest.X - hitbox.X);
                 target.Y = exact_pos.Y + (float)(farthest.Y - hitbox.Y);
                 return target - exact_pos;
@@ -49,10 +54,136 @@ namespace XNAVERGE {
             else return path;
         }
 
-        // A helper function for try_to_move. Projects one side of the entity toward the target
+        // Tests whether, as this entity moves along the vector path, it will at any point cross 
+        // the given box. Edits path to represent the farthest distance the entity can go without
+        // being obstructed (meaning that it leaves it alone when returning false).
+        public virtual bool test_collision(Rectangle box, ref Point old_path) {
+            Point path, sign, drag_nose, box_nose;
+            float distance;
+            bool vertical_side;
+            Vector2 vpath;
+            Rectangle goal;
+            path = old_path;
+            sign = new Point(Math.Sign(path.X), Math.Sign(path.Y));
+            goal = hitbox;
+            goal.Offset(path.X, path.Y);
+            
+            // Do a preliminary check against the rectangle defined by the path's extremes
+            if (!box.Intersects(Rectangle.Union(hitbox,goal))) return false;
+            
+            // If the boxes intersect before dragging, we know the path is zero (no movement possible.)
+            // Checking this also takes care of a potential edge case later on.
+            if (box.Intersects(hitbox)) {
+                old_path = Point.Zero;
+                return true;
+            }
+
+            if (sign.X == 0 && sign.Y == 0) return false;
+
+            vpath = new Vector2((float)path.X, (float)path.Y);
+
+            drag_nose = new Point(hitbox.X + (1 + sign.X) * (hitbox.Width - 1) / 2, hitbox.Y + (1 + sign.Y) * (hitbox.Height - 1) / 2);
+            box_nose = new Point(box.X + (1 - sign.X) * (box.Width - 1) / 2, box.Y + (1 - sign.Y) * (box.Height - 1) / 2);
+
+
+            switch (sign.X * sign.Y) {
+                // The easy case: horizontal or vertical movement. The rectangular region
+                // we tested above is the actual drag path, so we know that there's a
+                // collision.
+                case 0:
+                    if (this == VERGEGame.game.player) Console.WriteLine("!");
+                    if (sign.X != 0) old_path.X = box_nose.X - drag_nose.X - sign.X;
+                    else old_path.Y = box_nose.Y - drag_nose.Y - sign.Y;
+                    return true;
+
+                // UL-to-DR path (or vice versa)
+                case 1:
+                    // Check if box is too far left to collide
+                    distance = (box.Top - (hitbox.Bottom - 1)) / vpath.Y;
+                    if (box.Right - 1 < hitbox.Left + path.X * distance) return false;
+                    // Check if box is too far right to collide
+                    distance = ((box.Bottom - 1) - hitbox.Top) / vpath.Y;
+                    if (box.Left > (hitbox.Right - 1) + path.X * distance) return false;
+                    // Collision occurred. Adjust path accordingly.                    
+
+                    break;                    
+
+                // UR-to-DL path (or vice versa)
+                case -1:
+                    // Check if box is too far left to collide
+                    distance = ((box.Bottom - 1) - hitbox.Top) / vpath.Y;
+                    if (box.Right - 1 < hitbox.Left + path.X * distance) return false;
+                    // Check if box is too far right to collide
+                    distance = (box.Top - (hitbox.Bottom - 1)) / vpath.Y;
+                    if (box.Left > (hitbox.Right - 1) + path.X * distance) return false;
+                    // Collision occurred. Adjust path accordingly.
+
+                    break;
+
+                default: throw new Exception("I can't even begin to guess what happened here.");
+            }
+                
+            // At this point we know there was a collision, and that the dragged box is moving diagonally.
+
+            distance = (box_nose.Y - drag_nose.Y)/((float)vpath.Y);
+            vertical_side = (sign.X > 0) ^ (box_nose.X < drag_nose.X + path.X * distance);
+
+            if (vertical_side) { // collision is between the left and right sides of the rectangles
+                path.X = box_nose.X - sign.X - drag_nose.X;
+                path.Y = path.X * old_path.Y / old_path.X;
+            }
+            else { // collision is between the top and bottom sides of the rectangles
+                path.Y = box_nose.Y - sign.Y - drag_nose.Y;
+                path.X = path.Y * old_path.X / old_path.Y;                
+            }
+            old_path = path;
+            return true;
+        }
+
+        // A helper for try_to_move(). This checks the prospective path for obstructing 
+        // entities and returns a new path indicating how far the entity can move without
+        // hitting one. 
+        protected virtual Vector2 try_to_move_ent(Vector2 path) {
+            Vector2 target;
+            Point pixel_path, best_path, cur_path;
+            Rectangle goal;
+            int best_distance, cur_distance;
+            VERGEMap map = VERGEGame.game.map;
+            BoundedSpace<Entity>.BoundedElementSet ent_enum;
+            Entity ent;
+
+            target = _exact_pos + path;
+            // The target pixel is where the character's upper-left hitbox pixel will be if it 
+            // moves the full possible distance.
+            best_path = pixel_path = new Point(((int)Math.Floor(target.X)) - hitbox.X, ((int)Math.Floor(target.Y)) - hitbox.Y);
+            best_distance = Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y);
+            if (best_distance <= 0) return path; // no between-pixel movement;                        
+            goal = hitbox;
+            goal.Offset(pixel_path.X, pixel_path.Y);
+             
+            ent_enum = VERGEGame.game.entity_space.elements_within_bounds(Rectangle.Union(hitbox, goal), true, this);
+            while (ent_enum.GetNext(out ent)) {
+                cur_path = pixel_path;
+                if (test_collision(ent.hitbox, ref cur_path)) {
+                    cur_distance = Math.Abs(cur_path.X) + Math.Abs(cur_path.Y);
+                    if (cur_distance < best_distance) {
+                        best_distance = cur_distance;
+                        best_path = cur_path;
+                    }
+                }
+            }
+            
+            if (best_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y)) { // couldn't go the full distance                
+                path.X = exact_pos.X + (float)(best_path.X - hitbox.X);
+                path.Y = exact_pos.Y + (float)(best_path.Y - hitbox.Y); 
+            }
+            return path;
+        }
+
+        // A helper function for _try_to_move_obs. Projects one side of the entity toward the target
         // along the given (integer-valued) path vector. The "vertical" parameter is true if 
         // the side being projected is the left or right (i.e. the vertically aligned sides).
-        private void _try_move_project_side(Point path, bool vertical_side, ref int max_distance, ref Point farthest) {
+        protected void _try_move_project_side(Point path, bool vertical_side, ref int max_distance, ref Point farthest) {
             VERGEMap map = VERGEGame.game.map;
             Point cur_pixel, ray_goal, ray_result, test;
             int side_length, max_distance_so_far, cur_distance;

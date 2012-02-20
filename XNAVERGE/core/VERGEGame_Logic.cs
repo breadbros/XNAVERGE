@@ -40,16 +40,16 @@ namespace XNAVERGE {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();            
             elapsed = (int)(gameTime.TotalGameTime.Ticks - _last_tick_time); // won't overflow unless Updates are more than 2 seconds apart            
-            if (elapsed >= _tick_length_in_timespan_ticks) {                
+            if (elapsed >= _tick_length_in_timespan_ticks) {
+                // IF TICKS HAVE ELAPSED, DO THE ACTUAL UPDATING
+                // okay, you don't need to yell
+                
                 elapsed /= _tick_length_in_timespan_ticks; // convert elapsed from ms to ticks, rounding down
                 _tick += elapsed;
-                _last_tick_time += elapsed * _tick_length_in_timespan_ticks;
-
-                // IF TICKS HAVE ELAPSED, DO THE ACTUAL UPDATING
+                _last_tick_time += elapsed * _tick_length_in_timespan_ticks;                
 
                 if (map != null) {
-                    input.Update();
-                    prev_player_coords = default(Point);
+                    input.Update();                    
 
                     // HANDLE MOVEMENT AND COLLISIONS
                     // ------------------------------
@@ -58,28 +58,21 @@ namespace XNAVERGE {
                         prev_player_coords = player.hitbox.Center;
                         prev_player_coords.X /= map.tileset.tilesize;
                         prev_player_coords.Y /= map.tileset.tilesize;
-                        if (player_controllable) Default_Handlers.VERGEStyle_Player_Movement_Handler(player);
-                        else {
-                            player.velocity = player.acceleration = Vector2.Zero;
-                        }
-                        player.Update();
-                    }                    
+                    }
+                    else prev_player_coords = default(Point);
                     for (int i = 0; i < map.num_entities; i++) {
-                        if (map.entities[i] != player) {
-                            Default_Handlers.Entity_Movescript_Handler(map.entities[i]);
-                            map.entities[i].Update();
+                        ent = map.entities[i];                        
+                        if (ent != player || !player_controllable) {
+                            Default_Handlers.Entity_Movescript_Handler(ent);
+                            
                         }
+                        else { // this is a controllable player entity
+                            Default_Handlers.VERGEStyle_Player_Movement_Handler(ent);                                                
+                        }
+                        ent.Update();
                     }
                     
                     /*
-                    old_player = player;
-                    if (old_player != null) {
-                        prev_player_coords = player.hitbox.Center;
-                        prev_player_coords.X /= map.tileset.tilesize;
-                        prev_player_coords.Y /= map.tileset.tilesize;
-                    }
-                    else prev_player_coords = default(Point);
-
 
                     for (int i = 0; i < map.num_entities; i++) {
                         ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true, map.entities[i]);

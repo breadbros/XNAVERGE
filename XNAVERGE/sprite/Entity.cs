@@ -154,7 +154,12 @@ namespace XNAVERGE {
             if (this.obstructable) {                
                 path = try_to_move(path);
             }
-            _exact_pos += path;
+            _exact_pos += path;            
+        }
+
+        public override void Update() {
+            base.Update();
+            VERGEGame.game.entity_space.Update(this);
         }
 
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used
