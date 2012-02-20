@@ -19,28 +19,67 @@ namespace Sully {
         public Texture2D bgColor;
         public Texture2D speechPortraits;
         public int activeSpeechIdx = 0;
+        public Boolean isStarted = false;
 
-        public List<String> lines;
+        public List<object> boxes_of_text;
+        public List<string> currently_rendering_text;
 
         private static int last_anim_tick;
         
         public Textbox() {
-            lines = new List<String>(3);
+            boxes_of_text = new List<object>();
+            currently_rendering_text = new List<string>();
             vertical_padding = 2;
             horizontal_padding = 7; 
             long_step = 2;
             short_step = 1;
 
-            reset();
+            full_reset();
         }
 
-        public void reset() {
-            lines.Clear();
+        public void addBox( String str_1, String str_2, String str_3, int speechIdx = 0 ) {
+
+            List<object> lines = new List<object>();
+
+            lines.Add( speechIdx );
+            lines.Add( str_1 );
+            lines.Add( str_2 );
+            lines.Add( str_3 );
+            boxes_of_text.Add( lines );
+
+            maybe_start();
+        }
+
+        public void full_reset() {
             callback = null;
             state = TextboxState.Hidden;
             cur_line = cur_pos = 0;
             last_anim_tick = VERGEGame.game.tick;
-        }        
+            isStarted = false;
+        }
+
+        public void box_reset() {
+            last_anim_tick = VERGEGame.game.tick;
+            cur_line = cur_pos = 0;
+            this.currently_rendering_text.Clear();
+
+            List<object> curbox = (List<object>)boxes_of_text[0];
+            activeSpeechIdx = (int)curbox[0];
+
+            this.currently_rendering_text.Add( (string)curbox[1] );
+            this.currently_rendering_text.Add( (string)curbox[2] );
+            this.currently_rendering_text.Add( (string)curbox[3] );
+            state = TextboxState.Printing;
+        }
+
+        public void maybe_start() {
+            if( !isStarted ) {
+                VERGEGame.game.lock_player();
+                box_reset();
+                state = TextboxState.Printing;
+                isStarted = true;
+            }
+        }
 
         public void Update() {
             SullyGame game = (SullyGame)VERGEGame.game;
@@ -48,27 +87,37 @@ namespace Sully {
             switch (state) {
                 case TextboxState.Waiting: // The textbox has finished scrolling and is awaiting input
                     if (game.action.confirm.pressed || game.action.cancel.pressed) {
-                        reset();
-                        if (callback != null) callback();
-                        VERGEGame.game.unlock_player();
+
+                        boxes_of_text.Remove( boxes_of_text[0] );
+
+                        if( boxes_of_text.Count == 0 ) {
+                            if( callback != null ) {
+                                callback();
+                            }
+                            full_reset();
+                            VERGEGame.game.unlock_player();
+                        } else {
+                            box_reset();
+                        }
                     }
                     break;
                 case TextboxState.Printing: { // The textbox is currently scrolling text
-                    if (lines.Count == 0 || game.action.cancel.pressed) {
+                    if( currently_rendering_text.Count == 0 || game.action.cancel.pressed ) {
+                        
                         state = TextboxState.Waiting;
                         last_anim_tick = game.tick;
-                    }
-                    else {
+                    
+                    } else {
                         if (game.action.confirm.down) step = short_step;
                         else step = long_step;
                         while (game.tick - last_anim_tick >= step) {
                             last_anim_tick += step;
                             cur_pos++;
-                            while (cur_line < lines.Count && cur_pos >= lines[cur_line].Length) {
+                            while( cur_line < currently_rendering_text.Count && cur_pos >= currently_rendering_text[cur_line].Length ) {
                                 cur_line++;
                                 cur_pos = 0;
                             }
-                            if (cur_line >= lines.Count) {
+                            if( cur_line >= currently_rendering_text.Count ) {
                                 state = TextboxState.Waiting;
                             }
                         }
@@ -89,7 +138,7 @@ namespace Sully {
         public void Draw() {
             SullyGame game = (SullyGame)VERGEGame.game;
             int height, length;
-            length = lines.Count;
+            length = currently_rendering_text.Count;
             height = game.system_font.LineSpacing;
 
             if( bgColor == null ) {
@@ -113,15 +162,15 @@ namespace Sully {
 
                 if( state == TextboxState.Waiting ) { // finished printing the full contents
                     for( int i = 0; i < length; i++ ) {
-                        _Draw( lines[i], inner_bounds.X, inner_bounds.Y + i * height );
+                        _Draw( currently_rendering_text[i], inner_bounds.X, inner_bounds.Y + i * height );
                     }
                 } else { // still scrolling text
                     for( int i = 0; i < cur_line; i++ ) {
 
-                        _Draw( lines[i], inner_bounds.X, inner_bounds.Y + i * height );
+                        _Draw( currently_rendering_text[i], inner_bounds.X, inner_bounds.Y + i * height );
                     }
 
-                    _Draw( lines[cur_line].Substring( 0, cur_pos + 1 ), inner_bounds.X, inner_bounds.Y + cur_line * height );
+                    _Draw( currently_rendering_text[cur_line].Substring( 0, cur_pos + 1 ), inner_bounds.X, inner_bounds.Y + cur_line * height );
                 }
 
                 game.spritebatch.End();

@@ -41,25 +41,15 @@ namespace Sully {
         }
 
         public static void TextBox( int port, string s1, string s2, string s3 ) {
-            talk( s1, s2, s3, port );
+            sg.textbox.addBox( s1, s2, s3, port );
         }
 
         public static void TextBox( string s1, string s2, string s3 ) {
-            talk( s1, s2, s3 );
+            sg.textbox.addBox( s1, s2, s3 );
         }
 
         public static void SetTile( int layer, int x, int y, int tile ) {
             sg.map.tiles[layer].data[x][y] = tile;
-        }
-
-        public static void talk( String str_1, String str_2, String str_3, int speechIdx = 0 ) {
-            VERGEGame.game.lock_player();
-            sg.textbox.reset();
-            sg.textbox.lines.Add( str_1 );
-            sg.textbox.lines.Add( str_2 );
-            sg.textbox.lines.Add( str_3 );
-            sg.textbox.activeSpeechIdx = speechIdx;
-            sg.textbox.state = TextboxState.Printing;
         }
     }
 }
