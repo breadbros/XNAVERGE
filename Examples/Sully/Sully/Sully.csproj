@@ -107,6 +107,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalScripts\Maps.cs" />
+    <Compile Include="GlobalScripts\Party.cs" />
+    <Compile Include="GlobalScripts\Flags.cs" />
+    <Compile Include="GlobalScripts\Util.cs" />
+    <Compile Include="MapScripts\ParadiseIsle.cs" />
     <Compile Include="SullyGlobalScripts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

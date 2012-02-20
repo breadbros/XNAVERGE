@@ -65,8 +65,9 @@ namespace XNAVERGE {
             renderstack = new RenderStack(this, new_renderstring, delim);
         }
 
-        public void set_renderstring(String new_renderstring) { set_renderstring(new_renderstring, ','); }
-
+        public void set_renderstring(String new_renderstring) { 
+            set_renderstring(new_renderstring, ',');
+        }
 
         // ---------------------------------
         // ENTITY MANAGEMENT
@@ -182,7 +183,7 @@ namespace XNAVERGE {
             while (distance < limit) {                
                 if (distance != 0 && obs_at_pixel(source.X, source.Y)) { // don't check the starting point                    
                     max_distance = distance - 1;                    
-                    return prev;
+                    return prev;  
                 }
                 prev = source;
                 // Increment only the longer dimension until error passes threshold

@@ -32,8 +32,17 @@ namespace XNAVERGE {
         public bool tile_movement; // specifies whether or not directional commands are in pixels or tiles
         public bool done;
         public int step;
+        public event Action OnDone;
 
         protected int wait_time; // time left to wait, in hundredths of ticks. 0 if not waiting.
+
+        public void _stopMovestring() {
+            done = true;
+
+            if( OnDone != null ) {
+                OnDone();
+            }
+        }
 
         public Movestring(String movestring) {
             MatchCollection matches = regex.Matches(movestring);
@@ -48,7 +57,7 @@ namespace XNAVERGE {
                 parameters = new int[1];
                 commands[0] = MovestringCommand.Stop;
                 parameters[0] = NO_NUMBER;
-                done = true;
+                _stopMovestring();
                 return;
             }            
 
@@ -176,7 +185,7 @@ namespace XNAVERGE {
                         }
                         break;
                     case MovestringCommand.Stop:
-                        done = true;
+                        _stopMovestring();
                         return 0; // being stopped absorbs all time spent, like an infinite wait
                     case MovestringCommand.Loop:
                         if (parameters[step] != NO_NUMBER) { // finite loop
