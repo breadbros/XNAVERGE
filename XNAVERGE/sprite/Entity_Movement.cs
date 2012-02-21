@@ -90,8 +90,7 @@ namespace XNAVERGE {
                 // The easy case: horizontal or vertical movement. The rectangular region
                 // we tested above is the actual drag path, so we know that there's a
                 // collision.
-                case 0:
-                    if (this == VERGEGame.game.player) Console.WriteLine("!");
+                case 0:                    
                     if (sign.X != 0) old_path.X = box_nose.X - drag_nose.X - sign.X;
                     else old_path.Y = box_nose.Y - drag_nose.Y - sign.Y;
                     return true;
@@ -125,16 +124,21 @@ namespace XNAVERGE {
                 
             // At this point we know there was a collision, and that the dragged box is moving diagonally.
 
-            distance = (box_nose.Y - drag_nose.Y)/((float)vpath.Y);
+            distance = (box_nose.Y - drag_nose.Y)/vpath.Y;
             vertical_side = (sign.X > 0) ^ (box_nose.X < drag_nose.X + path.X * distance);
+
+            //if (this == VERGEGame.game.player) Console.WriteLine("{0},{1}", sign.X, sign.Y);
+            old_path = Point.Zero;
+            return true;
+
 
             if (vertical_side) { // collision is between the left and right sides of the rectangles
                 path.X = box_nose.X - sign.X - drag_nose.X;
-                path.Y = path.X * old_path.Y / old_path.X;
+                path.Y = (int)Math.Round(path.X * old_path.Y / (double)old_path.X);                
             }
             else { // collision is between the top and bottom sides of the rectangles
                 path.Y = box_nose.Y - sign.Y - drag_nose.Y;
-                path.X = path.Y * old_path.X / old_path.Y;                
+                path.X = (int)Math.Round(path.Y * old_path.Y / (double)old_path.X);                
             }
             old_path = path;
             return true;
@@ -165,7 +169,9 @@ namespace XNAVERGE {
             while (ent_enum.GetNext(out ent)) {
                 cur_path = pixel_path;
                 if (test_collision(ent.hitbox, ref cur_path)) {
+                    //if (Math.Sign(pixel_path.X) > 0 && Math.Sign(pixel_path.Y) > 0) Console.WriteLine(VERGEGame.game.tick);
                     cur_distance = Math.Abs(cur_path.X) + Math.Abs(cur_path.Y);
+                    if (cur_distance >= Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y)) { Console.WriteLine("NO, BAD."); }
                     if (cur_distance < best_distance) {
                         best_distance = cur_distance;
                         best_path = cur_path;
@@ -173,9 +179,10 @@ namespace XNAVERGE {
                 }
             }
             
-            if (best_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y)) { // couldn't go the full distance                
-                path.X = exact_pos.X + (float)(best_path.X - hitbox.X);
-                path.Y = exact_pos.Y + (float)(best_path.Y - hitbox.Y); 
+            if (best_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y)) { // couldn't go the full distance
+                if (Math.Sign(pixel_path.X) > 0 && Math.Sign(pixel_path.Y) > 0) Console.WriteLine("{0} {1} {2}", VERGEGame.game.tick, best_distance, Math.Abs(best_path.X) + Math.Abs(best_path.Y));
+                path.X = (float)best_path.X;
+                path.Y = (float)best_path.Y; 
             }
             return path;
         }
