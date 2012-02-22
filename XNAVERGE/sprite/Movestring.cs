@@ -33,6 +33,7 @@ namespace XNAVERGE {
         public bool done;
         public int step;
 
+        public int movement_left; // distance left to move for the current move command, measured in hundredths of pixels. 0 if not at a move command.
         protected int wait_time; // time left to wait, in hundredths of ticks. 0 if not waiting.
 
         public Movestring(String movestring) {
@@ -143,7 +144,8 @@ namespace XNAVERGE {
             step = 0;
             done = false;
             tile_movement = DEFAULT_TO_TILE_MOVEMENT;
-            wait_time = 0;            
+            wait_time = 0;
+            movement_left = 0;
         }
 
         // Processes the movestring, returning when it gets to a blocking point or requires outside handling. It takes as an

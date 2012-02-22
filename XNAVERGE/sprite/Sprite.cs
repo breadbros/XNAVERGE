@@ -237,8 +237,10 @@ namespace XNAVERGE {
 
         public virtual void Update() {
             int pixel_val;
-            handle_movement();
-
+            float elapsed = (float)(VERGEGame.game.tick - last_logic_tick);
+            Vector2 velocity_change = elapsed * acceleration;
+            _exact_pos += elapsed * (velocity + velocity_change / 2); // s = A(t^2)/2 + Vt + s_old, assuming constant A
+            velocity += velocity_change;
             // Update pixel coordinates
             pixel_val = (int)Math.Floor(_exact_pos.X);
             destination.X += pixel_val - hitbox.X;
@@ -246,15 +248,8 @@ namespace XNAVERGE {
             pixel_val = (int)Math.Floor(_exact_pos.Y);
             destination.Y += pixel_val - hitbox.Y;
             hitbox.Y = pixel_val;
-
             last_logic_tick = VERGEGame.game.tick;
         }
 
-        public virtual void handle_movement() {
-            float elapsed = (float)(VERGEGame.game.tick - last_logic_tick);
-            Vector2 velocity_change = elapsed * acceleration;
-            _exact_pos += elapsed * (velocity + velocity_change / 2); // s = A(t^2)/2 + Vt + s_old, assuming constant A
-            velocity += velocity_change;
-        }
     }
 }

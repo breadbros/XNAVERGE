@@ -13,11 +13,20 @@ namespace XNAVERGE {
     public static class Default_Handlers {
         internal static VERGEGame game;
 
+        // A general purpose VERGE-emulation handler that defers to various other handlers depending on
+        // the entity's state.
+        public static bool omnibus_vergestyle_handler(Entity ent) {
+            if (ent == VERGEGame.game.player && VERGEGame.game.player_controllable)
+                return vergestyle_player_movement_handler(ent);
+            else
+                return entity_movescript_handler(ent);
+        }
+
         // Moves the entity in accordance with the player's inputs. This works like VERGE player input
         // EXCEPT that, when diagonals are enabled, it moves the player at the same speed overall 
         // (unlike VERGE, which moved them both vertically and horizontally as fast as if they were 
         //  moving in that direction alone)
-        public static void VERGEStyle_Player_Movement_Handler(Entity ent) {
+        public static bool vergestyle_player_movement_handler(Entity ent) {
             int x = 0, y = 0;
             float factor;
             if (VERGEGame.game.dir.left.down) x--;
@@ -37,9 +46,10 @@ namespace XNAVERGE {
                 if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.INV_SQRT2; // diagonal movement
                 ent.velocity *= factor;
             }
+            return false;
         }
 
-        public static void Entity_Movescript_Handler(Entity ent) {
+        public static bool entity_movescript_handler(Entity ent) {
             int cur_param, elapsed, adjusted_time;            
             Movestring movestring;
             elapsed = game.tick - ent.last_logic_tick;
@@ -48,10 +58,6 @@ namespace XNAVERGE {
             ent.acceleration = Vector2.Zero;
             adjusted_time = ent.speed * elapsed; // hundredths of "virtual" ticks elapsed (accounting for speed)
 
-            if (game.player == ent) {
-                VERGEStyle_Player_Movement_Handler(ent);
-                return; 
-            }
             movestring = ent.movestring;
 
             while (adjusted_time > 0) {
@@ -59,7 +65,7 @@ namespace XNAVERGE {
                 adjusted_time = movestring.ready(adjusted_time);
                 if (adjusted_time <= 0 && ent.moving) ent.set_walk_state(false);
                     
-                if (ent.movement_left <= 0) { // If not currently walking
+                if (movestring.movement_left <= 0) { // If not currently walking
                     cur_param = movestring.parameters[movestring.step];
 
                     switch (movestring.commands[movestring.step]) {
@@ -104,20 +110,21 @@ namespace XNAVERGE {
 
                 }
 
-                if (ent.movement_left > 0) {                                                
-                    if (ent.movement_left <= adjusted_time) { // Can move farther than is needed in the remaining time                                                    
-                        ent.velocity += Utility.velocity_from_direction(ent.movement_direction, ent.movement_left/100f, elapsed);
-                        adjusted_time -= ent.movement_left;
-                        ent.movement_left = 0;
+                if (movestring.movement_left > 0) {
+                    if (movestring.movement_left <= adjusted_time) { // Can move farther than is needed in the remaining time                                                    
+                        ent.velocity += Utility.velocity_from_direction(ent.movement_direction, movestring.movement_left / 100f, elapsed);
+                        adjusted_time -= movestring.movement_left;
+                        movestring.movement_left = 0;
                         movestring.step++;
                     }
                     else { // Entity will spend the entire period moving                        
                         ent.velocity += Utility.velocity_from_direction(ent.movement_direction, ent.speed/100f, 1);
-                        ent.movement_left -= adjusted_time;                            
+                        movestring.movement_left -= adjusted_time;                            
                         adjusted_time = 0;
                     }
                 }
             }
+            return false;
         }
 
 
@@ -126,12 +133,12 @@ namespace XNAVERGE {
         public static void set_up_cardinal_movement(Entity ent, Direction dir, int distance, bool in_tiles) {
             ent.facing = ent.movement_direction = dir;
             if (distance > 0) {
-                ent.movement_left = distance * 100;
+                ent.movestring.movement_left = distance * 100;
                 ent.set_walk_state(true);
-                if (in_tiles) ent.movement_left *= game.map.tileset.tilesize;
+                if (in_tiles) ent.movestring.movement_left *= game.map.tileset.tilesize;
             }
             else { // distance 0: no movement, just change facing
-                ent.movement_left = 0;
+                ent.movestring.movement_left = 0;
                 ent.movestring.step++;
             }
         }

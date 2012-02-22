@@ -24,7 +24,9 @@ namespace XNAVERGE {
         public const bool PLAYER_CONTROLLABLE_DEFAULT = true;
         public bool player_controllable; // true if player responds to input
         public Stack<bool> player_controllable_stack; // a stack of previous player_controllable states
-        
+
+        public EntityLogicDelegate default_entity_handler; // the movement handler assigned to new entities
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -61,14 +63,7 @@ namespace XNAVERGE {
                     }
                     else prev_player_coords = default(Point);
                     for (int i = 0; i < map.num_entities; i++) {
-                        ent = map.entities[i];                        
-                        if (ent != player || !player_controllable) {
-                            Default_Handlers.Entity_Movescript_Handler(ent);
-                            
-                        }
-                        else { // this is a controllable player entity
-                            Default_Handlers.VERGEStyle_Player_Movement_Handler(ent);                                                
-                        }
+                        ent = map.entities[i];                                                
                         ent.Update();
                     }
                     
