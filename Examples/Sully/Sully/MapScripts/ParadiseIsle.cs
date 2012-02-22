@@ -152,7 +152,9 @@ namespace Sully {
                 _.TextBox( _.T_DARIN, "Hrm... Crystal might get suspicious if I", "sneak off the island without her...", "" );
                 _.TextBox( _.T_DARIN, "...again.", "", "" );
 
-                _.PlayerMove( "U2" );
+                _.sg.textbox.OnDone += () => {
+                    _.PlayerMove( "U2" );
+                };
             }
         }
 

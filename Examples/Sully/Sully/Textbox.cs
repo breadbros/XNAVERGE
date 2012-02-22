@@ -15,7 +15,10 @@ namespace Sully {
         public Rectangle bounds, inner_bounds, color_bounds, speech_bounds;
         public int cur_line, cur_pos, vertical_padding, horizontal_padding;
         public int short_step, long_step;
+        
         public BasicDelegate callback;
+        public event Action OnDone;
+
         public Texture2D bgColor;
         public Texture2D speechPortraits;
         public int activeSpeechIdx = 0;
@@ -52,6 +55,7 @@ namespace Sully {
 
         public void full_reset() {
             callback = null;
+            OnDone = null;
             state = TextboxState.Hidden;
             cur_line = cur_pos = 0;
             last_anim_tick = VERGEGame.game.tick;
@@ -94,6 +98,11 @@ namespace Sully {
                             if( callback != null ) {
                                 callback();
                             }
+
+                            if( OnDone != null ) {
+                                OnDone();
+                            }
+
                             full_reset();
                             VERGEGame.game.unlock_player();
                         } else {

@@ -145,16 +145,27 @@ namespace XNAVERGE {
         }
 
 
-        public override void handle_movement() {
-            float elapsed = (float)(VERGEGame.game.tick - last_logic_tick);
+        public override void Update() {
+            float elapsed;
             Vector2 velocity_change, path;
-            velocity_change = elapsed * acceleration;
-            path = elapsed * (velocity + velocity_change / 2); // s = A(t^2)/2 + Vt + s_old, assuming constant A            
-            velocity += velocity_change;            
-            if (false && this == VERGEGame.game.player) {
-                path = try_to_move(path);                
+            bool more = true;
+
+            elapsed = (float)(VERGEGame.game.tick - last_logic_tick);
+            while (more) {
+                more = handler(this);
+                velocity_change = elapsed * acceleration;
+                path = elapsed * (velocity + velocity_change / 2);
+                velocity += velocity_change;
+                if (this.obstructable) // reduce path to account for obstructions
+                    path = try_to_move(path);
+                if (path.X != 0 || path.Y != 0) {
+                    exact_x += path.X;
+                    exact_y += path.Y;
+                }
             }
-            _exact_pos += path;
+
+            VERGEGame.game.entity_space.Update(this);
+            last_logic_tick = VERGEGame.game.tick;
         }
 
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used

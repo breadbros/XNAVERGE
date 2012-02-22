@@ -170,8 +170,10 @@ namespace XNAVERGE {
             int diff_diff, diff_sum, error, distance, limit;
             diff = new Point(target.X - source.X, target.Y - source.Y);
             sign = new Point(Math.Sign(diff.X), Math.Sign(diff.Y));
-            diff_diff = Math.Abs(Math.Abs(diff.X) - Math.Abs(diff.Y));
-            diff_sum = Math.Abs(diff.X + diff.Y);            
+            diff.X = Math.Abs(diff.X);
+            diff.Y = Math.Abs(diff.Y);
+            diff_diff = Math.Abs(diff.X - diff.Y);
+            diff_sum = diff.X + diff.Y;
             limit = Math.Min(max_distance, diff_sum);
             if (limit <= 0) return source;
 
@@ -180,11 +182,9 @@ namespace XNAVERGE {
             //       the larger difference = (diff_diff + diff_sum)/2
             error = 0;            
             distance = 0;
-            while (distance < limit) {                
-                if (distance != 0 && obs_at_pixel(source.X, source.Y)) { // don't check the starting point                    
-                    max_distance = distance - 1;                    
-                    return prev;  
-                }
+
+            while (distance < limit) {
+
                 prev = source;
                 // Increment only the longer dimension until error passes threshold
                 // (this case never occurs when moving on a perfect diagonal)
@@ -201,7 +201,11 @@ namespace XNAVERGE {
                     source.Y += sign.Y;
                     error -= 4*diff_diff;
                     distance += 2;
-                }                
+                }
+                if (obs_at_pixel(source.X, source.Y)) {                     
+                    max_distance = distance - 1;
+                    return prev;
+                }
             }            
             return source;             
         }        
