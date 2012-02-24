@@ -30,7 +30,7 @@ namespace XNAVERGE {
 
         // State variables
         public bool tile_movement; // specifies whether or not directional commands are in pixels or tiles
-        public bool done;
+        public bool done;        
         public int step;
 
         public int movement_left; // distance left to move for the current move command, measured in hundredths of pixels. 0 if not at a move command.

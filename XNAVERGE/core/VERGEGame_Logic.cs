@@ -25,7 +25,7 @@ namespace XNAVERGE {
         public bool player_controllable; // true if player responds to input
         public Stack<bool> player_controllable_stack; // a stack of previous player_controllable states
 
-        public EntityLogicDelegate default_entity_handler; // the movement handler assigned to new entities
+        public EntityMovementDelegate default_entity_handler; // the movement handler assigned to new entities
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,

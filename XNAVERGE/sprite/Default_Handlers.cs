@@ -15,7 +15,7 @@ namespace XNAVERGE {
 
         // A general purpose VERGE-emulation handler that defers to various other handlers depending on
         // the entity's state.
-        public static bool omnibus_vergestyle_handler(Entity ent) {
+        public static bool omnibus_vergestyle_handler(Entity ent, int time, Vector2 collision_path) {
             if (ent == VERGEGame.game.player && VERGEGame.game.player_controllable)
                 return vergestyle_player_movement_handler(ent);
             else
