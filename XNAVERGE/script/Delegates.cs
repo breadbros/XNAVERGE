@@ -43,5 +43,9 @@ public struct EntityMovementData {
     public Vector2 collision_direction {
         get { return attempted_path - actual_path; }
     }
-    public int time; // in hundredths of ticks    
+
+    // Both these time variables are in speed-adjusted hundredths of ticks. That is, when speed is 100, they're
+    // actually hundredths of ticks. Otherwise, 1 unit = 1/speed ticks.
+    public int time; 
+    public int time_shortfall; // if the movement was interrupted, this indicates how much of the intended movement time was "lost".
 }
