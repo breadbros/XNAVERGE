@@ -15,56 +15,73 @@ namespace XNAVERGE {
 
         // A general purpose VERGE-emulation handler that defers to various other handlers depending on
         // the entity's state.
-        public static bool omnibus_vergestyle_handler(Entity ent) {
+        public static int omnibus_vergestyle_handler(Entity ent, ref EntityMovementData data) {
             if (ent == VERGEGame.game.player && VERGEGame.game.player_controllable)
-                return vergestyle_player_movement_handler(ent);
+                return vergestyle_player_movement_handler(ent, ref data);
             else
-                return entity_movescript_handler(ent);
+                return entity_movescript_handler(ent, ref data);
         }
 
         // Moves the entity in accordance with the player's inputs. This works like VERGE player input
         // EXCEPT that, when diagonals are enabled, it moves the player at the same speed overall 
         // (unlike VERGE, which moved them both vertically and horizontally as fast as if they were 
         //  moving in that direction alone)
-        public static bool vergestyle_player_movement_handler(Entity ent) {
+        public static int vergestyle_player_movement_handler(Entity ent, ref EntityMovementData data) {
             int x = 0, y = 0;
             float factor;
-            if (VERGEGame.game.dir.left.down) x--;
-            if (VERGEGame.game.dir.right.down) x++;
-            if (VERGEGame.game.dir.up.down) y--;
-            if (VERGEGame.game.dir.down.down) y++;
-            ent.velocity = new Vector2((float)x, (float)y);
+            ent.velocity = ent.acceleration = Vector2.Zero;
             ent.acceleration = Vector2.Zero;
-            if (x == 0 && y == 0) {
-                if (ent.moving) ent.set_walk_state(false);
+            if (data.first_call) {
+                if (VERGEGame.game.dir.left.down) x--;
+                if (VERGEGame.game.dir.right.down) x++;
+                if (VERGEGame.game.dir.up.down) y--;
+                if (VERGEGame.game.dir.down.down) y++;
+
+                if (x == 0 && y == 0) {
+                    if (ent.moving) ent.set_walk_state(false);
+                }
+                else {
+                    ent.velocity.X = (float)x;
+                    ent.velocity.Y = (float)y;
+                    if (!ent.moving) ent.set_walk_state(true);
+                    ent.facing = Utility.direction_from_signs(x, y, false);
+                    ent.movement_direction = Utility.direction_from_signs(x, y, true);
+                    factor = ent.speed / 100f;
+                    if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.INV_SQRT2; // diagonal movement
+                    ent.velocity *= factor;
+                }                
             }
-            else {                
-                if (!ent.moving) ent.set_walk_state(true);
-                ent.facing = Utility.direction_from_signs(x, y, false);
-                ent.movement_direction = Utility.direction_from_signs(x, y, true);                
-                factor = ent.speed / 100f;
-                if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.INV_SQRT2; // diagonal movement
-                ent.velocity *= factor;
+            else if (data.collided) {
+                // sliding goes here                
             }
-            return false;
+            return 0;
         }
 
-        public static bool entity_movescript_handler(Entity ent) {
-            int cur_param, elapsed, adjusted_time;            
-            Movestring movestring;
-            elapsed = game.tick - ent.last_logic_tick;
+        public static int entity_movescript_handler(Entity ent, ref EntityMovementData data) {
+            int cur_param, time_left;
+            Movestring movestring;            
 
             ent.velocity = Vector2.Zero;
             ent.acceleration = Vector2.Zero;
-            adjusted_time = ent.speed * elapsed; // hundredths of "virtual" ticks elapsed (accounting for speed)
-
+            time_left = data.time;
             movestring = ent.movestring;
 
-            while (adjusted_time > 0) {
-                //Console.WriteLine("{0} {1}", ent.index, adjusted_time);
-                adjusted_time = movestring.ready(adjusted_time);
-                if (adjusted_time <= 0 && ent.moving) ent.set_walk_state(false);
-                    
+            // Movement failed. As with VERGE, the standard policy is just to mash up against the obstruction forever
+            // and hope it goes away somehow.
+            if (data.collided) {
+                if (movestring.movement_left == Int32.MinValue) movestring.movement_left = data.time_shortfall; 
+                else movestring.movement_left += data.time_shortfall;
+                return 0;
+            }
+
+            while (time_left > 0) {
+                if (movestring.movement_left == Int32.MinValue) {
+                    movestring.movement_left = 0;
+                    movestring.step++;
+                }
+                time_left = movestring.ready(time_left);
+                if (time_left <= 0 && ent.moving) ent.set_walk_state(false);
+
                 if (movestring.movement_left <= 0) { // If not currently walking
                     cur_param = movestring.parameters[movestring.step];
 
@@ -106,25 +123,26 @@ namespace XNAVERGE {
                         case MovestringCommand.Right:
                             set_up_cardinal_movement(ent, Direction.Right, cur_param, movestring.tile_movement);
                             break;
-                    }                
-
+                    }
                 }
 
                 if (movestring.movement_left > 0) {
-                    if (movestring.movement_left <= adjusted_time) { // Can move farther than is needed in the remaining time                                                    
-                        ent.velocity += Utility.velocity_from_direction(ent.movement_direction, movestring.movement_left / 100f, elapsed);
-                        adjusted_time -= movestring.movement_left;
-                        movestring.movement_left = 0;
-                        movestring.step++;
+                    if (movestring.movement_left <= time_left) { // Can move farther than is needed in the remaining time                                                    
+                        ent.velocity += Utility.velocity_from_direction(ent.movement_direction, movestring.movement_left / 100f, 
+                            ((float)movestring.movement_left) / ent.speed);
+                        time_left -= movestring.movement_left;
+                        movestring.movement_left = Int32.MinValue;
+                        return time_left;
                     }
                     else { // Entity will spend the entire period moving                        
-                        ent.velocity += Utility.velocity_from_direction(ent.movement_direction, ent.speed/100f, 1);
-                        movestring.movement_left -= adjusted_time;                            
-                        adjusted_time = 0;
+                        ent.velocity += Utility.velocity_from_direction(ent.movement_direction, ent.speed, 100f);
+                        movestring.movement_left -= time_left;
+                        return 0;
                     }
                 }
             }
-            return false;
+
+            return 0;
         }
 
 

@@ -27,7 +27,7 @@ namespace XNAVERGE {
         // Returns the velocity needed to travel the given distance in the given number of ticks
         // along the given direction, assuming zero acceleration.
         // TODO: Make this less stupid? Maybe someday. Who can say what the future holds
-        public static Vector2 velocity_from_direction(Direction dir, float distance, int ticks) {
+        public static Vector2 velocity_from_direction(Direction dir, float distance, float ticks) {
             Vector2 value;
             float factor;
             switch (dir) {

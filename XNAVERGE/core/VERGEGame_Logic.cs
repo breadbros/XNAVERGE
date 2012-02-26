@@ -25,7 +25,7 @@ namespace XNAVERGE {
         public bool player_controllable; // true if player responds to input
         public Stack<bool> player_controllable_stack; // a stack of previous player_controllable states
 
-        public EntityLogicDelegate default_entity_handler; // the movement handler assigned to new entities
+        public EntityMovementDelegate default_entity_handler; // the movement handler assigned to new entities
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -35,7 +35,7 @@ namespace XNAVERGE {
         protected override void Update(GameTime gameTime) {
             BoundedSpace<Entity>.BoundedElementSet ent_enum;            
             Point prev_player_coords, cur_player_coords, facing_coords;
-            Entity ent, old_player;
+            Entity ent;
             int elapsed;
 
             // Back button instantly quits. TODO: take this out when it transitions from convenient to obnoxious.

@@ -12,30 +12,30 @@ namespace XNAVERGE {
         public const int NO_MOVESCRIPT = Int32.MinValue; // indicates that a character is done moving or has no movescript
         public const int DEFAULT_MOVE_ARRAY_LENGTH = 10; // starting movestring action array size (will be expanded as necessary).        
 
-        public EntityLogicDelegate handler;
+        public EntityMovementDelegate handler;
         public Movestring movestring;
 
         public bool test;
+        
+        public virtual void try_to_move(ref EntityMovementData data) {
+            try_to_move_obs(ref data);
+            try_to_move_ent(ref data);
 
-        // Returns the path up to the first obstruction (or the original path, if unobstructed)
-        public virtual Vector2 try_to_move(Vector2 path) {
-            return try_to_move_ent(try_to_move_obs(path));            
+            return;
         }
 
-        // A helper for try_to_move(). This checks the prospective path for map obstructions 
-        // and returns a new path indicating how far the entity can move before being
-        // obstructed. 
-        protected virtual Vector2 try_to_move_obs(Vector2 path) {
-            Vector2 target;
+        // Checks how far this entity can move along the path without hitting a map obstruction. If an
+        // obstruction is encountered, it edits the movement data to account for it.
+        protected virtual void try_to_move_obs(ref EntityMovementData data) {            
             Point closest_obs = hitbox.Location;
             int max_distance;
-            Point pixel_path, sign, farthest;
-            target = _exact_pos + path;
+            Point pixel_path, sign, farthest;            
             // The target pixel is where the character's upper-left hitbox pixel will be if it 
             // moves the full possible distance.
-            pixel_path = new Point(((int)Math.Floor(target.X)) - hitbox.X, ((int)Math.Floor(target.Y)) - hitbox.Y);
+            pixel_path = new Point(((int)Math.Floor(_exact_pos.X + data.attempted_path.X)) - hitbox.X, 
+                                   ((int)Math.Floor(_exact_pos.Y + data.attempted_path.Y)) - hitbox.Y);
             sign = new Point(Math.Sign(pixel_path.X), Math.Sign(pixel_path.Y));
-            if (sign.X == 0 && sign.Y == 0) return path; // no between-pixel movement;            
+            if (sign.X == 0 && sign.Y == 0) return; // no between-pixel movement;
 
             farthest = new Point(hitbox.X + pixel_path.X, hitbox.Y + pixel_path.Y);
             max_distance = Int32.MaxValue;
@@ -48,11 +48,10 @@ namespace XNAVERGE {
             }
 
             if (max_distance < Int32.MaxValue) { // obstructed                             
-                target.X = exact_pos.X + (float)(farthest.X - hitbox.X);
-                target.Y = exact_pos.Y + (float)(farthest.Y - hitbox.Y);
-                return target - exact_pos;
-            }
-            else return path;
+                data.collided = true;
+                data.actual_path = new Vector2((float)farthest.X - hitbox.X, (float)farthest.Y - hitbox.Y);
+                return;
+            }            
         }
 
         // Tests whether, as this entity moves along the vector path, it will at any point cross 
@@ -128,9 +127,7 @@ namespace XNAVERGE {
             distance = (box_nose.Y - drag_nose.Y)/vpath.Y;
             vertical_side = (sign.X > 0) ^ (box_nose.X < drag_nose.X + path.X * distance);
 
-            //if (this == VERGEGame.game.player) Console.WriteLine("{0},{1}", sign.X, sign.Y);
-            old_path = Point.Zero;
-            return true;
+            //if (this == VERGEGame.game.player) Console.WriteLine("{0},{1}", sign.X, sign.Y);            
 
 
             if (vertical_side) { // collision is between the left and right sides of the rectangles
@@ -148,31 +145,31 @@ namespace XNAVERGE {
         // A helper for try_to_move(). This checks the prospective path for obstructing 
         // entities and returns a new path indicating how far the entity can move without
         // hitting one. 
-        protected virtual Vector2 try_to_move_ent(Vector2 path) {
-            Vector2 target;
+        protected virtual void try_to_move_ent(ref EntityMovementData data) {
             Point pixel_path, best_path, cur_path;
             Rectangle goal;
             int best_distance, cur_distance;
             VERGEMap map = VERGEGame.game.map;
             BoundedSpace<Entity>.BoundedElementSet ent_enum;
             Entity ent;
-
-            target = _exact_pos + path;
+            
             // The target pixel is where the character's upper-left hitbox pixel will be if it 
             // moves the full possible distance.
-            best_path = pixel_path = new Point(((int)Math.Floor(target.X)) - hitbox.X, ((int)Math.Floor(target.Y)) - hitbox.Y);
+            pixel_path = new Point(((int)Math.Floor(_exact_pos.X + data.attempted_path.X)) - hitbox.X,
+                                               ((int)Math.Floor(_exact_pos.Y + data.attempted_path.Y)) - hitbox.Y);
+                                
             best_distance = Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y);
-            if (best_distance <= 0) return path; // no between-pixel movement;                        
+            if (best_distance <= 0) return; // no between-pixel movement;                        
+            best_path = pixel_path;
             goal = hitbox;
             goal.Offset(pixel_path.X, pixel_path.Y);
              
             ent_enum = VERGEGame.game.entity_space.elements_within_bounds(Rectangle.Union(hitbox, goal), true, this);
             while (ent_enum.GetNext(out ent)) {
                 cur_path = pixel_path;
-                if (test_collision(ent.hitbox, ref cur_path)) {
-                    //if (Math.Sign(pixel_path.X) > 0 && Math.Sign(pixel_path.Y) > 0) Console.WriteLine(VERGEGame.game.tick);
+                if (test_collision(ent.hitbox, ref cur_path)) {                    
                     cur_distance = Math.Abs(cur_path.X) + Math.Abs(cur_path.Y);
-                    if (cur_distance >= Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y)) { Console.WriteLine("NO, BAD."); }
+                    System.Diagnostics.Debug.Assert(cur_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y));                    
                     if (cur_distance < best_distance) {
                         best_distance = cur_distance;
                         best_path = cur_path;
@@ -181,11 +178,10 @@ namespace XNAVERGE {
             }
             
             if (best_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y)) { // couldn't go the full distance
-                if (Math.Sign(pixel_path.X) > 0 && Math.Sign(pixel_path.Y) > 0) Console.WriteLine("{0} {1} {2}", VERGEGame.game.tick, best_distance, Math.Abs(best_path.X) + Math.Abs(best_path.Y));
-                path.X = (float)best_path.X;
-                path.Y = (float)best_path.Y; 
-            }
-            return path;
+                data.collided = true;
+                data.actual_path.X = (float)best_path.X;
+                data.actual_path.Y = (float)best_path.Y; 
+            }            
         }
 
         // A helper function for _try_to_move_obs. Projects one side of the entity toward the target
@@ -282,7 +278,6 @@ namespace XNAVERGE {
         */
         
     }
-    
 
     // An enumeration of wander styles. The first, "scripted", covers both the "static" and "scripted" modes in normal VERGE and denotes an entity
     // that does not wander at random.

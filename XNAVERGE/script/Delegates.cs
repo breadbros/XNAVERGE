@@ -15,15 +15,9 @@ namespace XNAVERGE {
 
     // This type of delegate is called when an entity is activated adjacently by the player ("talked to").
     public delegate void EntityActivationDelegate(Entity ent);
+   
 
-    // This is called at least once every update, and is expected to set up velocity, acceleration, and animation
-    // state for that entity, but NOT to do obs checking or actually move it. An EntityLogicDelegate should
-    // return false if it's finished, and true if it wants the engine to process movement and obstructions, then
-    // call it again immediately (for cleanup, multi-step movement, etc).
-    // EntityLogicDelegates should not change entity position, alter other entities, or change the entity roster.
-    // If you need to do that, I'll be adding an additional callback you can set up during the logic delegate, to 
-    // be called after movement and collision are finished.
-    public delegate bool EntityLogicDelegate(Entity ent); 
+    public delegate int EntityMovementDelegate(Entity ent, ref EntityMovementData data); 
 
     // MovescriptDelegates can be associated with movestrings and are called when the movestring completes. Currently
     // the "aborted" value is always false, but eventually it will be possible to set movestrings to timeout, in which
@@ -40,4 +34,18 @@ namespace XNAVERGE {
     // For example, when the ScriptRenderLayer has zero parallax (the default), the rectangle just goes from 
     // (0, 0) to (screen.w-1, screen.h-1).
     public delegate void RenderLayerDelegate(ScriptRenderLayer layer, Rectangle clipping_region);
+}
+
+public struct EntityMovementData {
+    public bool first_call;
+    public bool collided; // TODO: add data indicating what was collided with?
+    public Vector2 starting_point, attempted_path, actual_path;
+    public Vector2 collision_direction {
+        get { return attempted_path - actual_path; }
+    }
+
+    // Both these time variables are in speed-adjusted hundredths of ticks. That is, when speed is 100, they're
+    // actually hundredths of ticks. Otherwise, 1 unit = 1/speed ticks.
+    public int time; 
+    public int time_shortfall; // if the movement was interrupted, this indicates how much of the intended movement time was "lost".
 }
