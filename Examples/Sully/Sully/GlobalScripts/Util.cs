@@ -29,11 +29,13 @@ namespace Sully {
             T_STAN = 6,
             T_SULLY = 7,
             T_BUNNY = 8,
-            T_BIRD = 9,
-            T_BUBBA = 10,
-            T_SANCHO = 11,
-            T_LANCE = 12,
-            T_PAXTON = 13;
+            T_BERT = 9,
+            T_RAT = 10,
+            T_BIRD = 11,
+            T_BUBBA = 12,
+            T_SANCHO = 13,
+            T_LANCE = 14,
+            T_PAXTON = 15;
 
         public static void init( SullyGame sg ) {
             _.sg = sg;

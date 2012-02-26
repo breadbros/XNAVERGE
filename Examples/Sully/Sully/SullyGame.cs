@@ -56,7 +56,10 @@ namespace Sully
             this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
 
             /// spawn the player
-            player = map.spawn_entity( 13, 19, "darin" );     
+
+            //player = map.spawn_entity( 13, 19, "darin" );     
+            player = map.spawn_entity( 63, 59, "darin" );     
+
         }
 
         /// <summary>
@@ -91,7 +94,15 @@ namespace Sully
         private void init_textbox() {
             textbox = new Textbox();
 
-            textbox.image = Content.Load<Texture2D>( "textbox" );
+            //textbox.image = Content.Load<Texture2D>( "textbox" );
+            
+            Color[] boxcolors = new Color[3];
+            boxcolors[0] = Color.Red;
+            boxcolors[1] = Color.Green;
+            boxcolors[2] = Color.Blue;
+
+            textbox.image = _.MakeBox( 300, 100, boxcolors ); 
+            
             textbox.speechPortraits = Content.Load<Texture2D>( "speech" );
             textbox.bounds = new Rectangle( 0, 0, textbox.image.Width, textbox.image.Height );
 

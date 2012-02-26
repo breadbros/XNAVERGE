@@ -133,6 +133,7 @@ namespace XNAVERGE {
                 }
                 command_queue.Enqueue(command);
             }
+
             if (open_ended) {
                 command_queue.Enqueue(MovestringCommand.Stop);
                 param_queue.Enqueue(Movestring.NO_NUMBER);
@@ -145,7 +146,6 @@ namespace XNAVERGE {
                 commands[i] = command_queue.Dequeue();
                 parameters[i] = param_queue.Dequeue();
             }
-            
         }        
 
         // Restarts the movestring from the beginning, but does NOT reset the loop counter if the movestring us a finite loop.

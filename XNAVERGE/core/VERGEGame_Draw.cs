@@ -55,7 +55,6 @@ namespace XNAVERGE {
             spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, screen.scaling_matrix);
             spritebatch.Draw(screen.true_size_buffer, blit_rect, Color.White);
             spritebatch.End();
-
         }
 
         
@@ -116,6 +115,5 @@ namespace XNAVERGE {
         internal virtual void call_render_hook(ScriptRenderLayer layer, Rectangle clipping_region) {
             if (hook_render != null) hook_render(layer, clipping_region); // this is very wasteful!
         }
-        
     }
 }

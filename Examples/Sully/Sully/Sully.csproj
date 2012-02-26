@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalScripts\Box.cs" />
     <Compile Include="GlobalScripts\Maps.cs" />
     <Compile Include="GlobalScripts\Party.cs" />
     <Compile Include="GlobalScripts\Flags.cs" />
