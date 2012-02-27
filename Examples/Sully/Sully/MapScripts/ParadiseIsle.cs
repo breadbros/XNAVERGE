@@ -16,19 +16,19 @@ namespace Sully {
 
             //if Crystal's already joined, we don't want to see the version of her that's
             // pre-built into the map...
-            if( _.getFlagB( _.F_CRYS_JOIN ) ) {
+            if( _.getFlagB( _.F.F_CRYS_JOIN ) ) {
 
                 this.map.entities[0].x = 30000;
                 this.map.entities[0].speed = 0;
             }
 
             //if Sully's shown the way
-            if( _.getFlagB( _.F_SULLY_OPEN_PEARL ) ) {
+            if( _.getFlagB( _.F.F_SULLY_OPEN_PEARL ) ) {
                 open_tree_door();
             }
 
             // This is the code for the flashback sequence triggered in bumsville.
-            if( _.getFlag( _.F_BUM_NIGHT ) == 1 ) {
+            if( _.getFlag( _.F.F_BUM_NIGHT ) == 1 ) {
                 do_flashback();
             }
 
@@ -50,10 +50,10 @@ namespace Sully {
 
         public void sully( int x, int y, bool adj ) {
             //if Galfrey hasn't joined yet, we default to the intro text.
-            if( !_.getFlagB( _.F_HECK_GALFREY_JOIN ) ) {
+            if( !_.getFlagB( _.F.F_HECK_GALFREY_JOIN ) ) {
                 sully_intro(x,y,adj);
             } else {
-                if( _.getFlagB( _.F_SULLY_OPEN_PEARL ) ) {
+                if( _.getFlagB( _.F.F_SULLY_OPEN_PEARL ) ) {
                     _.TextBox( _.T_SULLY, "Please leave me be.",
                                           "I'm just a silly little clam.",
                                           "I have no objects of value for you!" );
@@ -93,7 +93,7 @@ namespace Sully {
                                         "I have revealed the entrance!" );
                     _.TextBox( _.T_DARIN, "Thanks, Sully. We owe ya one!", "", "" );
 
-                    _.setFlag( _.F_SULLY_OPEN_PEARL, 1 );
+                    _.setFlag( _.F.F_SULLY_OPEN_PEARL, 1 );
                 }
             }
 
@@ -105,7 +105,7 @@ namespace Sully {
             _.TextBox( _.T_SULLY, "...", "...", "...yeah." );
             _.TextBox( _.T_SULLY, ":(", "", "" );
 
-            _.setFlag( _.F_SULLY_INTRO, 1 );
+            _.setFlag( _.F.F_SULLY_INTRO, 1 );
         }
 
         public void sancho( int x, int y, bool adj ) {
@@ -117,8 +117,8 @@ namespace Sully {
         }
 
         public void pearl_cave( int x, int y, bool adj ) {
-            if( _.getFlagB( _.F_SULLY_OPEN_PEARL ) ) {
-                _.setFlag( _.F_SEA_IN_CYCLOPS_HALL, 1 );
+            if( _.getFlagB( _.F.F_SULLY_OPEN_PEARL ) ) {
+                _.setFlag( _.F.F_SEA_IN_CYCLOPS_HALL, 1 );
 
                 _.ChangeMap( "undersea", 47, 21, _.TWHITE );
 
@@ -148,7 +148,7 @@ namespace Sully {
         }
 
         public void girlfriend_check( int x, int y, bool adj ) {
-            if( !_.getFlagB( _.F_CRYS_JOIN ) ) {
+            if( !_.getFlagB( _.F.F_CRYS_JOIN ) ) {
                 _.TextBox( _.T_DARIN, "Hrm... Crystal might get suspicious if I", "sneak off the island without her...", "" );
                 _.TextBox( _.T_DARIN, "...again.", "", "" );
 

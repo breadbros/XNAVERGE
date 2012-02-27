@@ -51,7 +51,6 @@ namespace XNAVERGE {
             
             // Set up graphics
             graphics = new GraphicsDeviceManager(this);
-            
 
             // Uncomment this line to remove fps throttling: 
             graphics.SynchronizeWithVerticalRetrace = false;

@@ -11,34 +11,41 @@ using XNAVERGE;
 namespace Sully {
     public partial class _ {
 
-        public static void DrawPixel( int x, int y, Color color, Texture2D target, Boolean iSSingleOp = true ) {
-            DrawLine( x, y, x, y, color, target, iSSingleOp );
+        public static Texture2D pixel;
+        public static SpriteBatch sb;
+
+        public static void DrawPixel( int x, int y, Color color, Texture2D target ) {
+            //DrawLine( x, y, x+1, y+1, color, target );
+                
+            sb.Draw(pixel, new Vector2(x,y), color);        
         }
 
-        public static void DrawLine( int x1, int y1, int x2, int y2, Color color, Texture2D target, Boolean iSSingleOp = true ) {
-            Vector2 point1 = new Vector2( (float)x1, (float)y1 );
-            Vector2 point2 = new Vector2( (float)x2, (float)y2 );
-
-            float widthOfLine = (float)1.0;
-            float angle = (float)Math.Atan2( point2.Y - point1.Y, point2.X - point1.X );
-            float length = Vector2.Distance( point1, point2 );
-
-            _.sg.spritebatch.Draw(
-                target, point1, null, color,
-                angle, Vector2.Zero, new Vector2( length, widthOfLine ),
-                SpriteEffects.None, 0 
-            );
+        public static void DrawLine( int x1, int y1, int w, int h, Color color) {
+            sb.Draw( pixel, new Rectangle( x1,y1, w,h ), color );
         }
 
-        public static void DrawRect( int x1, int y1, int x2, int y2, Color color, Texture2D target, Boolean iSSingleOp = true ) {
-            DrawLine( x1, y1, x1, y2, color, target, iSSingleOp );
-            DrawLine( x1, y1, x2, y1, color, target, iSSingleOp );
-            DrawLine( x2, y1, x2, y2, color, target, iSSingleOp );
-            DrawLine( x1, y2, x2, y2, color, target, iSSingleOp );
+        public static void DrawRect( int x1, int y1, int x2, int y2, Color color) {
+            int w = x2 - x1;
+            int h = y2 - y1;
+            
+            DrawLine( x1, y1, 1, h, color );
+            DrawLine( x1, y1, w, 1, color );
+            DrawLine( x2, y1, 1, h, color );
+            DrawLine( x1, y2, w, 1, color );
         }
 
-        public static Texture2D MakeBox( int w, int h , Color[] boxcolors ) {
-            Texture2D dest = new Texture2D( _.sg.GraphicsDevice, w, h );
+        public static Texture2D MakeBox( int w, int h, Color[] boxcolors ) {
+
+            RenderTarget2D dest = new RenderTarget2D( _.sg.GraphicsDevice, w, h, true, SurfaceFormat.Color, DepthFormat.Depth24 );
+            if( sb != null ) {
+                sb.Dispose();
+            }
+            sb = new SpriteBatch( _.sg.GraphicsDevice );
+
+            _.sg.GraphicsDevice.SetRenderTarget( dest );
+            _.sg.GraphicsDevice.Clear( ClearOptions.Target, Color.Transparent, 0, 0 );
+
+            sb.Begin();
 
             Color _0 = boxcolors[0];
             Color _1 = boxcolors[1];
@@ -50,33 +57,35 @@ namespace Sully {
             int x2 = x1 + w;
             int y2 = y1 + h;
 
-            _.sg.spritebatch.Begin();
+            
+            DrawLine( x1, y1 + 2, 1, (y2 - 2)-(y1 + 2), _0 ); // TL -> BL
+            DrawLine( x1 + 2, y1, (x2 - 2)-(x1 + 2), 1, _0 ); // TL -> TR
 
-            DrawLine( x1, y1 + 2, x1, y2 - 3, _0, dest, false ); // TL -> BL
-            DrawLine( x1 + 2, y1, x2 - 3, y1, _0, dest, false ); // TL -> TR
+            DrawLine( x2 - 1, y1 + 2, 1, (y2 - 2)-(y1 + 2), _0 ); // BR -> TR
+            DrawLine( x1 + 2, y2 - 1, (x2 - 2)-(x1 + 2), 1, _0 ); // BR -> BL
 
-            DrawLine( x2 - 1, y2 - 3, x2 - 1, y1 + 2, _0, dest, false ); // BR -> TR
-            DrawLine( x2 - 3, y2 - 1, x1 + 2, y2 - 1, _0, dest, false ); // BR -> BL
+            DrawRect( x1 + 1, y1 + 1, x2 - 2, y2 - 2, _1 );
+                DrawPixel( x1 + 1, y1 + 1, _0, dest ); // TL
+                DrawPixel( x2 - 2, y1 + 1, _0, dest ); // TR
+                DrawPixel( x1 + 1, y2 - 2, _0, dest ); // BL
+                DrawPixel( x2 - 2, y2 - 2, _0, dest ); // BR
+            
 
-            DrawRect( x1 + 1, y1 + 1, x2 - 2, y2 - 2, _1, dest, false );
-            DrawPixel( x1 + 1, y1 + 1, _0, dest, false ); // TL
-            DrawPixel( x2 - 2, y1 + 1, _0, dest, false ); // TR
-            DrawPixel( x1 + 1, y2 - 2, _0, dest, false ); // BL
-            DrawPixel( x2 - 2, y2 - 2, _0, dest, false ); // BR
-
-            DrawRect( x1 + 2, y1 + 2, x2 - 3, y2 - 3, _2, dest, false );
-            DrawPixel( x1 + 2, y1 + 2, _1, dest, false ); // TL
-            DrawPixel( x2 - 3, y1 + 2, _1, dest, false ); // TR
-            DrawPixel( x1 + 2, y2 - 3, _1, dest, false ); // BL
-            DrawPixel( x2 - 3, y2 - 3, _1, dest, false ); // BR
-
-            DrawRect( x1 + 3, y1 + 3, x2 - 4, y2 - 4, _0, dest, false );
-            DrawPixel( x1 + 3, y1 + 3, _2, dest, false ); // TL
-            DrawPixel( x2 - 4, y1 + 3, _2, dest, false ); // TR
-            DrawPixel( x1 + 3, y2 - 4, _2, dest, false ); // BL
-            DrawPixel( x2 - 4, y2 - 4, _2, dest, false ); // BR
-
-            _.sg.spritebatch.End();
+            DrawRect( x1 + 2, y1 + 2, x2 - 3, y2 - 3, _2 );            
+                DrawPixel( x1 + 2, y1 + 2, _1, dest ); // TL
+                DrawPixel( x2 - 3, y1 + 2, _1, dest ); // TR
+                DrawPixel( x1 + 2, y2 - 3, _1, dest ); // BL
+                DrawPixel( x2 - 3, y2 - 3, _1, dest ); // BR
+            
+             
+            DrawRect( x1 + 3, y1 + 3, x2 - 4, y2 - 4, _0 );            
+                DrawPixel( x1 + 3, y1 + 3, _2, dest ); // TL
+                DrawPixel( x2 - 4, y1 + 3, _2, dest ); // TR
+                DrawPixel( x1 + 3, y2 - 4, _2, dest ); // BL
+                DrawPixel( x2 - 4, y2 - 4, _2, dest ); // BR
+             
+            sb.End();
+            _.sg.GraphicsDevice.SetRenderTarget( null );
 
             return dest;
         }

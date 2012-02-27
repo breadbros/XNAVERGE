@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 
 using XNAVERGE;
 
@@ -40,6 +43,8 @@ namespace Sully {
         public static void init( SullyGame sg ) {
             _.sg = sg;
             _.flags = new int[1500];
+            _.pixel = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color ); 
+            _.pixel.SetData( new[] { new Color( new Vector4( 255, 255, 255, 255 )) } );
         }
 
         public static void TextBox( int port, string s1, string s2, string s3 ) {

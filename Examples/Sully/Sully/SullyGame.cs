@@ -95,14 +95,12 @@ namespace Sully
             textbox = new Textbox();
 
             //textbox.image = Content.Load<Texture2D>( "textbox" );
-            
             Color[] boxcolors = new Color[3];
-            boxcolors[0] = Color.Red;
-            boxcolors[1] = Color.Green;
-            boxcolors[2] = Color.Blue;
+            boxcolors[0] = new Color( 0,0,0 );
+            boxcolors[1] = new Color( 112, 112, 112 );
+            boxcolors[2] = new Color( 144, 144, 144 );
+            textbox.image = _.MakeBox( 317, 50, boxcolors );
 
-            textbox.image = _.MakeBox( 300, 100, boxcolors ); 
-            
             textbox.speechPortraits = Content.Load<Texture2D>( "speech" );
             textbox.bounds = new Rectangle( 0, 0, textbox.image.Width, textbox.image.Height );
 

@@ -223,7 +223,7 @@ namespace XNAVERGE {
             BoundedSpace<Entity>.BoundedElementSet ent_enum;//VERGEGame.game.entity_space.elements_within_bounds
             Entity collider;
             Rectangle collision_zone;
-            bool tile_based;
+
             int leading_x, leading_y, pixel_distance, best_distance;
             pixel_distance = 1 + (intended_distance - 1) / 100;
             leading_x = ent.hitbox.X + (ent.hitbox.Width - 1 + xs * (ent.hitbox.Width + 1)) / 2; // one pixel beyond the leading sides
