@@ -37,12 +37,18 @@ namespace XNAVERGE {
 }
 
 public struct EntityMovementData {
-    public bool first_call;
-    public bool collided; // TODO: add data indicating what was collided with?
+    public bool first_call;    
     public Vector2 starting_point, attempted_path, actual_path;
+
+    public bool collided;
+    // What entity was collided with. If collided = false or the collision was with an obstacle, set to null.
+    public Entity collided_entity;
+    public bool obstructed_by_entity {
+        get { return (collided_entity != null); }
+    }
     public Vector2 collision_direction {
         get { return attempted_path - actual_path; }
-    }
+    }    
 
     // Both these time variables are in speed-adjusted hundredths of ticks. That is, when speed is 100, they're
     // actually hundredths of ticks. Otherwise, 1 unit = 1/speed ticks.

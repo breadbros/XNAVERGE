@@ -169,6 +169,7 @@ namespace XNAVERGE {
                 data.actual_path = data.attempted_path = time_factor * (velocity + velocity_change / 2); // cur_pos = old_pos + v*t + a*(t^2)/2
                 
                 data.collided = false;
+                data.collided_entity = null;
                 if (this.obstructable && data.attempted_path != Vector2.Zero)
                     try_to_move(ref data); // maybe truncate actual_path
                 if (data.actual_path == Vector2.Zero) {
