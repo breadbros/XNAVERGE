@@ -19,6 +19,7 @@ namespace Sully
     public class SullyGame : VERGEGame
     {
         public Textbox textbox;
+        public Menu mainMenu;
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -80,6 +81,7 @@ namespace Sully
         {
             base.Update(gameTime);
             if( textbox.state != TextboxState.Hidden ) textbox.Update();
+            if( mainMenu.state != MenuState.Hidden ) mainMenu.Update();
         }
 
         /// <summary>
@@ -94,6 +96,7 @@ namespace Sully
         private void init_textbox() {
             Texture2D speechPortraits = Content.Load<Texture2D>( "speech" );
             textbox = new Textbox( screen.width, screen.height, speechPortraits );
+            mainMenu = new Menu();
         }
     }
 }

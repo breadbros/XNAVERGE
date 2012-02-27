@@ -60,6 +60,10 @@ namespace Sully {
             color_bounds = bounds;
             inner_bounds.Inflate( -horizontal_padding, -vertical_padding );
             color_bounds.Inflate( -2, -2 );
+
+            
+            bgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
+            bgColor.SetData( new[] { new Color( new Vector4( 140, 0, 140, 63 ) ) } );
         }
 
         public void addBox( String str_1, String str_2, String str_3, int speechIdx = 0 ) {
@@ -166,16 +170,11 @@ namespace Sully {
             game.print_string( s, x, y, Color.White, false );
         }
 
-        public void Draw() {
-            SullyGame game = (SullyGame)VERGEGame.game;
+        public void Draw( SullyGame game ) {
+            
             int height, length;
             length = currently_rendering_text.Count;
             height = game.system_font.LineSpacing;
-
-            if( bgColor == null ) {
-                bgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
-                bgColor.SetData( new[] { new Color( new Vector4( 140, 0, 140, 63 )) } );
-            }
 
             if( state != TextboxState.Hidden ) {
                 game.spritebatch.Begin();
