@@ -108,11 +108,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalScripts\Box.cs" />
+    <Compile Include="GlobalScripts\Time.cs" />
     <Compile Include="GlobalScripts\Maps.cs" />
     <Compile Include="GlobalScripts\Party.cs" />
     <Compile Include="GlobalScripts\Flags.cs" />
     <Compile Include="GlobalScripts\Util.cs" />
     <Compile Include="MapScripts\ParadiseIsle.cs" />
+    <Compile Include="McGrender.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="SullyGlobalScripts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

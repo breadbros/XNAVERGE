@@ -79,6 +79,9 @@ namespace Sully
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            //int new_ticks = gameTime.ElapsedGameTime.Milliseconds;
+            _.systime = gameTime.TotalGameTime.Milliseconds;
+
             base.Update(gameTime);
             if( textbox.state != TextboxState.Hidden ) textbox.Update();
             if( mainMenu.state != MenuState.Hidden ) mainMenu.Update();
