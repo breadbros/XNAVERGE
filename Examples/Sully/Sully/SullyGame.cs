@@ -92,28 +92,8 @@ namespace Sully
         }
 
         private void init_textbox() {
-            textbox = new Textbox();
-
-            //textbox.image = Content.Load<Texture2D>( "textbox" );
-            Color[] boxcolors = new Color[3];
-            boxcolors[0] = new Color( 0,0,0 );
-            boxcolors[1] = new Color( 112, 112, 112 );
-            boxcolors[2] = new Color( 144, 144, 144 );
-            textbox.image = _.MakeBox( 317, 50, boxcolors );
-
-            textbox.speechPortraits = Content.Load<Texture2D>( "speech" );
-            textbox.bounds = new Rectangle( 0, 0, textbox.image.Width, textbox.image.Height );
-
-            int yloc = screen.height - textbox.bounds.Height - 4;
-
-            textbox.bounds.Offset( ( screen.width - textbox.bounds.Width ) / 2, yloc );
-
-            textbox.speech_bounds = new Rectangle( 2, yloc - 33, 32, 32 );
-
-            textbox.inner_bounds = textbox.bounds; // copy value            
-            textbox.color_bounds = textbox.bounds;
-            textbox.inner_bounds.Inflate( -textbox.horizontal_padding, -textbox.vertical_padding );
-            textbox.color_bounds.Inflate( -2, -2 );
+            Texture2D speechPortraits = Content.Load<Texture2D>( "speech" );
+            textbox = new Textbox( screen.width, screen.height, speechPortraits );
         }
     }
 }

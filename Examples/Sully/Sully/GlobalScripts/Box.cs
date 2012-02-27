@@ -69,14 +69,12 @@ namespace Sully {
                 DrawPixel( x2 - 2, y1 + 1, _0, dest ); // TR
                 DrawPixel( x1 + 1, y2 - 2, _0, dest ); // BL
                 DrawPixel( x2 - 2, y2 - 2, _0, dest ); // BR
-            
 
             DrawRect( x1 + 2, y1 + 2, x2 - 3, y2 - 3, _2 );            
                 DrawPixel( x1 + 2, y1 + 2, _1, dest ); // TL
                 DrawPixel( x2 - 3, y1 + 2, _1, dest ); // TR
                 DrawPixel( x1 + 2, y2 - 3, _1, dest ); // BL
                 DrawPixel( x2 - 3, y2 - 3, _1, dest ); // BR
-            
              
             DrawRect( x1 + 3, y1 + 3, x2 - 4, y2 - 4, _0 );            
                 DrawPixel( x1 + 3, y1 + 3, _2, dest ); // TL

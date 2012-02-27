@@ -28,8 +28,8 @@ namespace Sully {
         public List<string> currently_rendering_text;
 
         private static int last_anim_tick;
-        
-        public Textbox() {
+
+        public Textbox( int screen_width, int screen_height, Texture2D speechPorts ) {
             boxes_of_text = new List<object>();
             currently_rendering_text = new List<string>();
             vertical_padding = 2;
@@ -38,6 +38,28 @@ namespace Sully {
             short_step = 1;
 
             full_reset();
+
+            //textbox.image = Content.Load<Texture2D>( "textbox" );
+            Color[] boxcolors = new Color[3];
+            boxcolors[0] = new Color( 0, 0, 0 );
+            boxcolors[1] = new Color( 112, 112, 112 );
+            boxcolors[2] = new Color( 144, 144, 144 );
+            image = _.MakeBox( 317, 50, boxcolors );
+
+            speechPortraits = speechPorts;
+
+            bounds = new Rectangle( 0, 0, image.Width, image.Height );
+
+            int yloc = screen_height - bounds.Height - 4;
+
+            bounds.Offset( ( screen_width - bounds.Width ) / 2, yloc );
+
+            speech_bounds = new Rectangle( 2, yloc - 33, 32, 32 );
+
+            inner_bounds = bounds; // copy value            
+            color_bounds = bounds;
+            inner_bounds.Inflate( -horizontal_padding, -vertical_padding );
+            color_bounds.Inflate( -2, -2 );
         }
 
         public void addBox( String str_1, String str_2, String str_3, int speechIdx = 0 ) {
