@@ -113,7 +113,7 @@ namespace Sully {
         }
 
         public void undersea( int x, int y, bool adj ) {
-            _.ChangeMap( "underwater", 30, 11, _.TCIRCLE );
+            //_.ChangeMap( "underwater", 30, 11, _.TCIRCLE );
         }
 
         public void pearl_cave( int x, int y, bool adj ) {
@@ -151,10 +151,11 @@ namespace Sully {
             if( !_.getFlagB( _.F.F_CRYS_JOIN ) ) {
                 _.TextBox( _.T_DARIN, "Hrm... Crystal might get suspicious if I", "sneak off the island without her...", "" );
                 _.TextBox( _.T_DARIN, "...again.", "", "" );
-
+                _.sg.textbox.setPlayerAutorelease( false );
                 _.sg.textbox.OnDone += () => {
                     _.PlayerMove( "U2" );
                 };
+
             }
         }
 

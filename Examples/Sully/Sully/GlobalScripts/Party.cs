@@ -7,15 +7,24 @@ using XNAVERGE;
 
 namespace Sully {
     public partial class _ {
-        public static void PlayerMove( string movescript ) {
-            sg.player_controllable = false;
 
-            /// when the movestring is done... return control to the player. 
-            sg.player.movestring.OnDone += () => {
-                sg.player_controllable = true;
-            };
+        public static Action _PlayerMove_Action;
+
+        public static void PlayerMove( string movescript ) {
+            if( sg.player_controllable ) {
+                VERGEGame.game.lock_player();
+            }
 
             sg.player.movestring = new Movestring(movescript);
+
+            _PlayerMove_Action = () => {
+                //sg.player_controllable = true;
+                VERGEGame.game.unlock_player();
+                sg.player.movestring.OnDone -= _PlayerMove_Action;
+            };
+
+            /// when the movestring is done... return control to the player. 
+            sg.player.movestring.OnDone += _PlayerMove_Action;
         }
 
         public static int TNONE = 0;

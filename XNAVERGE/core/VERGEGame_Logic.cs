@@ -142,6 +142,5 @@ namespace XNAVERGE {
             else player_controllable = PLAYER_CONTROLLABLE_DEFAULT;
             return player_controllable;
         }
-
     }    
 }

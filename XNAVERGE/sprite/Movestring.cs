@@ -45,7 +45,11 @@ namespace XNAVERGE {
             }
         }
 
-        public Movestring(String movestring) {
+        Entity ent = null;
+
+        public Movestring(String movestring, Entity e = null) {
+            ent = e;
+            
             MatchCollection matches = regex.Matches(movestring);
             GroupCollection groups;
             Queue<MovestringCommand> command_queue = new Queue<MovestringCommand>();

@@ -24,6 +24,7 @@ namespace Sully {
         public Texture2D speechPortraits;
         public int activeSpeechIdx = 0;
         public Boolean isStarted = false;
+        public Boolean dontReleasePlayerOnDone = false;
 
         public List<object> boxes_of_text;
         public List<string> currently_rendering_text;
@@ -65,6 +66,10 @@ namespace Sully {
             
             bgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
             bgColor.SetData( new[] { new Color( new Vector4( 140, 0, 140, 63 ) ) } );
+        }
+
+        public void setPlayerAutorelease( Boolean b ) {
+            this.dontReleasePlayerOnDone = !b;
         }
 
         public void addBox( String str_1, String str_2, String str_3, int speechIdx = 0 ) {
@@ -131,7 +136,13 @@ namespace Sully {
                             }
 
                             full_reset();
-                            VERGEGame.game.unlock_player();
+                            
+                            if( this.dontReleasePlayerOnDone ) {
+                                this.dontReleasePlayerOnDone = false;
+                            } else {
+                                VERGEGame.game.unlock_player();
+                            }
+
                         } else {
                             box_reset();
                         }
