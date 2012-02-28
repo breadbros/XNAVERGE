@@ -5,9 +5,9 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Sully.McGrenderStack;
 
 namespace Sully {
-   
     
     public class Menu {
 
@@ -57,6 +57,7 @@ namespace Sully {
 
         public void Draw( SullyGame game ) {
 
+            /*
             game.spritebatch.Begin();
 
             game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
@@ -69,7 +70,41 @@ namespace Sully {
             game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
 
             game.spritebatch.End();
+        
+             */ 
         }
+
+        public void _initMenu( SullyGame game ) {
+            Layer l = game.mcg.AddLayer("menu");
+            
+            Action a1 = () => {
+                game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( mainBox.image, mainBox.bounds, Color.White );
+            };
+
+            Action a2 = () => {
+                game.spritebatch.Draw( activeBgColor, commandBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
+            };
+
+            Action a3 = () => {
+                game.spritebatch.Draw( inactiveBgColor, smallBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
+            };
+                
+            l.AddNode(
+                new Node( a1, l, 0, 0, 300, 300, 3000 )
+            );
+
+            l.AddNode(
+                new Node( a2, l, 0, 0)
+            );
+
+            l.AddNode(
+                new Node( a3, l, 0, 0)
+            );
+        }
+
     }
 
     public enum MenuState { Hidden, Active, Animating }

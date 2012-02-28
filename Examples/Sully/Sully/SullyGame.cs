@@ -20,6 +20,7 @@ namespace Sully
     {
         public Textbox textbox;
         public Menu mainMenu;
+        public McGrenderStack.McGrenderStack mcg;
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -32,6 +33,9 @@ namespace Sully
             _.init( this );
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new SullyGlobalScripts(this);
+
+            mcg = new McGrenderStack.McGrenderStack( this );
+
             base.Initialize();
         }
 
@@ -59,8 +63,7 @@ namespace Sully
             /// spawn the player
 
             //player = map.spawn_entity( 13, 19, "darin" );     
-            player = map.spawn_entity( 63, 59, "darin" );     
-
+            player = map.spawn_entity( 63, 59, "darin" );
         }
 
         /// <summary>
@@ -85,6 +88,7 @@ namespace Sully
             base.Update(gameTime);
             if( textbox.state != TextboxState.Hidden ) textbox.Update();
             if( mainMenu.state != MenuState.Hidden ) mainMenu.Update();
+            mcg.Update( gameTime.ElapsedGameTime.Milliseconds );
         }
 
         /// <summary>
@@ -94,12 +98,14 @@ namespace Sully
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+            mcg.Draw();
         }
 
         private void init_textbox() {
             Texture2D speechPortraits = Content.Load<Texture2D>( "speech" );
             textbox = new Textbox( screen.width, screen.height, speechPortraits );
             mainMenu = new Menu();
+            mainMenu._initMenu( this );
         }
     }
 }
