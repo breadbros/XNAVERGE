@@ -78,7 +78,6 @@ namespace XNAVERGE {
                             }
                         }
                     }
-                    y = 0;
                 }
                 else if (y == 0) {
                     pt = new Point(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
@@ -111,8 +110,7 @@ namespace XNAVERGE {
                                 pt.X -= x;
                             }
                         }
-                    }
-                    x = 0;
+                    }                    
                 }
                 else { x = 0; y = 0; }
             }
@@ -135,8 +133,10 @@ namespace XNAVERGE {
                 ent.velocity *= factor;
 
                 if (data.collided) { // if sliding, move at most one pixel in this handler iteration
-                    //Console.WriteLine("Elapsed: {0} out of {1}", data.time Math.Min(data.time - ent.speed, 0), 
-                    return Math.Max(data.time - ent.speed, 0);
+                    // figure out how much time it will take to move one pixel
+                    factor = data.time - ent.speed;
+                    if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.SQRT2;
+                    return Math.Max((int)Math.Floor(factor), 0);                    
                 }
             }
             return 0;

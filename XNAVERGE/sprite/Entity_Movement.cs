@@ -151,7 +151,7 @@ namespace XNAVERGE {
             int best_distance, cur_distance;
             VERGEMap map = VERGEGame.game.map;
             BoundedSpace<Entity>.BoundedElementSet ent_enum;
-            Entity ent;
+            Entity ent, nearest_ent = null;
             
             // The target pixel is where the character's upper-left hitbox pixel will be if it 
             // moves the full possible distance.
@@ -173,12 +173,14 @@ namespace XNAVERGE {
                     if (cur_distance < best_distance) {
                         best_distance = cur_distance;
                         best_path = cur_path;
+                        nearest_ent = ent;
                     }
                 }
             }
             
-            if (best_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y)) { // couldn't go the full distance
+            if (nearest_ent != null) {
                 data.collided = true;
+                data.collided_entity = nearest_ent;
                 data.actual_path.X = (float)best_path.X;
                 data.actual_path.Y = (float)best_path.Y; 
             }            
