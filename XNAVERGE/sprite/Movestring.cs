@@ -47,7 +47,8 @@ namespace XNAVERGE {
 
         Entity ent = null;
 
-        public Movestring(String movestring, Entity e = null) {
+        public Movestring(String movestring) : this(movestring, null) { }
+        public Movestring(String movestring, Entity e) {
             ent = e;
             
             MatchCollection matches = regex.Matches(movestring);
