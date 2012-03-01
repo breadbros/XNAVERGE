@@ -169,6 +169,7 @@ namespace XNAVERGE {
                 data.actual_path = data.attempted_path = time_factor * (velocity + velocity_change / 2); // cur_pos = old_pos + v*t + a*(t^2)/2
                 
                 data.collided = false;
+                data.collided_entity = null;
                 if (this.obstructable && data.attempted_path != Vector2.Zero)
                     try_to_move(ref data); // maybe truncate actual_path
                 if (data.actual_path == Vector2.Zero) {
@@ -217,6 +218,13 @@ namespace XNAVERGE {
                     }
                     exact_x += data.actual_path.X;
                     exact_y += data.actual_path.Y;
+                    /*if (this == VERGEGame.game.player) {
+                        for (int xx = 0; xx < hitbox.Width; xx++) {
+                            for (int yy = 0; yy < hitbox.Height; yy++) {
+                                if (VERGEGame.game.map.obs_at_pixel(hitbox.X + xx, hitbox.Y + yy)) VERGEGame.game.Exit();
+                            }
+                        }
+                    }*/
                 }                
                 velocity += velocity_change;
                 data.time_shortfall -= elapsed;

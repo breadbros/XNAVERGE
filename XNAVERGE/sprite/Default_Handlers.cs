@@ -27,32 +27,159 @@ namespace XNAVERGE {
         // (unlike VERGE, which moved them both vertically and horizontally as fast as if they were 
         //  moving in that direction alone)
         public static int vergestyle_player_movement_handler(Entity ent, ref EntityMovementData data) {
-            int x = 0, y = 0;
+            int x = 0, y = 0;            
             float factor;
+            Vector2 ofs;
+            VERGEMap map;
+            Point pt;
             ent.velocity = ent.acceleration = Vector2.Zero;
             ent.acceleration = Vector2.Zero;
+            
             if (data.first_call) {
                 if (VERGEGame.game.dir.left.down) x--;
                 if (VERGEGame.game.dir.right.down) x++;
                 if (VERGEGame.game.dir.up.down) y--;
                 if (VERGEGame.game.dir.down.down) y++;
+            }
+            else if (data.collided && !data.obstructed_by_entity) {
+                // Hacky sliding code. Clean this shit up sometime!
+                map = VERGEGame.game.map;                
+                x = Math.Sign(data.attempted_path.X);
+                y = Math.Sign(data.attempted_path.Y);
 
-                if (x == 0 && y == 0) {
-                    if (ent.moving) ent.set_walk_state(false);
+
+
+                if (x == 0) {
+                    pt = new Point(ent.hitbox.X + 1,
+                                   ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2);
+                    for (int i = 0; i < ent.hitbox.Width - 2; i++) { // first check all but the ends
+                        if (map.obs_at_pixel(pt.X, pt.Y)) {
+                            y = 0;
+                            break;
+                        }
+                        pt.X++;
+                    }
+
+                    if (y != 0) {
+                        if (map.obs_at_pixel(ent.hitbox.Left, pt.Y)) {
+                            if (!map.obs_at_pixel(ent.hitbox.Right - 1, pt.Y)) x = 1;
+                        }
+                        else if (map.obs_at_pixel(ent.hitbox.Right - 1, pt.Y)) {
+                            if (!map.obs_at_pixel(ent.hitbox.Left, pt.Y)) x = -1;
+                        }
+                        if (x != 0) {
+                            pt.X = ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2;
+
+                            for (int i = 0; i < ent.hitbox.Height + 1; i++) {
+                                if (map.obs_at_pixel(pt.X, pt.Y)) {
+                                    x = 0;
+                                    y = 0;
+                                    break;
+                                }
+                                pt.Y -= y;
+                            }
+                        }
+                    }
+                }
+                else if (y == 0) {
+                    pt = new Point(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
+                                   ent.hitbox.Y + 1);
+                                   
+                    for (int i = 0; i < ent.hitbox.Height - 2; i++) { // first check all but the ends
+                        if (map.obs_at_pixel(pt.X, pt.Y)) {
+                            x = 0;
+                            break;
+                        }
+                        pt.Y++;
+                    }
+
+                    if (x != 0) {
+                        if (map.obs_at_pixel(pt.X, ent.hitbox.Top)) {
+                            if (!map.obs_at_pixel(pt.X, ent.hitbox.Bottom - 1)) y = 1;
+                        }
+                        else if (map.obs_at_pixel(pt.X, ent.hitbox.Bottom - 1)) {
+                            if (!map.obs_at_pixel(pt.X, ent.hitbox.Top)) y = -1;
+                        }
+                        if (y != 0) {
+                            pt.Y = ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2;
+
+                            for (int i = 0; i < ent.hitbox.Width + 1; i++) {
+                                if (map.obs_at_pixel(pt.X, pt.Y)) {
+                                    x = 0;
+                                    y = 0;
+                                    break;
+                                }
+                                pt.X -= x;
+                            }
+                        }
+                    }                    
                 }
                 else {
-                    ent.velocity.X = (float)x;
-                    ent.velocity.Y = (float)y;
-                    if (!ent.moving) ent.set_walk_state(true);
-                    ent.facing = Utility.direction_from_signs(x, y, false);
-                    ent.movement_direction = Utility.direction_from_signs(x, y, true);
-                    factor = ent.speed / 100f;
-                    if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.INV_SQRT2; // diagonal movement
-                    ent.velocity *= factor;
-                }                
+                    pt = new Point(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
+                                   ent.hitbox.Y + (1 + y) * (ent.hitbox.Height - 1) / 2);
+                    for (int i=0; i < ent.hitbox.Height; i++) {
+                        if (map.obs_at_pixel(pt.X, pt.Y)) {
+                            x = 0;
+                            break;
+                        }
+                        pt.Y -= y;
+                    }
+                    pt = new Point(ent.hitbox.X + (1 + x) * (ent.hitbox.Width - 1) / 2,
+                                   ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2);
+                    for (int i = 0; i < ent.hitbox.Width; i++) {
+                        if (map.obs_at_pixel(pt.X, pt.Y)) {
+                            y = 0;
+                            break;
+                        }
+                        pt.X -= x;
+                    }
+
+                    if (x != 0 && y != 0 && 
+                        map.obs_at_pixel(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
+                                         ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2)) {
+                        if (Math.Abs(data.attempted_path.X) > Math.Abs(data.attempted_path.Y)) y = 0;
+                        else if (Math.Abs(data.attempted_path.X) < Math.Abs(data.attempted_path.Y)) x = 0; 
+                        else {x = 0; y = 0; }
+                    }
+
+                    if (x == 0 && y == 0) return 0;
+                    
+                }
+                Vector2 aaa;
+                //Console.WriteLine("Attempted {0},{1}. Direction {2},{3}", data.attempted_path.X, data.attempted_path.Y,x, y);
+                if (x != 0 && y != 0) { // adjust alignment for diagonal movement
+                    ofs = new Vector2( Math.Abs((float) (ent.hitbox.X + (1 + x) / 2) - ent.exact_x),
+                                       Math.Abs((float) (ent.hitbox.Y + (1 + y) / 2) - ent.exact_y));
+                    aaa = new Vector2(ent.exact_x + x * ofs.X, ent.exact_y + y * ofs.Y);
+                    if (ofs.X < ofs.Y) ent.exact_y += y * (ofs.Y - ofs.X);
+                    else if (ofs.X > ofs.Y) ent.exact_x += x * (ofs.X - ofs.Y);
+
+                }
             }
-            else if (data.collided) {
-                // sliding goes here                
+
+            
+            if (x == 0 && y == 0) {
+                if (ent.moving) ent.set_walk_state(false);
+            }
+            else {
+                ent.velocity.X = (float)x;
+                ent.velocity.Y = (float)y;
+                if (!ent.moving) ent.set_walk_state(true);
+                factor = ent.speed / 100f;
+                ent.movement_direction = Utility.direction_from_signs(x, y, true);
+                if (!data.collided) { // Moving normally 
+                    ent.facing = Utility.direction_from_signs(x, y, false);                    
+                }
+                
+                if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.INV_SQRT2; // diagonal movement
+                ent.velocity *= factor;
+
+                if (data.collided) { // if sliding, move at most one pixel in this handler iteration
+                    // figure out how much time it will take to move one pixel
+                    factor = data.time - ent.speed;
+                    if (Math.Abs(x) + Math.Abs(y) == 2) factor *= Utility.SQRT2;
+                    return Math.Max((int)Math.Floor(factor), 0);                    
+                }
             }
             return 0;
         }

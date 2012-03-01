@@ -26,7 +26,7 @@ namespace XNAVERGE {
             set {
                 destination.X += value - hitbox.X;
                 hitbox.X = value;
-                _exact_pos.X = (float) value; 
+                _exact_pos.X = ((float) value) + 0.5f; 
             }
         }
         public virtual int y {
@@ -34,7 +34,7 @@ namespace XNAVERGE {
             set {
                 destination.Y += value - hitbox.Y;
                 hitbox.Y = value;
-                _exact_pos.Y = (float) value; 
+                _exact_pos.Y = ((float) value) + 0.5f; 
             }
         }
         public virtual int w { get { return hitbox.Width; } }
