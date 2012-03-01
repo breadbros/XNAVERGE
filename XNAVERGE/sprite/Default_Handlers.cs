@@ -29,6 +29,7 @@ namespace XNAVERGE {
         public static int vergestyle_player_movement_handler(Entity ent, ref EntityMovementData data) {
             int x = 0, y = 0;            
             float factor;
+            Vector2 ofs;
             VERGEMap map;
             Point pt;
             ent.velocity = ent.acceleration = Vector2.Zero;
@@ -42,10 +43,11 @@ namespace XNAVERGE {
             }
             else if (data.collided && !data.obstructed_by_entity) {
                 // Hacky sliding code. Clean this shit up sometime!
-                map = VERGEGame.game.map;
-
+                map = VERGEGame.game.map;                
                 x = Math.Sign(data.attempted_path.X);
                 y = Math.Sign(data.attempted_path.Y);
+
+
 
                 if (x == 0) {
                     pt = new Point(ent.hitbox.X + 1,
@@ -112,7 +114,47 @@ namespace XNAVERGE {
                         }
                     }                    
                 }
-                else { x = 0; y = 0; }
+                else {
+                    pt = new Point(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
+                                   ent.hitbox.Y + (1 + y) * (ent.hitbox.Height - 1) / 2);
+                    for (int i=0; i < ent.hitbox.Height; i++) {
+                        if (map.obs_at_pixel(pt.X, pt.Y)) {
+                            x = 0;
+                            break;
+                        }
+                        pt.Y -= y;
+                    }
+                    pt = new Point(ent.hitbox.X + (1 + x) * (ent.hitbox.Width - 1) / 2,
+                                   ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2);
+                    for (int i = 0; i < ent.hitbox.Width; i++) {
+                        if (map.obs_at_pixel(pt.X, pt.Y)) {
+                            y = 0;
+                            break;
+                        }
+                        pt.X -= x;
+                    }
+
+                    if (x != 0 && y != 0 && 
+                        map.obs_at_pixel(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
+                                         ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2)) {
+                        if (Math.Abs(data.attempted_path.X) > Math.Abs(data.attempted_path.Y)) y = 0;
+                        else if (Math.Abs(data.attempted_path.X) < Math.Abs(data.attempted_path.Y)) x = 0; 
+                        else {x = 0; y = 0; }
+                    }
+
+                    if (x == 0 && y == 0) return 0;
+                    
+                }
+                Vector2 aaa;
+                //Console.WriteLine("Attempted {0},{1}. Direction {2},{3}", data.attempted_path.X, data.attempted_path.Y,x, y);
+                if (x != 0 && y != 0) { // adjust alignment for diagonal movement
+                    ofs = new Vector2( Math.Abs((float) (ent.hitbox.X + (1 + x) / 2) - ent.exact_x),
+                                       Math.Abs((float) (ent.hitbox.Y + (1 + y) / 2) - ent.exact_y));
+                    aaa = new Vector2(ent.exact_x + x * ofs.X, ent.exact_y + y * ofs.Y);
+                    if (ofs.X < ofs.Y) ent.exact_y += y * (ofs.Y - ofs.X);
+                    else if (ofs.X > ofs.Y) ent.exact_x += x * (ofs.X - ofs.Y);
+
+                }
             }
 
             

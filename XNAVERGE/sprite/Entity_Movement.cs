@@ -34,6 +34,9 @@ namespace XNAVERGE {
             // moves the full possible distance.
             pixel_path = new Point(((int)Math.Floor(_exact_pos.X + data.attempted_path.X)) - hitbox.X, 
                                    ((int)Math.Floor(_exact_pos.Y + data.attempted_path.Y)) - hitbox.Y);
+            if (false && this == VERGEGame.game.player) Console.WriteLine("Hitbox ({0},{1}), Path ({2},{3}), {4}",
+                                                   hitbox.X, hitbox.Y, pixel_path.X, pixel_path.Y, 
+                                                   VERGEGame.game.map.obs_at_pixel(hitbox.X+pixel_path.X, hitbox.Y+pixel_path.Y));
             sign = new Point(Math.Sign(pixel_path.X), Math.Sign(pixel_path.Y));
             if (sign.X == 0 && sign.Y == 0) return; // no between-pixel movement;
 

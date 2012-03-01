@@ -57,6 +57,7 @@ namespace XNAVERGE {
                     // ------------------------------
 
                     if (player != null) {
+                        //Console.WriteLine("{0},{1}", player.exact_x, player.exact_y);
                         prev_player_coords = player.hitbox.Center;
                         prev_player_coords.X /= map.tileset.tilesize;
                         prev_player_coords.Y /= map.tileset.tilesize;
@@ -67,16 +68,6 @@ namespace XNAVERGE {
                         ent.Update();
                     }
                     
-                    /*
-
-                    for (int i = 0; i < map.num_entities; i++) {
-                        ent_enum = entity_space.elements_within_bounds(map.entities[i].hitbox, true, map.entities[i]);
-                        while (ent_enum.GetNext(out ent)) {
-                            //if (ent != map.entities[i] && ent == player) Console.WriteLine("player hit " + i);
-                        }
-                        map.entities[i].Update();
-                    }
-                    */
                     if (player != null) { // update player zone
                         cur_player_coords = player.hitbox.Center;
                         cur_player_coords.X /= map.tileset.tilesize;

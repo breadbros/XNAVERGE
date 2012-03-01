@@ -218,6 +218,13 @@ namespace XNAVERGE {
                     }
                     exact_x += data.actual_path.X;
                     exact_y += data.actual_path.Y;
+                    /*if (this == VERGEGame.game.player) {
+                        for (int xx = 0; xx < hitbox.Width; xx++) {
+                            for (int yy = 0; yy < hitbox.Height; yy++) {
+                                if (VERGEGame.game.map.obs_at_pixel(hitbox.X + xx, hitbox.Y + yy)) VERGEGame.game.Exit();
+                            }
+                        }
+                    }*/
                 }                
                 velocity += velocity_change;
                 data.time_shortfall -= elapsed;
