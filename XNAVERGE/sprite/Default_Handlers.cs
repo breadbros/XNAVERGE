@@ -68,9 +68,11 @@ namespace XNAVERGE {
                     if (y != 0) {
                         if (map.obs_at_pixel(ent.hitbox.Left, pt.Y)) {
                             if (!map.obs_at_pixel(ent.hitbox.Right - 1, pt.Y)) x = 1;
+                            else y = 0;
                         }
                         else if (map.obs_at_pixel(ent.hitbox.Right - 1, pt.Y)) {
                             if (!map.obs_at_pixel(ent.hitbox.Left, pt.Y)) x = -1;
+                            else y = 0;
                         }
                         if (x != 0) {
                             pt.X = ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2;
@@ -101,9 +103,11 @@ namespace XNAVERGE {
                     if (x != 0) {
                         if (map.obs_at_pixel(pt.X, ent.hitbox.Top)) {
                             if (!map.obs_at_pixel(pt.X, ent.hitbox.Bottom - 1)) y = 1;
+                            else x = 0;
                         }
                         else if (map.obs_at_pixel(pt.X, ent.hitbox.Bottom - 1)) {
                             if (!map.obs_at_pixel(pt.X, ent.hitbox.Top)) y = -1;
+                            else x = 0;
                         }
                         if (y != 0) {
                             pt.Y = ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2;
