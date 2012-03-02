@@ -32,6 +32,7 @@ namespace XNAVERGE {
             Vector2 ofs;
             VERGEMap map;
             Point pt;
+            Rectangle box;
             ent.velocity = ent.acceleration = Vector2.Zero;
             ent.acceleration = Vector2.Zero;
             
@@ -41,15 +42,19 @@ namespace XNAVERGE {
                 if (VERGEGame.game.dir.up.down) y--;
                 if (VERGEGame.game.dir.down.down) y++;
             }
-            else if (data.collided && !data.obstructed_by_entity) {
+            else if (data.collided) {
                 // Hacky sliding code. Clean this shit up sometime!
                 map = VERGEGame.game.map;                
                 x = Math.Sign(data.attempted_path.X);
                 y = Math.Sign(data.attempted_path.Y);
 
+                if (data.obstructed_by_entity) {
+                    box = data.collided_entity.hitbox;
+                    if (box.Top < ent.hitbox.Bottom && box.Bottom > ent.hitbox.Top) x = 0;
+                    if (box.Left < ent.hitbox.Right && box.Right > ent.hitbox.Left) y = 0;
+                }
 
-
-                if (x == 0) {
+                if (x == 0) {                    
                     pt = new Point(ent.hitbox.X + 1,
                                    ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2);
                     for (int i = 0; i < ent.hitbox.Width - 2; i++) { // first check all but the ends
@@ -81,7 +86,7 @@ namespace XNAVERGE {
                         }
                     }
                 }
-                else if (y == 0) {
+                else if (y == 0) {                    
                     pt = new Point(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
                                    ent.hitbox.Y + 1);
                                    
