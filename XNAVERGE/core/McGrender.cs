@@ -17,11 +17,10 @@ namespace XNAVERGE {
         float? tick_x, tick_y;
         int? delay, final_time;
         Boolean isMoving;
-        public event Action OnStop = null;
+        public event BasicDelegate OnStop = null;
         public event RenderDelegate OnDraw = null;
 
         public bool DEBUG = false;
-
 
         Texture2D image = null;
         Rectangle im_bounds;
@@ -94,7 +93,7 @@ if( DEBUG ) Console.WriteLine( "STOPPING" );
                         this.cur_x = this.final_x;
                         this.cur_y = this.final_y;
 
-this.Reverse();
+//this.Reverse();
 
                         if( OnStop != null ) {
                             OnStop();

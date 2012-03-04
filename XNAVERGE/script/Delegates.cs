@@ -19,6 +19,9 @@ namespace XNAVERGE {
     // This type of delegate is called when an entity is activated adjacently by the player ("talked to").
     public delegate void EntityActivationDelegate(Entity ent);
    
+    /// This type of delegate is called at the begining of the game's update loop.  
+    /// return true if you want normal map handling to occur after, false if you don't.
+    public delegate bool GameControlDelegate();
 
     public delegate int EntityMovementDelegate(Entity ent, ref EntityMovementData data); 
 

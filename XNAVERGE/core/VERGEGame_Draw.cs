@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 namespace XNAVERGE {
+
     public partial class VERGEGame {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spritebatch;

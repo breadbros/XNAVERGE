@@ -91,7 +91,7 @@ namespace XNAVERGE {
         /// related content. Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize() {                        
+        protected override void Initialize() {             
             screen = new Screen(320, 240, 2);
             RasterizerState rstate = new RasterizerState();
             rstate.CullMode = CullMode.None; // culling not needed for 2D

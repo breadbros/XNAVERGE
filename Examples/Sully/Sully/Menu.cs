@@ -18,6 +18,7 @@ namespace Sully {
              public int last_x, last_y;
              public int x, y;
              public Rectangle bounds, color_bounds;
+             public McgNode rendernode;
 
              public MenuBox( Texture2D _img, int _x, int _y ) {
                  image = _img;
@@ -66,6 +67,48 @@ namespace Sully {
             state = MenuState.Active;    
         }
 
+        public bool CanSummonMenu() {
+            return !IsInMenu();
+        }
+
+        bool isInMenu = true;
+        public bool IsInMenu() {
+            return isInMenu;
+        }
+
+        public void _enterMenuEvent() {
+            this.isInMenu = true;
+        }
+
+        public void _exitMenuEvent() {
+            this.isInMenu = false;
+        }
+
+        public void SummonMenu() {
+            mainBox.rendernode.Reverse();
+            commandBox.rendernode.Reverse();
+            smallBox.rendernode.Reverse();
+
+            mainBox.rendernode.OnStop += _enterMenuEvent;
+            mainBox.rendernode.OnStop -= _exitMenuEvent;
+        }
+
+        public void DismissMenu() {
+
+            mainBox.rendernode.OnStop -= _enterMenuEvent;
+            mainBox.rendernode.OnStop += _exitMenuEvent;
+
+            mainBox.rendernode.Reverse();
+            commandBox.rendernode.Reverse();
+            smallBox.rendernode.Reverse();
+        }
+
+        public void HandleInput(DirectionalButtons dir, VERGEActions action) {
+            if( action.cancel.pressed ) {
+                DismissMenu();
+            }
+        }
+
         public void Update() { }
 
         //public void Draw( SullyGame game ) { }
@@ -93,16 +136,16 @@ namespace Sully {
 
             int delay = 200;
 
-            McgNode n = l.AddNode(
+            mainBox.rendernode = l.AddNode(
                 new McgNode( a1, l, -220, 10, 10, 10, delay )
             );
             //n.DEBUG = true;
 
-            l.AddNode(
+            commandBox.rendernode = l.AddNode(
                 new McgNode( a2, l, 320, 10, 240, 10, delay )
             );
 
-            l.AddNode(
+            smallBox.rendernode = l.AddNode(
                 new McgNode( a3, l, 320, 180, 240, 180, delay )
             );
         }

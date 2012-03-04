@@ -18,8 +18,6 @@ namespace XNAVERGE {
         public GamePadState gp_state;
         protected int last_updated;
        
-
-
         public InputManager() {
             button_dict = new Dictionary<string, SemanticButton>();
             semantic_buttons = button_dict.Values;

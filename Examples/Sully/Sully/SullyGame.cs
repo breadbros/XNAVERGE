@@ -22,6 +22,8 @@ namespace Sully
         public Menu mainMenu;
         McGrenderStack mcg;
 
+        public bool inMenu = false;
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -38,6 +40,25 @@ namespace Sully
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );
             this.setMcGrender( mcg );
+
+            this.game_input_handler = () => {
+
+                if( this.mainMenu.CanSummonMenu() && action.menu.pressed ) {
+                    this.mainMenu.SummonMenu();
+                } 
+                
+                if( this.mainMenu.IsInMenu() ) {
+                    this.mainMenu.HandleInput( dir, action );
+                }
+                
+
+                if( inMenu ) {
+                    return false;
+                }
+
+                return true;
+            };
+
 
             base.Initialize();
         }

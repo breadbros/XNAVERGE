@@ -27,15 +27,14 @@ namespace XNAVERGE {
 
         public EntityMovementDelegate default_entity_handler; // the movement handler assigned to new entities
 
+        public GameControlDelegate game_input_handler;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            BoundedSpace<Entity>.BoundedElementSet ent_enum;            
-            Point prev_player_coords, cur_player_coords, facing_coords;
-            Entity ent;
             int elapsed;
 
             // Back button instantly quits. TODO: take this out when it transitions from convenient to obnoxious.
@@ -48,58 +47,68 @@ namespace XNAVERGE {
                 
                 elapsed /= _tick_length_in_timespan_ticks; // convert elapsed from ms to ticks, rounding down
                 _tick += elapsed;
-                _last_tick_time += elapsed * _tick_length_in_timespan_ticks;                
+                _last_tick_time += elapsed * _tick_length_in_timespan_ticks;
 
-                if (map != null) {
-                    input.Update();                    
+                input.Update();
 
-                    // HANDLE MOVEMENT AND COLLISIONS
-                    // ------------------------------
-
-                    if (player != null) {
-                        //Console.WriteLine("{0},{1}", player.exact_x, player.exact_y);
-                        prev_player_coords = player.hitbox.Center;
-                        prev_player_coords.X /= map.tileset.tilesize;
-                        prev_player_coords.Y /= map.tileset.tilesize;
-                    }
-                    else prev_player_coords = default(Point);
-                    for (int i = 0; i < map.num_entities; i++) {
-                        ent = map.entities[i];                                                
-                        ent.Update();
-                    }
-                    
-                    if (player != null) { // update player zone
-                        cur_player_coords = player.hitbox.Center;
-                        cur_player_coords.X /= map.tileset.tilesize;
-                        cur_player_coords.Y /= map.tileset.tilesize;
-                        if (cur_player_coords != prev_player_coords && map.within_bounds(cur_player_coords.X, cur_player_coords.Y, true)) {
-                            map.zones[map.zone_layer.data[cur_player_coords.X][cur_player_coords.Y]].maybe_activate(cur_player_coords.X, cur_player_coords.Y);
-                        }
-
-                        // HANDLE ENTITY/ZONE ACTIVATION VIA BUTTON PRESS                
-                        if (player_controllable && action.confirm.pressed) {
-                            facing_coords = player.facing_coordinates(false);
-
-                            // Entity activation
-                            ent_enum = entity_space.elements_within_bounds(new Rectangle(facing_coords.X, facing_coords.Y, 1, 1), true, player);
-                            if (ent_enum.GetNext(out ent)) // just take the first match arbitrarily
-                                ent.activate();
-
-                            // Zone activation
-                            // Convert facing_coords to tile coordinates
-                            facing_coords.X /= map.tileset.tilesize;
-                            facing_coords.Y /= map.tileset.tilesize;
-                            if (facing_coords != cur_player_coords && map.within_bounds(facing_coords.X, facing_coords.Y, true)
-                                && map.zone_at(facing_coords.X, facing_coords.Y, true).adjacent)
-                                map.zone_at(facing_coords.X, facing_coords.Y, true).activate(facing_coords.X, facing_coords.Y, true);
-                        }
-                    }
-                    
-                    // END OF UPDATING
-                }
+                if( game_input_handler() ) {
+                    _handleMapMovementInput();
+                }   
             }
 
             base.Update(gameTime);
+        }
+
+        private void _handleMapMovementInput() {
+            if( map != null ) {
+
+                BoundedSpace<Entity>.BoundedElementSet ent_enum;
+                Point prev_player_coords, cur_player_coords, facing_coords;
+                Entity ent;
+
+                // HANDLE MOVEMENT AND COLLISIONS
+                // ------------------------------
+
+                if( player != null ) {
+                    //Console.WriteLine("{0},{1}", player.exact_x, player.exact_y);
+                    prev_player_coords = player.hitbox.Center;
+                    prev_player_coords.X /= map.tileset.tilesize;
+                    prev_player_coords.Y /= map.tileset.tilesize;
+                } else prev_player_coords = default( Point );
+                for( int i = 0; i < map.num_entities; i++ ) {
+                    ent = map.entities[i];
+                    ent.Update();
+                }
+
+                if( player != null ) { // update player zone
+                    cur_player_coords = player.hitbox.Center;
+                    cur_player_coords.X /= map.tileset.tilesize;
+                    cur_player_coords.Y /= map.tileset.tilesize;
+                    if( cur_player_coords != prev_player_coords && map.within_bounds( cur_player_coords.X, cur_player_coords.Y, true ) ) {
+                        map.zones[map.zone_layer.data[cur_player_coords.X][cur_player_coords.Y]].maybe_activate( cur_player_coords.X, cur_player_coords.Y );
+                    }
+
+                    // HANDLE ENTITY/ZONE ACTIVATION VIA BUTTON PRESS                
+                    if( player_controllable && action.confirm.pressed ) {
+                        facing_coords = player.facing_coordinates( false );
+
+                        // Entity activation
+                        ent_enum = entity_space.elements_within_bounds( new Rectangle( facing_coords.X, facing_coords.Y, 1, 1 ), true, player );
+                        if( ent_enum.GetNext( out ent ) ) // just take the first match arbitrarily
+                            ent.activate();
+
+                        // Zone activation
+                        // Convert facing_coords to tile coordinates
+                        facing_coords.X /= map.tileset.tilesize;
+                        facing_coords.Y /= map.tileset.tilesize;
+                        if( facing_coords != cur_player_coords && map.within_bounds( facing_coords.X, facing_coords.Y, true )
+                            && map.zone_at( facing_coords.X, facing_coords.Y, true ).adjacent )
+                            map.zone_at( facing_coords.X, facing_coords.Y, true ).activate( facing_coords.X, facing_coords.Y, true );
+                    }
+                }
+
+                // END OF UPDATING
+            }
         }
 
         // Tries to find a delegate matching the specified type in either the map or global script banks.
