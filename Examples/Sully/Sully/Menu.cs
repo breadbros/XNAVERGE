@@ -129,10 +129,14 @@ namespace Sully {
                     DismissMenu();
                 }
 
-                if( dir.up.DelayPress(1000) ) {
+                int delay = 20;
+
+Console.WriteLine( "menu::HandleInput();" );
+
+                if( dir.up.DelayPress( delay ) ) {
                     commandBox.cursor--;
                     if( commandBox.cursor < 0 ) commandBox.cursor = 5;
-                } else if( dir.down.DelayPress( 1000 ) ) {
+                } else if( dir.down.DelayPress( delay ) ) {
                     commandBox.cursor++;
                     if( commandBox.cursor > 5 ) commandBox.cursor = 0;
                 }

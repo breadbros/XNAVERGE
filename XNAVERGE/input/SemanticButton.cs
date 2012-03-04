@@ -62,15 +62,10 @@ namespace XNAVERGE {
              */
         }
 
-        private void _log() {
-            Console.WriteLine( ticks_held + "," + _lastDelayFired + "," + _timesDelayFired + "," + _nextDelayFired );
-        }
-
         int _lastDelayFired, _nextDelayFired, _timesDelayFired; 
         public bool DelayPress( int delay ) {
 
-            if( ticks_held > 0 && ticks_held >= _nextDelayFired ) {
-                _log();
+            if( _down && ticks_held > 0 && ticks_held >= _nextDelayFired ) {
 
                 _lastDelayFired = ticks_held;
                 _nextDelayFired = ticks_held + delay;
