@@ -22,6 +22,7 @@ namespace Sully {
 
             private int cursor;
             private ControlDelegate OnControlUpdate;
+            private RenderDelegate OnDraw;
 
             private MenuBox _mb;
 
@@ -38,7 +39,7 @@ namespace Sully {
             }
 
             public void onControlUpdate( DirectionalButtons dir, VERGEActions action ) {
-                _mb.OnControlUpdate(dir, action);
+                this.OnControlUpdate(dir, action);
             }
 
             public void setRendernode( McgNode node ) {
@@ -57,7 +58,7 @@ namespace Sully {
                 _mb.cursor = c;
             }
 
-            public MenuBox( MenuBox parent, ControlDelegate onControlUpdate ) {
+            public MenuBox( MenuBox parent, ControlDelegate onControlUpdate, RenderDelegate onRender ) {
                 _mb = parent;
                 OnControlUpdate = onControlUpdate;
 
@@ -66,6 +67,13 @@ namespace Sully {
                 y = _mb.y;
                 bounds = _mb.bounds;
                 color_bounds = _mb.color_bounds;
+
+                RenderDelegate myDraw = ( int x1, int y1 ) => {
+                    _mb.OnDraw( x1, y1 );
+                    onRender( x1, y1 );
+                };
+
+                OnDraw = myDraw;
             }
 
             public MenuBox( Texture2D _img, int _x, int _y, int start_x, int start_y, ControlDelegate onControlUpdate, RenderDelegate onRender ) {
@@ -78,6 +86,7 @@ namespace Sully {
                 bounds = new Rectangle( x, y, image.Width, image.Height );
                 color_bounds = new Rectangle( x, y, image.Width, image.Height );
                 color_bounds.Inflate( -2, -2 );
+                OnDraw = onRender;
                 McgLayer l = _.sg.renderstack.GetLayer( "menu" );
 
                 this.setRendernode(
@@ -228,12 +237,32 @@ namespace Sully {
 
             };
 
-            menus[menuOrder[0]] = new MenuBox( mainBox, updateItems );
-            menus[menuOrder[1]] = new MenuBox( mainBox, updateSkills );
-            menus[menuOrder[2]] = new MenuBox( mainBox, updateEquip );
-            menus[menuOrder[3]] = new MenuBox( mainBox, updateStatus );
-            menus[menuOrder[4]] = new MenuBox( mainBox, updateOption );
-            menus[menuOrder[5]] = new MenuBox( mainBox, updateSave );
+            RenderDelegate drawSkills = ( int x, int y ) => {
+
+            };
+
+            RenderDelegate drawEquip = ( int x, int y ) => {
+
+            };
+
+            RenderDelegate drawStatus = ( int x, int y ) => {
+
+            };
+
+            RenderDelegate drawOption = ( int x, int y ) => {
+
+            };
+
+            RenderDelegate drawSave = ( int x, int y ) => {
+
+            };
+
+            menus[menuOrder[0]] = new MenuBox( mainBox, updateItems, drawItems );
+            menus[menuOrder[1]] = new MenuBox( mainBox, updateSkills, drawSkills );
+            menus[menuOrder[2]] = new MenuBox( mainBox, updateEquip, drawEquip );
+            menus[menuOrder[3]] = new MenuBox( mainBox, updateStatus, drawStatus );
+            menus[menuOrder[4]] = new MenuBox( mainBox, updateOption, drawOption );
+            menus[menuOrder[5]] = new MenuBox( mainBox, updateSave, drawSave );
         }
 
         public bool CanSummonMenu() {
