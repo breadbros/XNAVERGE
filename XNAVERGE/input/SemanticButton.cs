@@ -62,6 +62,12 @@ namespace XNAVERGE {
              */
         }
 
+        public static int global_repeater_delay = 10;
+
+        public bool DelayPress() {
+            return DelayPress( SemanticButton.global_repeater_delay );
+        }
+
         int _lastDelayFired, _nextDelayFired, _timesDelayFired; 
         public bool DelayPress( int delay ) {
 
