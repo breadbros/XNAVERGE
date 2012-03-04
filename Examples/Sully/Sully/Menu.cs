@@ -20,6 +20,8 @@ namespace Sully {
              public Rectangle bounds, color_bounds;
              public McgNode rendernode;
 
+             public int cursor;
+
              public MenuBox( Texture2D _img, int _x, int _y ) {
                  image = _img;
                  x = _x;
@@ -59,6 +61,8 @@ namespace Sully {
 
         public MenuState state;
 
+        public MenuBox activeMenu;
+
         public Menu() {
 
             Color[] boxcolors = new Color[3];
@@ -74,8 +78,9 @@ namespace Sully {
 
             mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10); 
             commandBox = new MenuBox(_.MakeBox( 70, 160, boxcolors ), 240,10); 
-            smallBox = new MenuBox(_.MakeBox( 70, 50, boxcolors ), 240,180);    
+            smallBox = new MenuBox(_.MakeBox( 70, 50, boxcolors ), 240,180);
 
+            this.activeMenu = this.commandBox;
             state = MenuState.Active;    
         }
 
@@ -97,6 +102,8 @@ namespace Sully {
         }
 
         public void SummonMenu() {
+            this.activeMenu = this.commandBox;
+
             mainBox.rendernode.Reverse();
             commandBox.rendernode.Reverse();
             smallBox.rendernode.Reverse();
@@ -116,8 +123,22 @@ namespace Sully {
         }
 
         public void HandleInput(DirectionalButtons dir, VERGEActions action) {
-            if( action.cancel.pressed ) {
-                DismissMenu();
+
+            if( this.activeMenu == this.commandBox ) {
+                if( action.cancel.pressed ) {
+                    DismissMenu();
+                }
+
+                if( dir.up.DelayPress(1000) ) {
+                    commandBox.cursor--;
+                    if( commandBox.cursor < 0 ) commandBox.cursor = 5;
+                } else if( dir.down.DelayPress( 1000 ) ) {
+                    commandBox.cursor++;
+                    if( commandBox.cursor > 5 ) commandBox.cursor = 0;
+                }
+
+            } else if( this.activeMenu == this.mainBox ) {
+
             }
         }
 
@@ -143,6 +164,8 @@ namespace Sully {
                 int my = 15;
                 int yOffs = 5;
                 int mi = 0;
+
+                commandBox.PrintText( ">", mx - 10, yOffs + my * commandBox.cursor );
 
                 commandBox.PrintText( "ITEM", mx, yOffs + my * mi++ );
                 commandBox.PrintText( "SKILL", mx, yOffs + my * mi++ );

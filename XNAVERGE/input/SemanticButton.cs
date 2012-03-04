@@ -51,6 +51,34 @@ namespace XNAVERGE {
         public void unpress() {
             _down = _pressed = _released = false;
             ticks_held = 0;
+            _lastDelayFired = 0;
+            _timesDelayFired = 0;
+            _nextDelayFired = 0;
+
+            /*
+            if( this._name == "Down" ) {
+                Console.WriteLine( "down 0'd a" );
+            }
+             */
+        }
+
+        private void _log() {
+            Console.WriteLine( ticks_held + "," + _lastDelayFired + "," + _timesDelayFired + "," + _nextDelayFired );
+        }
+
+        int _lastDelayFired, _nextDelayFired, _timesDelayFired; 
+        public bool DelayPress( int delay ) {
+
+            if( ticks_held > 0 && ticks_held >= _nextDelayFired ) {
+                _log();
+
+                _lastDelayFired = ticks_held;
+                _nextDelayFired = ticks_held + delay;
+                _timesDelayFired++;
+                return true;
+            }
+
+            return false;
         }
 
         // time_elapsed is a count of the ticks since the InputManager last updated (generally 1).
@@ -62,22 +90,32 @@ namespace XNAVERGE {
 
             // Determine current state of semantic button (it's down if anything mapped to the button is down)
 
-            if (manager.gp_state.IsConnected && input.gamepad_buttons.Any(manager.gp_state.IsButtonDown)) down_now = true;
-            else if (input.keys.Any(manager.kb_state.IsKeyDown)) down_now = true;
-            
-            else {
+            if( manager.gp_state.IsConnected && input.gamepad_buttons.Any( manager.gp_state.IsButtonDown ) ) {
+                down_now = true;
+            } else if( input.keys.Any( manager.kb_state.IsKeyDown ) ) {
+                down_now = true;
+            }  else {
                 // TODO: other input types here
                 down_now = false;
             }
 
             if (down_now != _down) {
                 _down = down_now;
-                if (down_now) _pressed = true;
-                else _released = true;
+                if( down_now ) {
+                    _pressed = true;
+                } else {
+                    if( !_released ) {
+                        unpress();
+                    }
+                    _released = true;
+                }
             }
 
-            if (down_now || _released) ticks_held += time_elapsed;
-            else ticks_held = 0;
+            if( down_now || _released ) {
+                ticks_held += time_elapsed;
+            } else {
+                ticks_held = 0;
+            }
         }
     }    
 

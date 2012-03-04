@@ -50,9 +50,8 @@ namespace Sully
                 if( this.mainMenu.IsInMenu() ) {
                     this.mainMenu.HandleInput( dir, action );
                 }
-                
 
-                if( inMenu ) {
+                if( mainMenu.IsInMenu() ) {
                     return false;
                 }
 
