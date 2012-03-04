@@ -14,14 +14,18 @@ namespace XNAVERGE {
         float final_x, final_y;
         float cur_x, cur_y;
         float? tick_x, tick_y;
-        int? delay, running_time, final_time;
+        int? delay, final_time;
         Boolean isMoving;
         public event Action OnStop = null;
-        public event Action OnDraw = null;
+        public event RenderDelegate OnDraw = null;
+
+        public bool DEBUG = false;
+
+
         Texture2D image = null;
         Rectangle im_bounds;
 
-        public McgNode( Action act, McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
+        public McgNode( RenderDelegate act, McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
             OnDraw = act;
             _Node( l, start_x, start_y, end_x, end_y, delay );
         }
@@ -53,18 +57,35 @@ namespace XNAVERGE {
             }
         }
 
+        public override string ToString() {
+            return  "Node layer " + layer + 
+                    " cur: (" + cur_x + "," + cur_y + 
+                    ") final: (" + final_x + "," + final_y + 
+                    ") delay: " + delay + 
+                    " tick: (" + tick_x + "," + tick_y + 
+                    ") final_time: (" + final_time + 
+                    ") curtime: " + layer.stack.systime;   
+        }
+
         public Boolean IsMoving() {
             return isMoving;
         }
 
         public void Update( int ticksSinceLastUpdate ) {
+
+if( DEBUG ) Console.WriteLine( "ticksSinceLastUpdate: " + ticksSinceLastUpdate );
+if( DEBUG ) Console.WriteLine( this );
+
             if( isMoving ) {
+
+if( DEBUG ) Console.WriteLine( "IS MOVING" );
                 if( ticksSinceLastUpdate > 0 ) {
                     this.cur_x += ( (float)tick_x * (float)ticksSinceLastUpdate );
                     this.cur_y += ( (float)tick_y * (float)ticksSinceLastUpdate );
-                    running_time += ticksSinceLastUpdate;
 
-                    if( running_time >= final_time ) {
+if( DEBUG ) Console.WriteLine( this );
+                    if( layer.stack.systime >= final_time ) {
+if( DEBUG ) Console.WriteLine( "STOPPING" );
                         isMoving = false;
                         this.cur_x = this.final_x;
                         this.cur_y = this.final_y;
@@ -83,7 +104,7 @@ namespace XNAVERGE {
             if( image != null ) {
                 layer.stack.spritebatch.Draw( image, im_bounds, Color.White );
             } else if( OnDraw != null ) {
-                OnDraw();
+                OnDraw( (int)this.cur_x, (int)this.cur_y );
             }
         }
     }
@@ -104,8 +125,9 @@ namespace XNAVERGE {
             name = n;
         }
 
-        public void AddNode( McgNode n ) {
+        public McgNode AddNode( McgNode n ) {
             nodes.Add( n );
+            return n;
         }
 
         public void Update( int ticksSinceLastUpdate ) {
@@ -125,13 +147,15 @@ namespace XNAVERGE {
         public List<McgLayer> layers;
         public SpriteBatch spritebatch;
         public int systime;
+        public int prev_systime;
 
         public void setSpritebatch( SpriteBatch sb ) {
             spritebatch = sb;
         }
 
-        public void setSystime( int st ) {
-            systime = st;
+        public void setSystime( long st ) {
+            prev_systime = systime;
+            systime = (int)st;
         }
 
         public McGrenderStack() {
@@ -161,23 +185,13 @@ namespace XNAVERGE {
         }
 
         public void Draw() {
-            // Screen screen = game.screen;
-            // Rectangle blit_rect = new Rectangle( 0, 0, screen.width, screen.height );
-            // game.GraphicsDevice.SetRenderTarget( screen.true_size_buffer );
+            Update( systime - prev_systime );
 
             spritebatch.Begin();
             for( int i = 0; i < layers.Count; i++ ) {
                 layers[i].Draw();
             }
             spritebatch.End();
-
-            /*
-            game.GraphicsDevice.SetRenderTarget( null );
-            game.spritebatch.Begin( SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, screen.scaling_matrix );
-            game.spritebatch.Draw( screen.true_size_buffer, blit_rect, Color.White );
-            game.spritebatch.End();
-        
-             */ 
         }
     }
 }

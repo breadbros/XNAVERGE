@@ -36,8 +36,12 @@ namespace XNAVERGE {
             renderstack = mcg;
         }
 
+
+        System.Diagnostics.Stopwatch stopWatch;
         public VERGEGame() : base() {
             System.Diagnostics.StackTrace stack = new System.Diagnostics.StackTrace();
+            stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
 
             // the assembly/namespace to search for script classes defaults to the one 
             // from which this constructor was called.

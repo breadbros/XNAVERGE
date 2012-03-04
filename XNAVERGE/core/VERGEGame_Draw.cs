@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -48,9 +49,11 @@ namespace XNAVERGE {
             // Draw to native-size buffer at 1x size
             GraphicsDevice.SetRenderTarget(screen.true_size_buffer);
             map.renderstack.Draw();
+
+            renderstack.setSystime( stopWatch.ElapsedMilliseconds );
+            
             renderstack.setSpritebatch( spritebatch );
             renderstack.Draw();
-
 
             // Copy native buffer to backbuffer, scaled to true window size
             GraphicsDevice.SetRenderTarget(null);

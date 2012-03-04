@@ -9,6 +9,9 @@ namespace XNAVERGE {
     // The generic no-frills delegate, most often used for chains of event-scripting callbacks.
     public delegate void BasicDelegate();
 
+    // for rendering events.
+    public delegate void RenderDelegate( int px, int py );
+
     // ZoneDelegates are events called when zones are activated. Their arguments are the coordinates of the triggering zone,
     // and whether it was triggered via step or adjacent activation.
     public delegate void ZoneDelegate(int tx, int ty, bool adjacent);

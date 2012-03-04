@@ -15,6 +15,7 @@ namespace Sully {
         public class MenuBox {
              
              public Texture2D image;
+             public int last_x, last_y;
              public int x, y;
              public Rectangle bounds, color_bounds;
 
@@ -25,6 +26,17 @@ namespace Sully {
                  bounds = new Rectangle( x, y, image.Width, image.Height );
                  color_bounds = new Rectangle( x, y, image.Width, image.Height );
                  color_bounds.Inflate( -2, -2 );
+             }
+
+             public void UpdateBounds( int x, int y ) {
+                 if( x != last_x || y != last_y ) {
+                     last_x = x;
+                     last_y = y;
+
+                     bounds = new Rectangle( x, y, image.Width, image.Height );
+                     color_bounds = new Rectangle( x, y, image.Width, image.Height );
+                     color_bounds.Inflate( -2, -2 );
+                 }
              }
         }
 
@@ -60,32 +72,38 @@ namespace Sully {
 
         public void _initMenu( SullyGame game ) {
             McgLayer l = game.renderstack.GetLayer( "menu" );
-            
-            Action a1 = () => {
+
+            RenderDelegate a1 = ( int x, int y ) => {
+                mainBox.UpdateBounds( x, y );
                 game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( mainBox.image, mainBox.bounds, Color.White );
             };
 
-            Action a2 = () => {
+            RenderDelegate a2 = ( int x, int y ) => {
+                commandBox.UpdateBounds( x, y );
                 game.spritebatch.Draw( activeBgColor, commandBox.color_bounds, Color.White * .5f );
-                game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
+                game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White ); 
             };
 
-            Action a3 = () => {
+            RenderDelegate a3 = ( int x, int y ) => {
+                smallBox.UpdateBounds( x, y );
                 game.spritebatch.Draw( inactiveBgColor, smallBox.color_bounds, Color.White * .5f );
-                game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
+                game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White ); 
             };
-                
+
+            int delay = 2000;
+
+            McgNode n = l.AddNode(
+                new McgNode( a1, l, -220, 10, 10, 10, delay )
+            );
+            //n.DEBUG = true;
+
             l.AddNode(
-                new McgNode( a1, l, 0, 0, 300, 300, 3000 )
+                new McgNode( a2, l, 320, 10, 240, 10, delay )
             );
 
             l.AddNode(
-                new McgNode( a2, l, 0, 0)
-            );
-
-            l.AddNode(
-                new McgNode( a3, l, 0, 0)
+                new McgNode( a3, l, 320, 180, 240, 180, delay )
             );
         }
     }
