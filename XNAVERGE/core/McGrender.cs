@@ -11,6 +11,7 @@ namespace XNAVERGE {
     public class McgNode {
         McgLayer layer;
 
+        float start_x, start_y;
         float final_x, final_y;
         float cur_x, cur_y;
         float? tick_x, tick_y;
@@ -38,6 +39,9 @@ namespace XNAVERGE {
 
         private void _Node( McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
             layer = l;
+
+            this.start_x = start_x;
+            this.start_y = start_y;
 
             if( end_x == null ) {
                 cur_x = final_x = start_x;
@@ -90,6 +94,8 @@ if( DEBUG ) Console.WriteLine( "STOPPING" );
                         this.cur_x = this.final_x;
                         this.cur_y = this.final_y;
 
+this.Reverse();
+
                         if( OnStop != null ) {
                             OnStop();
                             OnStop = null;
@@ -106,6 +112,31 @@ if( DEBUG ) Console.WriteLine( "STOPPING" );
             } else if( OnDraw != null ) {
                 OnDraw( (int)this.cur_x, (int)this.cur_y );
             }
+        }
+
+
+        public void Reverse() {
+            float temp_x, temp_y;
+
+            if( !(tick_x != 0 || tick_y != 0) ) {
+                return;
+            }
+
+            //reverse the chunks
+            this.tick_x = -this.tick_x;
+            this.tick_y = -this.tick_y;
+
+            temp_x = final_x;
+            temp_y = final_y;
+
+            final_x = start_x;
+            final_y = start_y;
+
+            start_x = temp_x;
+            start_y = temp_y;
+
+            isMoving = true;
+            final_time = layer.stack.systime + delay;
         }
     }
 

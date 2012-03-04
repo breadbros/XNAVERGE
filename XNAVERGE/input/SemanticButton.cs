@@ -64,8 +64,6 @@ namespace XNAVERGE {
 
             if (manager.gp_state.IsConnected && input.gamepad_buttons.Any(manager.gp_state.IsButtonDown)) down_now = true;
             else if (input.keys.Any(manager.kb_state.IsKeyDown)) down_now = true;
-           
-
             
             else {
                 // TODO: other input types here

@@ -91,7 +91,7 @@ namespace Sully {
                 game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White ); 
             };
 
-            int delay = 2000;
+            int delay = 200;
 
             McgNode n = l.AddNode(
                 new McgNode( a1, l, -220, 10, 10, 10, delay )
