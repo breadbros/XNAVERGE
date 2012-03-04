@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-
 namespace XNAVERGE {
     public partial class VERGEGame {
         public GraphicsDeviceManager graphics;
@@ -48,13 +47,15 @@ namespace XNAVERGE {
 
             // Draw to native-size buffer at 1x size
             GraphicsDevice.SetRenderTarget(screen.true_size_buffer);
-            map.renderstack.Draw(); 
-            
+            map.renderstack.Draw();
+            renderstack.setSpritebatch( spritebatch );
+            renderstack.Draw();
+
+
             // Copy native buffer to backbuffer, scaled to true window size
             GraphicsDevice.SetRenderTarget(null);
             spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, screen.scaling_matrix);
             spritebatch.Draw(screen.true_size_buffer, blit_rect, Color.White);
-
             spritebatch.End();
         }
 

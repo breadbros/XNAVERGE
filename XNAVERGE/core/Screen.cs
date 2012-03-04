@@ -9,7 +9,7 @@ namespace XNAVERGE {
     public class Screen : IDisposable { 
         public int width { get { return _width; } }
         public int height { get { return _height; } }
-        internal RenderTarget2D true_size_buffer; // this buffer reflects the true internal size of the screen, before scaling
+        public RenderTarget2D true_size_buffer; // this buffer reflects the true internal size of the screen, before scaling
         public int scaling_factor {
             get { return _scaling_factor; }
             set {                
@@ -25,7 +25,7 @@ namespace XNAVERGE {
         public float aspect_ratio { get { return ((float)_width) / _height; } }
         
         public BasicEffect effect { get { return _effect; } }
-        internal Matrix scaling_matrix;
+        public Matrix scaling_matrix; //was internal
         protected BasicEffect _effect;
         protected int _width, _height, _scaling_factor;
 

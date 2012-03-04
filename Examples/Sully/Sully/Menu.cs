@@ -5,7 +5,8 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Sully.McGrenderStack;
+
+using XNAVERGE;
 
 namespace Sully {
     
@@ -55,27 +56,10 @@ namespace Sully {
 
         public void Update() { }
 
-        public void Draw( SullyGame game ) {
-
-            /*
-            game.spritebatch.Begin();
-
-            game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
-            game.spritebatch.Draw( mainBox.image, mainBox.bounds, Color.White );
-
-            game.spritebatch.Draw( activeBgColor, commandBox.color_bounds, Color.White * .5f );
-            game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
-
-            game.spritebatch.Draw( inactiveBgColor, smallBox.color_bounds, Color.White * .5f );
-            game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
-
-            game.spritebatch.End();
-        
-             */ 
-        }
+        public void Draw( SullyGame game ) { }
 
         public void _initMenu( SullyGame game ) {
-            Layer l = game.mcg.AddLayer("menu");
+            McgLayer l = game.renderstack.AddLayer("menu");
             
             Action a1 = () => {
                 game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
@@ -93,15 +77,15 @@ namespace Sully {
             };
                 
             l.AddNode(
-                new Node( a1, l, 0, 0, 300, 300, 3000 )
+                new McgNode( a1, l, 0, 0, 300, 300, 3000 )
             );
 
             l.AddNode(
-                new Node( a2, l, 0, 0)
+                new McgNode( a2, l, 0, 0)
             );
 
             l.AddNode(
-                new Node( a3, l, 0, 0)
+                new McgNode( a3, l, 0, 0)
             );
         }
 

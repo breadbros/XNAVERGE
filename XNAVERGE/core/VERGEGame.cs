@@ -30,6 +30,12 @@ namespace XNAVERGE {
 
         internal BoundedSpace<Entity> entity_space;
 
+        public McGrenderStack renderstack;
+
+        public void setMcGrender( McGrenderStack mcg ) {
+            renderstack = mcg;
+        }
+
         public VERGEGame() : base() {
             System.Diagnostics.StackTrace stack = new System.Diagnostics.StackTrace();
 

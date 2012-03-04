@@ -34,7 +34,7 @@ namespace Sully {
 
             _.InitMap();
 
-            _.PlayMusic( "troupe_-_cabedge_sailing" );
+            //_.PlayMusic( "troupe_-_cabedge_sailing" );
             // V1_StartMusic( "res/music/MEDIOEVA.MOD" );
             //Banner( "Paradise Isle", 300 );
         }
@@ -153,9 +153,8 @@ namespace Sully {
                 _.TextBox( _.T_DARIN, "...again.", "", "" );
                 _.sg.textbox.setPlayerAutorelease( false );
                 _.sg.textbox.OnDone += () => {
-                    _.PlayerMove( "U2" );
+                    _.PlayerMove( "U2" );          
                 };
-
             }
         }
 
