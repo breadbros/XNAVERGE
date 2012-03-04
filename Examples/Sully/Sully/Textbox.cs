@@ -31,7 +31,10 @@ namespace Sully {
 
         private static int last_anim_tick;
 
-        public Textbox( int screen_width, int screen_height, Texture2D speechPorts ) {
+        private SullyGame game;
+
+        public Textbox( int screen_width, int screen_height, Texture2D speechPorts, SullyGame g ) {
+            game = g;
             boxes_of_text = new List<object>();
             currently_rendering_text = new List<string>();
             vertical_padding = 2;
@@ -63,9 +66,22 @@ namespace Sully {
             inner_bounds.Inflate( -horizontal_padding, -vertical_padding );
             color_bounds.Inflate( -2, -2 );
 
-            
             bgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
             bgColor.SetData( new[] { new Color( new Vector4( 140, 0, 140, 63 ) ) } );
+
+
+
+            McgLayer l = game.renderstack.GetLayer( "textbox" );
+
+            Action a1 = () => {
+                //game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
+                //game.spritebatch.Draw( mainBox.image, mainBox.bounds, Color.White );
+                Draw();
+            };
+
+            l.AddNode(
+                new McgNode( a1, l, 0, 0, 300, 300, 3000 )
+            );
         }
 
         public void setPlayerAutorelease( Boolean b ) {
@@ -182,14 +198,14 @@ namespace Sully {
             game.print_string( s, x, y, Color.White, false );
         }
 
-        public void Draw( SullyGame game ) {
+        public void Draw() {
             
             int height, length;
             length = currently_rendering_text.Count;
             height = game.system_font.LineSpacing;
 
             if( state != TextboxState.Hidden ) {
-                game.spritebatch.Begin();
+//game.spritebatch.Begin();
 
                 game.spritebatch.Draw( bgColor, color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( image, bounds, Color.White );
@@ -215,7 +231,7 @@ namespace Sully {
                     _Draw( currently_rendering_text[cur_line].Substring( 0, cur_pos + 1 ), inner_bounds.X, inner_bounds.Y + cur_line * height );
                 }
 
-                game.spritebatch.End();
+//game.spritebatch.End();
             }
         }
     }

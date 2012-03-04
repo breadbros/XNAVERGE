@@ -35,6 +35,8 @@ namespace Sully
             global = new SullyGlobalScripts(this);
 
             mcg = new McGrenderStack();
+            mcg.AddLayer( "menu" );
+            mcg.AddLayer( "textbox" );
             this.setMcGrender( mcg );
 
             base.Initialize();
@@ -102,7 +104,7 @@ namespace Sully
 
         private void init_textbox() {
             Texture2D speechPortraits = Content.Load<Texture2D>( "speech" );
-            textbox = new Textbox( screen.width, screen.height, speechPortraits );
+            textbox = new Textbox( screen.width, screen.height, speechPortraits, this );
             mainMenu = new Menu();
             mainMenu._initMenu( this );
         }

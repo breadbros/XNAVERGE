@@ -18,8 +18,8 @@ namespace Sully {
         }
 
         public void draw_UI(ScriptRenderLayer layer, Rectangle clipping_region) {
-            sg.mainMenu.Draw( this.sg );
-            sg.textbox.Draw( this.sg );
+            //sg.mainMenu.Draw( this.sg );
+            //sg.textbox.Draw();
         }
     }
 }

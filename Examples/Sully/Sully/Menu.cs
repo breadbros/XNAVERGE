@@ -56,10 +56,10 @@ namespace Sully {
 
         public void Update() { }
 
-        public void Draw( SullyGame game ) { }
+        //public void Draw( SullyGame game ) { }
 
         public void _initMenu( SullyGame game ) {
-            McgLayer l = game.renderstack.AddLayer("menu");
+            McgLayer l = game.renderstack.GetLayer( "menu" );
             
             Action a1 = () => {
                 game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
@@ -88,7 +88,6 @@ namespace Sully {
                 new McgNode( a3, l, 0, 0)
             );
         }
-
     }
 
     public enum MenuState { Hidden, Active, Animating }

@@ -144,6 +144,16 @@ namespace XNAVERGE {
             return l;
         }
 
+        public McgLayer GetLayer( string name ) {
+            for( int i = 0; i < layers.Count; i++ ) {
+                if( layers[i].name == name ) {
+                    return layers[i];
+                }
+            }
+
+            return null;
+        }
+
         public void Update( int ticksSinceLastUpdate ) {
             for( int i = 0; i < layers.Count; i++ ) {
                 layers[i].Update( ticksSinceLastUpdate );
