@@ -21,9 +21,11 @@ namespace Sully {
              public McgNode rendernode;
 
              public int cursor;
+             public ControlDelegate OnControlUpdate;
 
-             public MenuBox( Texture2D _img, int _x, int _y ) {
+             public MenuBox( Texture2D _img, int _x, int _y, ControlDelegate onControlUpdate ) {
                  image = _img;
+                 OnControlUpdate = onControlUpdate;
                  x = _x;
                  y = _y;
                  bounds = new Rectangle( x, y, image.Width, image.Height );
@@ -63,6 +65,8 @@ namespace Sully {
 
         public MenuBox activeMenu;
 
+        public Dictionary<string, MenuBox> menus = new Dictionary<string, MenuBox>();
+        public String[] menuOrder;
         public Menu() {
 
             Color[] boxcolors = new Color[3];
@@ -76,12 +80,43 @@ namespace Sully {
             inactiveBgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
             inactiveBgColor.SetData( new[] { new Color( new Vector4( 0, 0, 0, 63 ) ) } );
 
-            mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10); 
-            commandBox = new MenuBox(_.MakeBox( 70, 160, boxcolors ), 240,10); 
-            smallBox = new MenuBox(_.MakeBox( 70, 50, boxcolors ), 240,180);
+
+            ControlDelegate cd1 = ( DirectionalButtons dir, VERGEActions action ) => {
+
+            };
+
+            ControlDelegate updateCommand = ( DirectionalButtons dir, VERGEActions action ) => {
+                if( action.cancel.pressed ) {
+                    DismissMenu();
+                }
+
+                if( action.confirm.pressed ) {
+                    //activeMenu = 
+                }
+
+                if( dir.up.DelayPress() ) {
+                    commandBox.cursor--;
+                    if( commandBox.cursor < 0 ) commandBox.cursor = 5;
+                } else if( dir.down.DelayPress() ) {
+                    commandBox.cursor++;
+                    if( commandBox.cursor > 5 ) commandBox.cursor = 0;
+                }
+            };
+
+            mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, cd1 );
+            commandBox = new MenuBox( _.MakeBox( 70, 160, boxcolors ), 240, 10, updateCommand ); 
+            smallBox = new MenuBox( _.MakeBox( 70, 50, boxcolors ), 240,180, null );
 
             this.activeMenu = this.commandBox;
-            state = MenuState.Active;    
+            state = MenuState.Active;
+
+            menuOrder = new String[6];
+            menuOrder[0] = "ITEM";
+            menuOrder[1] = "SKILL";
+            menuOrder[2] = "EQUIP";
+            menuOrder[3] = "STATUS";
+            menuOrder[4] = "OPTION";
+            menuOrder[5] = "SAVE";
         }
 
         public bool CanSummonMenu() {
@@ -120,28 +155,21 @@ namespace Sully {
             mainBox.rendernode.Reverse();
             commandBox.rendernode.Reverse();
             smallBox.rendernode.Reverse();
+
+            commandBox.cursor = 0;
         }
 
-        public void HandleInput(DirectionalButtons dir, VERGEActions action) {
+        public void HandleInput( DirectionalButtons dir, VERGEActions action ) {
+            this.activeMenu.OnControlUpdate( dir, action );
 
+            /*
             if( this.activeMenu == this.commandBox ) {
-                if( action.cancel.pressed ) {
-                    DismissMenu();
-                }
 
-Console.WriteLine( "menu::HandleInput();" );
-
-                if( dir.up.DelayPress() ) {
-                    commandBox.cursor--;
-                    if( commandBox.cursor < 0 ) commandBox.cursor = 5;
-                } else if( dir.down.DelayPress() ) {
-                    commandBox.cursor++;
-                    if( commandBox.cursor > 5 ) commandBox.cursor = 0;
-                }
 
             } else if( this.activeMenu == this.mainBox ) {
 
             }
+             * */
         }
 
         public void Update() { }
@@ -169,12 +197,10 @@ Console.WriteLine( "menu::HandleInput();" );
 
                 commandBox.PrintText( ">", mx - 10, yOffs + my * commandBox.cursor );
 
-                commandBox.PrintText( "ITEM", mx, yOffs + my * mi++ );
-                commandBox.PrintText( "SKILL", mx, yOffs + my * mi++ );
-                commandBox.PrintText( "EQUIP", mx, yOffs + my * mi++ );
-                commandBox.PrintText( "STATUS", mx, yOffs + my * mi++ );
-                commandBox.PrintText( "OPTION", mx, yOffs + my * mi++ );
-                commandBox.PrintText( "SAVE", mx, yOffs + my * mi++ );
+                for( int i=0; i<menuOrder.Length; i++ ) {
+                    commandBox.PrintText( menuOrder[i], mx, yOffs + my * mi++ );
+                }
+
             };
 
             RenderDelegate a3 = ( int x, int y ) => {

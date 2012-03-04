@@ -12,6 +12,9 @@ namespace XNAVERGE {
     // for rendering events.
     public delegate void RenderDelegate( int px, int py );
 
+    // for handling controls.
+    public delegate void ControlDelegate( DirectionalButtons dir, VERGEActions action );
+
     // ZoneDelegates are events called when zones are activated. Their arguments are the coordinates of the triggering zone,
     // and whether it was triggered via step or adjacent activation.
     public delegate void ZoneDelegate(int tx, int ty, bool adjacent);
