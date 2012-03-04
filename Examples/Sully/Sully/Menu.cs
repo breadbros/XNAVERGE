@@ -128,6 +128,12 @@ namespace Sully {
 
         public static int delay = 200;
 
+
+        public Texture2D getBackgroundColor( bool isActive ) {
+            if( isActive ) return activeBgColor;
+            return inactiveBgColor;
+        }
+
         public Dictionary<string, MenuBox> menus = new Dictionary<string, MenuBox>();
         public String[] menuOrder;
         public Menu() {
@@ -165,13 +171,14 @@ namespace Sully {
 
             RenderDelegate drawMainBox = ( int x, int y ) => {
                 mainBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( inactiveBgColor, mainBox.getColorBounds(), Color.White * .5f );
+
+                game.spritebatch.Draw( getBackgroundColor( activeMenu != commandBox ), mainBox.getColorBounds(), Color.White * .5f );
                 game.spritebatch.Draw( mainBox.getImage(), mainBox.getBounds(), Color.White );
             };
 
             RenderDelegate drawCommandBox = ( int x, int y ) => {
                 commandBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( activeBgColor, commandBox.getColorBounds(), Color.White * .5f );
+                game.spritebatch.Draw( getBackgroundColor( activeMenu == commandBox ), commandBox.getColorBounds(), Color.White * .5f );
                 game.spritebatch.Draw( commandBox.getImage(), commandBox.getBounds(), Color.White );
 
                 int mx = 15;
@@ -189,7 +196,7 @@ namespace Sully {
 
             RenderDelegate drawSmallBox = ( int x, int y ) => {
                 smallBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( inactiveBgColor, smallBox.getColorBounds(), Color.White * .5f );
+                game.spritebatch.Draw( getBackgroundColor(activeMenu==commandBox), smallBox.getColorBounds(), Color.White * .5f );
                 game.spritebatch.Draw( smallBox.getImage(), smallBox.getBounds(), Color.White );
             };
 
