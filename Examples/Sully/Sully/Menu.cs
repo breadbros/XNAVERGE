@@ -39,6 +39,18 @@ namespace Sully {
                      color_bounds.Inflate( -2, -2 );
                  }
              }
+
+             public void PrintText( string s, int rx, int ry ) {
+
+                 int x = color_bounds.Location.X + rx;
+                 int y = color_bounds.Location.Y + ry;
+
+                 SullyGame game = (SullyGame)VERGEGame.game;
+                 game.print_string( s, x, y + 1, Color.Black, false );
+                 game.print_string( s, x + 1, y + 1, Color.Black, false );
+                 game.print_string( s, x + 1, y, Color.Black, false );
+                 game.print_string( s, x, y, Color.White, false );
+             }
         }
 
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
@@ -125,7 +137,19 @@ namespace Sully {
             RenderDelegate a2 = ( int x, int y ) => {
                 commandBox.UpdateBounds( x, y );
                 game.spritebatch.Draw( activeBgColor, commandBox.color_bounds, Color.White * .5f );
-                game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White ); 
+                game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
+
+                int mx = 15;
+                int my = 15;
+                int yOffs = 5;
+                int mi = 0;
+
+                commandBox.PrintText( "ITEM", mx, yOffs + my * mi++ );
+                commandBox.PrintText( "SKILL", mx, yOffs + my * mi++ );
+                commandBox.PrintText( "EQUIP", mx, yOffs + my * mi++ );
+                commandBox.PrintText( "STATUS", mx, yOffs + my * mi++ );
+                commandBox.PrintText( "OPTION", mx, yOffs + my * mi++ );
+                commandBox.PrintText( "SAVE", mx, yOffs + my * mi++ );
             };
 
             RenderDelegate a3 = ( int x, int y ) => {
