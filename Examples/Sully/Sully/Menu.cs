@@ -14,47 +14,57 @@ namespace Sully {
 
         public class MenuBox {
              
-             public Texture2D image;
-             public int last_x, last_y;
-             public int x, y;
-             public Rectangle bounds, color_bounds;
-             public McgNode rendernode;
+            public Texture2D image;
+            public int last_x, last_y;
+            public int x, y;
+            public Rectangle bounds, color_bounds;
+            public McgNode rendernode;
 
-             public int cursor;
-             public ControlDelegate OnControlUpdate;
+            public int cursor;
+            public ControlDelegate OnControlUpdate;
+            public MenuBox child = null;
 
-             public MenuBox( Texture2D _img, int _x, int _y, ControlDelegate onControlUpdate ) {
-                 image = _img;
-                 OnControlUpdate = onControlUpdate;
-                 x = _x;
-                 y = _y;
-                 bounds = new Rectangle( x, y, image.Width, image.Height );
-                 color_bounds = new Rectangle( x, y, image.Width, image.Height );
-                 color_bounds.Inflate( -2, -2 );
-             }
+            public MenuBox( ControlDelegate onControlUpdate, RenderDelegate onDraw ) {
+                OnControlUpdate = onControlUpdate;
+            }
 
-             public void UpdateBounds( int x, int y ) {
-                 if( x != last_x || y != last_y ) {
-                     last_x = x;
-                     last_y = y;
+            public MenuBox( Texture2D _img, int final_x, int final_y, int start_x, int start_y, ControlDelegate onControlUpdate, RenderDelegate onDraw ) {
+                image = _img;
+                OnControlUpdate = onControlUpdate;
+                x = final_x;
+                y = final_y;
+                bounds = new Rectangle( x, y, image.Width, image.Height );
+                color_bounds = new Rectangle( x, y, image.Width, image.Height );
+                color_bounds.Inflate( -2, -2 );
 
-                     bounds = new Rectangle( x, y, image.Width, image.Height );
-                     color_bounds = new Rectangle( x, y, image.Width, image.Height );
-                     color_bounds.Inflate( -2, -2 );
-                 }
-             }
+                McgLayer l = _.sg.renderstack.GetLayer( "menu" );
+                rendernode = l.AddNode(
+                    new McgNode( onDraw, l, start_x, start_y, final_x, final_y, Menu.delay )
+                );
+            }
 
-             public void PrintText( string s, int rx, int ry ) {
+            public void UpdateBounds( int x, int y ) {
+                if( x != last_x || y != last_y ) {
+                    last_x = x;
+                    last_y = y;
 
-                 int x = color_bounds.Location.X + rx;
-                 int y = color_bounds.Location.Y + ry;
+                    bounds = new Rectangle( x, y, image.Width, image.Height );
+                    color_bounds = new Rectangle( x, y, image.Width, image.Height );
+                    color_bounds.Inflate( -2, -2 );
+                }
+            }
 
-                 SullyGame game = (SullyGame)VERGEGame.game;
-                 game.print_string( s, x, y + 1, Color.Black, false );
-                 game.print_string( s, x + 1, y + 1, Color.Black, false );
-                 game.print_string( s, x + 1, y, Color.Black, false );
-                 game.print_string( s, x, y, Color.White, false );
-             }
+            public void PrintText( string s, int rx, int ry ) {
+
+                int x = color_bounds.Location.X + rx;
+                int y = color_bounds.Location.Y + ry;
+
+                SullyGame game = (SullyGame)VERGEGame.game;
+                game.print_string( s, x, y + 1, Color.Black, false );
+                game.print_string( s, x + 1, y + 1, Color.Black, false );
+                game.print_string( s, x + 1, y, Color.Black, false );
+                game.print_string( s, x, y, Color.White, false );
+            }
         }
 
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
@@ -82,7 +92,9 @@ namespace Sully {
 
 
             ControlDelegate cd1 = ( DirectionalButtons dir, VERGEActions action ) => {
+                if( commandBox.child != null ) {
 
+                }
             };
 
             ControlDelegate updateCommand = ( DirectionalButtons dir, VERGEActions action ) => {
@@ -103,9 +115,42 @@ namespace Sully {
                 }
             };
 
-            mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, cd1 );
-            commandBox = new MenuBox( _.MakeBox( 70, 160, boxcolors ), 240, 10, updateCommand ); 
-            smallBox = new MenuBox( _.MakeBox( 70, 50, boxcolors ), 240,180, null );
+            SullyGame game = _.sg;
+            
+            RenderDelegate drawMainbox = ( int x, int y ) => {
+                mainBox.UpdateBounds( x, y );
+                game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( mainBox.image, mainBox.bounds, Color.White );
+            };
+
+            RenderDelegate drawCommandbox = ( int x, int y ) => {
+                commandBox.UpdateBounds( x, y );
+                game.spritebatch.Draw( activeBgColor, commandBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
+
+                int mx = 15;
+                int my = 15;
+                int yOffs = 5;
+                int mi = 0;
+
+                commandBox.PrintText( ">", mx - 10, yOffs + my * commandBox.cursor );
+
+                for( int i = 0; i < menuOrder.Length; i++ ) {
+                    commandBox.PrintText( menuOrder[i], mx, yOffs + my * mi++ );
+                }
+
+            };
+
+            RenderDelegate drawSmallbox = ( int x, int y ) => {
+                smallBox.UpdateBounds( x, y );
+                game.spritebatch.Draw( inactiveBgColor, smallBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
+            };
+
+
+            mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, -220, 10, cd1, drawMainbox );
+            commandBox = new MenuBox( _.MakeBox( 70, 160, boxcolors ), 240, 10, 320, 10, updateCommand, drawCommandbox ); 
+            smallBox = new MenuBox( _.MakeBox( 70, 50, boxcolors ), 240,180, 320, 180, null, drawSmallbox );
 
             this.activeMenu = this.commandBox;
             state = MenuState.Active;
@@ -161,69 +206,11 @@ namespace Sully {
 
         public void HandleInput( DirectionalButtons dir, VERGEActions action ) {
             this.activeMenu.OnControlUpdate( dir, action );
-
-            /*
-            if( this.activeMenu == this.commandBox ) {
-
-
-            } else if( this.activeMenu == this.mainBox ) {
-
-            }
-             * */
         }
 
         public void Update() { }
 
-        //public void Draw( SullyGame game ) { }
-
-        public void _initMenu( SullyGame game ) {
-            McgLayer l = game.renderstack.GetLayer( "menu" );
-
-            RenderDelegate a1 = ( int x, int y ) => {
-                mainBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( inactiveBgColor, mainBox.color_bounds, Color.White * .5f );
-                game.spritebatch.Draw( mainBox.image, mainBox.bounds, Color.White );
-            };
-
-            RenderDelegate a2 = ( int x, int y ) => {
-                commandBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( activeBgColor, commandBox.color_bounds, Color.White * .5f );
-                game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
-
-                int mx = 15;
-                int my = 15;
-                int yOffs = 5;
-                int mi = 0;
-
-                commandBox.PrintText( ">", mx - 10, yOffs + my * commandBox.cursor );
-
-                for( int i=0; i<menuOrder.Length; i++ ) {
-                    commandBox.PrintText( menuOrder[i], mx, yOffs + my * mi++ );
-                }
-
-            };
-
-            RenderDelegate a3 = ( int x, int y ) => {
-                smallBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( inactiveBgColor, smallBox.color_bounds, Color.White * .5f );
-                game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White ); 
-            };
-
-            int delay = 200;
-
-            mainBox.rendernode = l.AddNode(
-                new McgNode( a1, l, -220, 10, 10, 10, delay )
-            );
-            //n.DEBUG = true;
-
-            commandBox.rendernode = l.AddNode(
-                new McgNode( a2, l, 320, 10, 240, 10, delay )
-            );
-
-            smallBox.rendernode = l.AddNode(
-                new McgNode( a3, l, 320, 180, 240, 180, delay )
-            );
-        }
+        public static int delay = 200;
     }
 
     public enum MenuState { Hidden, Active, Animating }
