@@ -126,6 +126,7 @@ namespace Sully
             Texture2D speechPortraits = Content.Load<Texture2D>( "speech" );
             textbox = new Textbox( screen.width, screen.height, speechPortraits, this );
             mainMenu = new Menu();
+            mainMenu._initMenu( this );
         }
     }
 }

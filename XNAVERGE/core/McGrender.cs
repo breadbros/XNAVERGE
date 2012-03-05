@@ -20,16 +20,10 @@ namespace XNAVERGE {
         public event BasicDelegate OnStop = null;
         public event RenderDelegate OnDraw = null;
 
-        private bool isVisible = true;
-
         public bool DEBUG = false;
 
         Texture2D image = null;
         Rectangle im_bounds;
-
-        public void setVisible( bool b ) {
-            isVisible = b;
-        }
 
         public McgNode( RenderDelegate act, McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
             OnDraw = act;
@@ -111,7 +105,6 @@ if( DEBUG ) Console.WriteLine( "STOPPING" );
         }
 
         public void Draw() {
-            if( !isVisible ) return;
 
             if( image != null ) {
                 layer.stack.spritebatch.Draw( image, im_bounds, Color.White );
