@@ -72,6 +72,7 @@ namespace Sully {
 
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
         public MenuBox itemBox, skillBox, equipBox, statusBox, optionBox, saveBox;
+        public MenuBox partyBox;
 
         public static Texture2D activeBgColor, inactiveBgColor;
 
@@ -82,12 +83,18 @@ namespace Sully {
         public Dictionary<string, MenuBox> menus = new Dictionary<string, MenuBox>();
         public String[] menuOrder;
 
-        public static Texture2D GetHighlightBg( bool isOn ) {
+        public Texture2D GetHighlightBg( bool isOn ) {
             if( isOn ) {
                 return activeBgColor;
             }
 
             return inactiveBgColor;
+        }
+
+        public void LeaveMainMenu() {
+            activeMenu = commandBox;
+            highlightedMenu = commandBox;
+            mainBox.child = partyBox;
         }
 
         public Menu() {
@@ -133,15 +140,25 @@ namespace Sully {
             SullyGame game = _.sg;
             
             RenderDelegate drawMainbox = ( int x, int y ) => {
+
+                int mainBoxMarginX = 8;
+                int mainBoxMarginY = 5;
+
                 mainBox.UpdateBounds( x, y );
 
-                game.spritebatch.Draw( Menu.GetHighlightBg(highlightedMenu == mainBox), mainBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( GetHighlightBg(highlightedMenu == mainBox), mainBox.color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( mainBox.image, mainBox.bounds, Color.White );
+
+                if( mainBox.child != null ) {
+                    mainBox.child.OnDraw( x + mainBoxMarginX, y + mainBoxMarginY );
+                } else {
+
+                }
             };
 
             RenderDelegate drawCommandbox = ( int x, int y ) => {
                 commandBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( Menu.GetHighlightBg(highlightedMenu == commandBox), commandBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( GetHighlightBg(highlightedMenu == commandBox), commandBox.color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
 
                 int mx = 15;
@@ -158,11 +175,11 @@ namespace Sully {
 
             RenderDelegate drawSmallbox = ( int x, int y ) => {
                 smallBox.UpdateBounds( x, y );
-                game.spritebatch.Draw( Menu.GetHighlightBg(highlightedMenu == commandBox), smallBox.color_bounds, Color.White * .5f );
+                game.spritebatch.Draw( GetHighlightBg(highlightedMenu == commandBox), smallBox.color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
             };
 
-            mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, -220, 10, cd1, drawMainbox );
+            mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, -220, 10, cd1, drawMainbox ); 
             commandBox = new MenuBox( _.MakeBox( 70, 160, boxcolors ), 240, 10, 320, 10, updateCommand, drawCommandbox ); 
             smallBox = new MenuBox( _.MakeBox( 70, 50, boxcolors ), 240,180, 320, 180, null, drawSmallbox );
 
@@ -178,78 +195,83 @@ namespace Sully {
             menuOrder[4] = "OPTION";
             menuOrder[5] = "SAVE";
 
-            RenderDelegate drawItemBox = ( int x, int y ) => { 
+            RenderDelegate drawItem = ( int x, int y ) => { 
                 itemBox.PrintText( "Item...", x, y );
             };
 
-            RenderDelegate drawSkillBox = ( int x, int y ) => { 
+            RenderDelegate drawSkill = ( int x, int y ) => { 
                 itemBox.PrintText( "Skill...", x, y );
             };
 
-            RenderDelegate drawEquipBox = ( int x, int y ) => { 
+            RenderDelegate drawEquip = ( int x, int y ) => { 
                 itemBox.PrintText( "Equip...", x, y );
             };
 
-            RenderDelegate drawStatusBox = ( int x, int y ) => { 
+            RenderDelegate drawStatus = ( int x, int y ) => { 
                 itemBox.PrintText( "Status...", x, y );
             };
 
-            RenderDelegate drawOptionBox = ( int x, int y ) => { 
+            RenderDelegate drawOption = ( int x, int y ) => { 
                 itemBox.PrintText( "Option...", x, y );
             };
 
-            RenderDelegate drawSaveBox = ( int x, int y ) => { 
+            RenderDelegate drawSave = ( int x, int y ) => { 
                 itemBox.PrintText( "Save...", x, y );
             };
 
+            RenderDelegate drawParty = ( int x, int y ) => {
+                partyBox.PrintText( "Party...", x, y );
+            };
+
+
             ControlDelegate updateItem = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
-                    activeMenu = commandBox;
-                    highlightedMenu = commandBox;
+                    LeaveMainMenu();
                 }
             };
 
             ControlDelegate updateSkill = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
-                    activeMenu = commandBox;
-                    highlightedMenu = commandBox;
+                    LeaveMainMenu();
                 }
             };
 
             ControlDelegate updateEquip = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
-                    activeMenu = commandBox;
-                    highlightedMenu = commandBox;
+                    LeaveMainMenu();
                 }
             };
 
             ControlDelegate updateStatus = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
-                    activeMenu = commandBox;
-                    highlightedMenu = commandBox;
+                    LeaveMainMenu();
                 }
             };
             
             ControlDelegate updateOption = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
-                    activeMenu = commandBox;
-                    highlightedMenu = commandBox;
+                    LeaveMainMenu();
                 }
             };
 
             ControlDelegate updateSave = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
-                    activeMenu = commandBox;
-                    highlightedMenu = commandBox;
+                    LeaveMainMenu();
                 }
             };
 
-            itemBox = new MenuBox(updateItem, drawItemBox);
-            skillBox = new MenuBox( updateSkill, drawSkillBox );
-            equipBox = new MenuBox( updateEquip, drawEquipBox );
-            statusBox = new MenuBox( updateStatus, drawStatusBox );
-            optionBox = new MenuBox( updateOption, drawOptionBox );
-            saveBox = new MenuBox( updateSave, drawSaveBox );
+            ControlDelegate updateParty = ( DirectionalButtons dir, VERGEActions action ) => {
+                if( action.cancel.pressed ) {
+                    LeaveMainMenu();
+                }
+            };
+
+            itemBox = new MenuBox(updateItem, drawItem );
+            skillBox = new MenuBox( updateSkill, drawSkill );
+            equipBox = new MenuBox( updateEquip, drawEquip );
+            statusBox = new MenuBox( updateStatus, drawStatus );
+            optionBox = new MenuBox( updateOption, drawOption );
+            saveBox = new MenuBox( updateSave, drawSave );
 
             menus[menuOrder[0]] = itemBox;
             menus[menuOrder[1]] = skillBox;
@@ -257,6 +279,9 @@ namespace Sully {
             menus[menuOrder[3]] = statusBox;
             menus[menuOrder[4]] = optionBox;
             menus[menuOrder[5]] = saveBox;
+
+            partyBox = new MenuBox( updateParty, drawParty );
+            mainBox.child = partyBox;
         }
 
         public bool CanSummonMenu() {
