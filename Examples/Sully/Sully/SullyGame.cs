@@ -16,11 +16,17 @@ namespace Sully
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class SullyGame : VERGEGame
-    {
+    public class SullyGame : VERGEGame {
+
         public Textbox textbox;
         public Menu mainMenu;
         McGrenderStack mcg;
+
+
+        int money = 0;
+        public int getMoney() {
+            return money;
+        }
 
         public bool inMenu = false;
 

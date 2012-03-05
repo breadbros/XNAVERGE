@@ -208,9 +208,10 @@ namespace Sully {
                 game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
 
                 int y1 = 0;
+                string m = "" + _.sg.getMoney();
 
-                smallBox.PrintText( "Clams:", 6, y1 ); y1 += 15;
-                smallBox.PrintTextRight( "89999", 61, y1 ); y1 += 15;
+                smallBox.PrintText( "Clams:", 6, y1 ); y1 += 10;
+                smallBox.PrintTextRight( m, 61, y1 ); y1 += 20;
                 smallBox.PrintText( Menu.getFormattedTime(_.sg.stopWatch.Elapsed), 6, y1 );
             };
 
