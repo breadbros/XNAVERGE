@@ -68,6 +68,17 @@ namespace Sully {
                 game.print_string( s, x + 1, y, Color.Black, false );
                 game.print_string( s, x, y, Color.White, false );
             }
+
+            public void PrintTextRight( string s, int rx, int ry ) {
+                int x = color_bounds.Location.X + rx;
+                int y = color_bounds.Location.Y + ry;
+
+                SullyGame game = (SullyGame)VERGEGame.game;
+                game.print_right( s, x, y + 1, Color.Black, false );
+                game.print_right( s, x + 1, y + 1, Color.Black, false );
+                game.print_right( s, x + 1, y, Color.Black, false );
+                game.print_right( s, x, y, Color.White, false );
+            }
         }
 
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
@@ -174,9 +185,16 @@ namespace Sully {
             };
 
             RenderDelegate drawSmallbox = ( int x, int y ) => {
+
                 smallBox.UpdateBounds( x, y );
                 game.spritebatch.Draw( GetHighlightBg(highlightedMenu == commandBox), smallBox.color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( smallBox.image, smallBox.bounds, Color.White );
+
+                int y1 = 0;
+
+                smallBox.PrintText( "Clams:", 6, y1 ); y1 += 15;
+                smallBox.PrintTextRight( "89999", 61, y1 ); y1 += 15;
+                smallBox.PrintText( "1:23:45", 6, y1 );
             };
 
             mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, -220, 10, cd1, drawMainbox ); 
