@@ -100,10 +100,12 @@ namespace XNAVERGE {
         public virtual void print_right(String str, int x, int y, SpriteFont font, Color color, bool new_batch) { 
             print_string(str, x - ((int)font.MeasureString(str).X), y, font, color, new_batch);
         }
+
         public virtual void print_right(String str, int x, int y, Color color, bool new_batch) {
             verify_system_font();
             print_right(str, x, y, system_font, color, new_batch);
         }
+
         public virtual void print_center(String str, int y, SpriteFont font, Color color, bool new_batch) {
             print_string(str, (screen.width - (int)font.MeasureString(str).X)/2, y, font, color, new_batch);
         }

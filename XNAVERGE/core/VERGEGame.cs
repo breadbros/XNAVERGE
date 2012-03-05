@@ -36,8 +36,7 @@ namespace XNAVERGE {
             renderstack = mcg;
         }
 
-
-        System.Diagnostics.Stopwatch stopWatch;
+        public System.Diagnostics.Stopwatch stopWatch;
         public VERGEGame() : base() {
             System.Diagnostics.StackTrace stack = new System.Diagnostics.StackTrace();
             stopWatch = new System.Diagnostics.Stopwatch();

@@ -102,6 +102,23 @@ namespace Sully {
             return inactiveBgColor;
         }
 
+        public static string getFormattedTime( TimeSpan ts ) {
+
+            string t = _.sg.stopWatch.Elapsed.Hours + ":";
+
+            if( _.sg.stopWatch.Elapsed.Minutes < 10 ) {
+                t += "0";
+            }
+            t += _.sg.stopWatch.Elapsed.Minutes + ":";
+
+            if( _.sg.stopWatch.Elapsed.Seconds < 10 ) {
+                t += "0";
+            }
+            t += _.sg.stopWatch.Elapsed.Seconds;
+
+            return t;
+        }
+
         public void LeaveMainMenu() {
             activeMenu = commandBox;
             highlightedMenu = commandBox;
@@ -194,7 +211,7 @@ namespace Sully {
 
                 smallBox.PrintText( "Clams:", 6, y1 ); y1 += 15;
                 smallBox.PrintTextRight( "89999", 61, y1 ); y1 += 15;
-                smallBox.PrintText( "1:23:45", 6, y1 );
+                smallBox.PrintText( Menu.getFormattedTime(_.sg.stopWatch.Elapsed), 6, y1 );
             };
 
             mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, -220, 10, cd1, drawMainbox ); 
@@ -240,7 +257,6 @@ namespace Sully {
             RenderDelegate drawParty = ( int x, int y ) => {
                 partyBox.PrintText( "Party...", x, y );
             };
-
 
             ControlDelegate updateItem = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
