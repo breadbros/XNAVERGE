@@ -32,25 +32,28 @@ namespace XNAVERGE {
         public bool tile_movement; // specifies whether or not directional commands are in pixels or tiles
         public bool done;        
         public int step;
-        public event Action OnDone;
+        public event Action OnDone; // TODO: remove this once it's no longer needed
+        public event MovestringEndingDelegate on_done; // called when the movestring completes or times out on an obstruction
 
         public int movement_left; // distance left to move for the current move command, measured in hundredths of pixels. 0 if not at a move command.
         protected int wait_time; // time left to wait, in hundredths of ticks. 0 if not waiting.
 
-        public void _stopMovestring() {
+        public void stop() { stop(true); }
+        public void stop(bool treat_as_aborted) {
             done = true;
 
-            if( OnDone != null ) {
-                OnDone();
-            }
+            if( OnDone != null ) OnDone();
+            if (on_done != null) on_done(this.ent, treat_as_aborted);            
         }
 
         Entity ent = null;
 
-        public Movestring(String movestring) : this(movestring, null) { }
-        public Movestring(String movestring, Entity e) {
+        public Movestring(String movestring) : this(movestring, null, null) { }
+        public Movestring(String movestring, Entity e) : this(movestring, null, e) { }
+        public Movestring(String movestring, MovestringEndingDelegate callback, Entity e) {
             ent = e;
-            
+            if (on_done != null) this.on_done += on_done;
+
             MatchCollection matches = regex.Matches(movestring);
             GroupCollection groups;
             Queue<MovestringCommand> command_queue = new Queue<MovestringCommand>();
@@ -63,7 +66,7 @@ namespace XNAVERGE {
                 parameters = new int[1];
                 commands[0] = MovestringCommand.Stop;
                 parameters[0] = NO_NUMBER;
-                _stopMovestring();
+                stop(false);
                 return;
             }            
 
@@ -192,7 +195,7 @@ namespace XNAVERGE {
                         }
                         break;
                     case MovestringCommand.Stop:
-                        _stopMovestring();
+                        stop(false);
                         return 0; // being stopped absorbs all time spent, like an infinite wait
                     case MovestringCommand.Loop:
                         if (parameters[step] != NO_NUMBER) { // finite loop
