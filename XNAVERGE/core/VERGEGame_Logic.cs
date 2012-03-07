@@ -114,6 +114,32 @@ namespace XNAVERGE {
             return script;
         }
 
+        // Switches the player to movestring-based movement until it completes the specified movestring, 
+        // then returns player_controllable to its prior state. By default, the player is unobstructable
+        // while moving; to retain obstructability use the longer form with obstructable = true.
+        // Note that this will still leave the player unobstructable if it was that way to begin with!
+        public virtual void move_player(String movestring) { move_player(movestring, false); }
+        public virtual void move_player(String movestring, bool obstructable) {
+            bool old_obstructability;
+            if (player == null) return; // Or should this raise an exception?
+            lock_player();
+
+            if (obstructable) new Movestring(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => { 
+                    unlock_player();
+                    player.movestring = new Movestring("");
+                }), player);
+            else {
+                old_obstructability = player.obstructable;
+                player.obstructable = false;
+                player.movestring = new Movestring(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => {
+                    unlock_player();
+                    player.obstructable = old_obstructability;
+                    player.movestring = new Movestring("");
+                }), player);
+            }
+            Console.WriteLine("!");
+        }
+
         // Suppresses player input. This sets player_controllable to false, but unlike doing that 
         // directly, it also saves the previous state of that variable in the player_controllable_stack.
         // That previous state is returned by lock_player.
@@ -133,5 +159,6 @@ namespace XNAVERGE {
             else player_controllable = PLAYER_CONTROLLABLE_DEFAULT;
             return player_controllable;
         }
+
     }    
 }

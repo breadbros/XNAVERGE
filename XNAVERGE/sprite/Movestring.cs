@@ -52,7 +52,7 @@ namespace XNAVERGE {
         public Movestring(String movestring, Entity e) : this(movestring, null, e) { }
         public Movestring(String movestring, MovestringEndingDelegate callback, Entity e) {
             ent = e;
-            if (on_done != null) this.on_done += on_done;
+            if (callback != null) on_done += callback;
 
             MatchCollection matches = regex.Matches(movestring);
             GroupCollection groups;
