@@ -21,7 +21,8 @@ namespace XNAVERGE {
         public String main_namespace;
 
         public VERGEMap map;
-        public Entity player;        
+        public Entity player;
+
         public bool player_tile_obstruction; // true if player uses tile-based, rather than pixel-based, obstruction
 
         public InputManager input;

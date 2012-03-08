@@ -22,7 +22,6 @@ namespace Sully
         public Menu mainMenu;
         McGrenderStack mcg;
 
-
         int money = 0;
         public int getMoney() {
             return money;
