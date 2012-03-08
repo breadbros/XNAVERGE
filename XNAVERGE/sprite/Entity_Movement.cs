@@ -13,9 +13,7 @@ namespace XNAVERGE {
         public const int DEFAULT_MOVE_ARRAY_LENGTH = 10; // starting movestring action array size (will be expanded as necessary).        
 
         public EntityMovementDelegate handler;
-        public Movestring movestring;
-
-        public bool test;
+        public Movestring movestring;        
         
         public virtual void try_to_move(ref EntityMovementData data) {
             try_to_move_obs(ref data);
@@ -260,6 +258,7 @@ namespace XNAVERGE {
             speed = DEFAULT_SPEED;
             _moving = false;
             handler = VERGEGame.game.default_entity_handler;
+            time_pushing = 0;
             movestring = new Movestring("");            
         }
         /*
