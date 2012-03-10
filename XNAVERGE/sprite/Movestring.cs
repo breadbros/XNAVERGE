@@ -13,6 +13,7 @@ namespace XNAVERGE {
     public class Movestring {
         public const bool DEFAULT_TO_TILE_MOVEMENT = true; // assume tile movement if a movestring does not specify
         public const int NO_NUMBER = Int32.MinValue; // indicates no parameter is associated with a command
+        public const int NEVER_TIMEOUT = -1;
 
         // constants for the weird custom format this uses
         public const int FACECODE_UP = 1;
@@ -34,8 +35,9 @@ namespace XNAVERGE {
         public int step;
         public event Action OnDone; // TODO: remove this once it's no longer needed
         public event MovestringEndingDelegate on_done; // called when the movestring completes or times out on an obstruction
+        public int timeout; // The movestring times out if the entity spends this long pushing something (measured in engine ticks)
 
-        public int movement_left; // distance left to move for the current move command, measured in hundredths of pixels. 0 if not at a move command.
+        public int movement_left; // distance left to move for the current move command, measured in hundredths of pixels. 0 if not at a move command.        
         protected int wait_time; // time left to wait, in hundredths of ticks. 0 if not waiting.
 
         public void stop() { stop(true); }
@@ -48,11 +50,14 @@ namespace XNAVERGE {
 
         Entity ent = null;
 
-        public Movestring(String movestring) : this(movestring, null, null) { }
-        public Movestring(String movestring, Entity e) : this(movestring, null, e) { }
-        public Movestring(String movestring, MovestringEndingDelegate callback, Entity e) {
+        public Movestring(String movestring) : this(movestring, null, null, NEVER_TIMEOUT) { }
+        public Movestring(String movestring, Entity e) : this(movestring, null, e, NEVER_TIMEOUT) { }
+        public Movestring(String movestring, MovestringEndingDelegate callback, Entity e) : 
+            this(movestring, callback, e, NEVER_TIMEOUT) {}
+        public Movestring(String movestring, MovestringEndingDelegate callback, Entity e, int timeout) {
             ent = e;
             if (callback != null) on_done += callback;
+            this.timeout = timeout;
 
             MatchCollection matches = regex.Matches(movestring);
             GroupCollection groups;
@@ -163,6 +168,13 @@ namespace XNAVERGE {
             tile_movement = DEFAULT_TO_TILE_MOVEMENT;
             wait_time = 0;
             movement_left = 0;
+        }
+
+        // Abort and execute the movestring callback immediately. This generally means that the entity has timed out
+        // pushing against an obstruction. 
+        // (No effect if there is no movestring callback)
+        public void do_timeout() {
+            if (on_done != null) on_done(ent, true);
         }
 
         // Processes the movestring, returning when it gets to a blocking point or requires outside handling. It takes as an

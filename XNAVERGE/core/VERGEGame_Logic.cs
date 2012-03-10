@@ -124,20 +124,19 @@ namespace XNAVERGE {
             if (player == null) return; // Or should this raise an exception?
             lock_player();
 
-            if (obstructable) new Movestring(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => { 
+            if (obstructable) player.move(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => { 
                     unlock_player();
                     player.movestring = new Movestring("");
-                }), player);
+                }), 0);
             else {
                 old_obstructability = player.obstructable;
                 player.obstructable = false;
-                player.movestring = new Movestring(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => {
+                player.move(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => {
                     unlock_player();
                     player.obstructable = old_obstructability;
                     player.movestring = new Movestring("");
-                }), player);
+                }), 0);
             }
-            Console.WriteLine("!");
         }
 
         // Suppresses player input. This sets player_controllable to false, but unlike doing that 

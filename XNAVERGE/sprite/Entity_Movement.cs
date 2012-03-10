@@ -13,8 +13,14 @@ namespace XNAVERGE {
         public const int DEFAULT_MOVE_ARRAY_LENGTH = 10; // starting movestring action array size (will be expanded as necessary).        
 
         public EntityMovementDelegate handler;
-        public Movestring movestring;        
-        
+        public Movestring movestring;
+
+        public virtual void move(String movestring) { this.move(movestring, null, Movestring.NEVER_TIMEOUT); }
+        public virtual void move(String movestring, MovestringEndingDelegate callback) { this.move(movestring, callback, Movestring.NEVER_TIMEOUT); }
+        public virtual void move(String movestring, MovestringEndingDelegate callback, int timeout) {
+            this.movestring = new Movestring(movestring, callback, this, timeout);
+        }
+
         public virtual void try_to_move(ref EntityMovementData data) {
             try_to_move_obs(ref data);
             try_to_move_ent(ref data);
