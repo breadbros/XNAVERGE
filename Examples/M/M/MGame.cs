@@ -51,23 +51,21 @@ namespace M
                 map.entities[i].obstructing = true;
             }
 
-            for (int x = 0; true && x < map.width; x++) {
+            for (int x = 0; false && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
-                    if (rand.NextDouble() < 0.2) {
+                    if (rand.NextDouble() < 0.5) {
                         e = map.spawn_entity(x, y, "chap");
                         e.speed = 100;
                         e.obstructing = true;
                         e.obstructable = true;
                         e.movestring = new Movestring("L1D1R1U1B");
-                        //e.wander(3, 3, 10, 10, 100);
-                        e.wander(100);
+                        e.wander(3, 3, 10, 10, 10);
+                        //e.wander(100);
                     }
                 }
-            }
-            player.obstructable = false;
+            }            
 
-            global.get_script<BasicDelegate>("testing")();
-            map.zones[1].script = script<ZoneDelegate>("zonetrigger");
+            global.get_script<BasicDelegate>("testing")();            
             
             
             system_font = Content.Load<SpriteFont>("Garamond");

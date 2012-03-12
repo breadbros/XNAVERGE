@@ -94,14 +94,18 @@ namespace XNAVERGE.Content {
             ent.obstructing = input.ReadBoolean();
             ent.obstructable = input.ReadBoolean();
             movestring = input.ReadString();
+            ent.movestring = new Movestring(movestring);
             state = (WanderState)ent.move_state;            
             state.mode = (WanderMode) input.ReadInt32(); 
             state.delay = input.ReadInt32(); // wander delay (int)
             state.rect.X = input.ReadInt32();
             state.rect.Y = input.ReadInt32();
             state.rect.Width = input.ReadInt32() - state.rect.X + 1;
-            state.rect.Height = input.ReadInt32() - state.rect.Y + 1;             
-            ent.movestring = new Movestring(movestring);
+            state.rect.Height = input.ReadInt32() - state.rect.Y + 1;
+            if (state.mode == WanderMode.Scripted) ent.move(movestring);
+            else VERGEGame.game.action_queue.Enqueue(() => {
+                Default_Handlers.entity_wander_callback(ent, false);
+            });
             return ent;
         }
 

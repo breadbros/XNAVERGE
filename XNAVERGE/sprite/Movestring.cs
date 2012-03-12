@@ -197,7 +197,6 @@ namespace XNAVERGE {
                     case MovestringCommand.Wait:
                         if (wait_time == 0) wait_time = parameters[step] * 100;
                         wait_time -= elapsed;
-                        Console.WriteLine(wait_time);
                         if (wait_time > 0) return 0; // still waiting
                         else {
                             elapsed = -wait_time;
