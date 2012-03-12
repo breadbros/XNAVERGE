@@ -81,6 +81,8 @@ namespace Sully {
             }
         }
 
+        public int itemSubmenu = 0;
+
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
         public MenuBox itemBox, skillBox, equipBox, statusBox, optionBox, saveBox;
         public MenuBox partyBox;
@@ -233,10 +235,36 @@ namespace Sully {
 
             RenderDelegate drawItem = ( int x, int y ) => { 
 
-                for( int i = 0; i < _.sg.inventory.consumables.items.Count; i++ ) {
+                switch(itemSubmenu) {
+                    case 0:
+                        itemBox.PrintText( "Supplies", 0, 0 );
+                        break;
+                    case 1:
+                        itemBox.PrintText( "Equipment", 0, 0 );
+                        break;
+                    case 2:
+                        itemBox.PrintText( "Key", 0, 0 );
+                        break;
+                }
 
-                    _.DrawIcon( i, x, y + ( i * 10 ) );
-                    itemBox.PrintText( "" + _.sg.inventory.consumables.items[i].quant + "x " + _.sg.inventory.consumables.items[i].item.name, x + 20, y + ( i * 10 ) );
+                if(  _.sg.inventory.consumables.items.Count == 0 ) {
+                    itemBox.PrintText( "No items.", 0, 0 );
+                } else {
+
+                    itemBox.PrintText( ">", x, y + itemBox.cursor * 10 );
+                    
+                    for( int i = 0; i < _.sg.inventory.consumables.items.Count; i++ ) {
+
+                        if( i != itemBox.cursor ) {
+                            _.DrawIcon( i, x + 10, y + 4 + ( i * 10 ), i != itemBox.cursor );
+                        }
+
+                        itemBox.PrintText(  _.sg.inventory.consumables.items[i].item.name, x + 30, y + ( i * 10 ) );
+                        itemBox.PrintTextRight( "" + _.sg.inventory.consumables.items[i].quant, x + 200, y + ( i * 10 ) ); 
+                    }
+
+                    int j = itemBox.cursor;
+                    _.DrawIcon( j, x + 10, y + ( j * 10 ), false );
                 }
             };
 
@@ -268,6 +296,38 @@ namespace Sully {
                 if( action.cancel.pressed ) {
                     LeaveMainMenu();
                 }
+
+                int menuMax = 0;
+                switch( itemSubmenu ) {
+                    case 0:
+                        menuMax = _.sg.inventory.consumables.items.Count;
+                        break;
+                    case 1:
+                        menuMax = _.sg.inventory.equipment.items.Count;
+                        break;
+                    case 2:
+                        menuMax = _.sg.inventory.key.items.Count;
+                        break;
+                }
+
+                if( dir.up.DelayPress() ) {
+                    itemBox.cursor--;
+                    if( itemBox.cursor < 0 ) itemBox.cursor = menuMax-1;
+                } else if( dir.down.DelayPress() ) {
+                    itemBox.cursor++;
+                    if( itemBox.cursor >= menuMax ) itemBox.cursor = 0;
+                }
+
+                if( dir.left.DelayPress() ) {
+                    itemSubmenu--;
+                    itemBox.cursor = 0;
+                    if( itemSubmenu < 0 ) itemSubmenu = 2;
+                } else if( dir.right.DelayPress() ) {
+                    itemSubmenu++;
+                    itemBox.cursor = 0;
+                    if( itemSubmenu > 2 ) itemSubmenu = 0;
+                }
+  
             };
 
             ControlDelegate updateSkill = ( DirectionalButtons dir, VERGEActions action ) => {

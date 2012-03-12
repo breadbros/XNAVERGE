@@ -76,7 +76,17 @@ namespace Sully {
             i = new Item();
             i.name = "Bitter Root";
             i.description = "Bitter. Just like my wife.";
-            inventory.AddItem(i, 9);
+            inventory.AddItem( i, 9 );
+
+            i = new Item();
+            i.name = "Poop";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 99 );
+
+            i = new Item();
+            i.name = "A Thing";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 42 );
 
             base.Initialize();
         }

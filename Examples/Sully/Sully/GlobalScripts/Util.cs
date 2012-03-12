@@ -88,12 +88,13 @@ namespace Sully {
         }
 
         static Texture2D iconAtlas = null;
-        public static void DrawIcon( int idx, int x, int y ) {
+        public static void DrawIcon( int idx, int x, int y, Boolean tiny ) {
             if( iconAtlas == null ) {
                 iconAtlas = _.sg.Content.Load<Texture2D>( "ItemIcons" );
             }
 
-            _.sg.spritebatch.Draw( iconAtlas, new Rectangle(x,y,16,16), icon_get( idx ), Color.White );
+            if( tiny ) _.sg.spritebatch.Draw( iconAtlas, new Rectangle( x, y, 8, 8 ), icon_get( idx ), Color.White );
+            else _.sg.spritebatch.Draw( iconAtlas, new Rectangle(x,y,16,16), icon_get( idx ), Color.White );
         }
 
         public static Boolean ItemIsConsumable( Item i ) { return true; }
