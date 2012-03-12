@@ -58,5 +58,11 @@ namespace Sully {
         public static void SetTile( int layer, int x, int y, int tile ) {
             sg.map.tiles[layer].data[x][y] = tile;
         }
+
+
+
+        public static Boolean ItemIsConsumable( Item i ) { return true; }
+        public static Boolean ItemIsEquipment( Item i ) { return false; }
+        public static Boolean ItemIsKey( Item i ) { return false; }
     }
 }

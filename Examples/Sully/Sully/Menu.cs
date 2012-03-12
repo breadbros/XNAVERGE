@@ -232,7 +232,10 @@ namespace Sully {
             menuOrder[5] = "SAVE";
 
             RenderDelegate drawItem = ( int x, int y ) => { 
-                itemBox.PrintText( "Item...", x, y );
+
+                for( int i = 0; i < _.sg.inventory.consumables.items.Count; i++ ) {
+                    itemBox.PrintText( "" + _.sg.inventory.consumables.items[i].quant + "x " + _.sg.inventory.consumables.items[i].item.name, x, y + ( i * 10 ) );
+                }
             };
 
             RenderDelegate drawSkill = ( int x, int y ) => { 

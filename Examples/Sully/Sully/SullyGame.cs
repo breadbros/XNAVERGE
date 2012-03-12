@@ -11,16 +11,19 @@ using Microsoft.Xna.Framework.Media;
 
 using XNAVERGE;
 
-namespace Sully
-{
+namespace Sully {
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class SullyGame : VERGEGame {
 
+        public Inventory inventory;
         public Textbox textbox;
         public Menu mainMenu;
         McGrenderStack mcg;
+
+        public 
 
         int money = 0;
         public int getMoney() {
@@ -63,6 +66,17 @@ namespace Sully
                 return true;
             };
 
+            inventory = new Inventory();
+
+            Item i = new Item();
+            i.name = "Delicious Herb";
+            i.description = "This herb really is quite delicious.";
+            inventory.AddItem(i, 3);
+
+            i = new Item();
+            i.name = "Bitter Root";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem(i, 9);
 
             base.Initialize();
         }

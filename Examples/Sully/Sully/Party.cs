@@ -23,7 +23,83 @@ namespace Sully {
     }
 */
 
-    class Item {
+    public class Inventory {
+        public ItemSet consumables, equipment, key;
+
+        public Inventory() {
+            consumables = new ItemSet(); 
+            equipment = new ItemSet();
+            key = new ItemSet();
+        }
+
+        public Boolean HasItem( Item i ) {
+            return HasItem( i.name );
+        }
+
+        public Boolean HasItem( String s ) {
+            foreach( ItemSlot slot in consumables.items ) {
+                if( slot.item.name == s ) return true;
+            }
+
+            foreach( ItemSlot slot in equipment.items ) {
+                if( slot.item.name == s ) return true;
+            }
+
+            foreach( ItemSlot slot in key.items ) {
+                if( slot.item.name == s ) return true;
+            }
+
+            return false;
+        }
+
+
+        public void AddItem( Item i, int quant ) {
+            if( _.ItemIsConsumable( i ) ) {
+                consumables.AddItem( i, quant );
+            } else if( _.ItemIsEquipment( i ) ) {
+                equipment.AddItem( i, quant );
+            } else if( _.ItemIsKey( i ) ) {
+                key.AddItem( i, quant );
+            } else {
+                throw new System.InvalidOperationException( "Invalid item type." );
+            }
+        }
+    }
+
+    public class ItemSet {
+        public List<ItemSlot> items;
+
+        public ItemSet() {
+            items = new List<ItemSlot>(); 
+        }
+
+        public void AddItem( Item item, int quant ) {
+            if( quant <= 0 ) {
+                throw new System.InvalidOperationException( "You can only add positive numbers of items to your inventory." );
+            }
+            
+            foreach( ItemSlot slot in items ) {
+                if( slot.item.name == item.name ) {
+                    slot.quant += quant;
+                    return;
+                }
+            }
+
+            items.Add( new ItemSlot(item, quant) );
+        }
+    }
+
+    public class ItemSlot {
+        public Item item;
+        public int quant;
+
+        public ItemSlot( Item i, int quant ) {
+            this.item = i;
+            this.quant = quant;
+        }
+    }
+
+    public class Item {
         public string name, description;
     }
 
