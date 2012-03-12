@@ -25,6 +25,7 @@ namespace XNAVERGE {
         public bool player_controllable; // true if player responds to input
         public Stack<bool> player_controllable_stack; // a stack of previous player_controllable states
 
+        public Queue<Action> action_queue;
         public EntityMovementDelegate default_entity_handler; // the movement handler assigned to new entities
 
         /// <summary>
@@ -94,7 +95,11 @@ namespace XNAVERGE {
                                 map.zone_at(facing_coords.X, facing_coords.Y, true).activate(facing_coords.X, facing_coords.Y, true);
                         }
                     }
-                    
+
+                    foreach (Action action in action_queue) {
+                        action.Invoke();
+                    }
+                    action_queue.Clear();
                     // END OF UPDATING
                 }
             }

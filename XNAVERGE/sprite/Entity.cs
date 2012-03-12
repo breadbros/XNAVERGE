@@ -171,7 +171,7 @@ namespace XNAVERGE {
 
             // Now for the gross part. Maybe this should be moved to another function?
             while (data.time > 0) {
-                data.time_shortfall = elapsed = data.time - handler(this, ref data);                
+                data.time_shortfall = elapsed = data.time - handler(this, move_state, ref data);                
                 time_factor = ((float)elapsed) / speed; // time passed this step, in ticks, as a float.
                 velocity_change = time_factor * acceleration;
                 data.actual_path = data.attempted_path = time_factor * (velocity + velocity_change / 2); // cur_pos = old_pos + v*t + a*(t^2)/2

@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xbox 360 Copy of M", "Examp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sully", "Examples\Sully\Sully\Sully.csproj", "{354DAF82-D6AF-4310-870C-4D5EF870344F}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "SullyContent", "Examples\Sully\SullyContent\SullyContent.contentproj", "{BE4DABF9-B23E-45E7-8DF9-2D6E882AEC5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SullyContent", "Examples\Sully\SullyContent\SullyContent.contentproj", "{BE4DABF9-B23E-45E7-8DF9-2D6E882AEC5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -79,7 +79,8 @@ namespace XNAVERGE.Content {
         }
 
         private Entity read_ent(ContentReader input, VERGEMap map) {
-            Entity ent;
+            WanderState state;
+            Entity ent;            
             String name, chr, movestring;            
             name = input.ReadString();
             chr = input.ReadString();
@@ -93,11 +94,13 @@ namespace XNAVERGE.Content {
             ent.obstructing = input.ReadBoolean();
             ent.obstructable = input.ReadBoolean();
             movestring = input.ReadString();
-            // unimplemented stuff:
-            input.ReadInt32(); // movemode (int, cast to WanderMode)
-            input.ReadInt32(); // wander delay (int)
-            input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); input.ReadInt32(); // wander x1, y1, x2, y2 (four ints)
-            
+            state = (WanderState)ent.move_state;            
+            state.mode = (WanderMode) input.ReadInt32(); 
+            state.delay = input.ReadInt32(); // wander delay (int)
+            state.rect.X = input.ReadInt32();
+            state.rect.Y = input.ReadInt32();
+            state.rect.Width = input.ReadInt32() - state.rect.X + 1;
+            state.rect.Height = input.ReadInt32() - state.rect.Y + 1;             
             ent.movestring = new Movestring(movestring);
             return ent;
         }

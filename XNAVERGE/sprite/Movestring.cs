@@ -44,8 +44,8 @@ namespace XNAVERGE {
         public void stop(bool treat_as_aborted) {
             done = true;
 
-            if( OnDone != null ) OnDone();
-            if (on_done != null) on_done(this.ent, treat_as_aborted);            
+            if (OnDone != null) VERGEGame.game.action_queue.Enqueue(OnDone);
+            if (on_done != null) VERGEGame.game.action_queue.Enqueue(() => { on_done(ent, treat_as_aborted); });
         }
 
         Entity ent = null;
@@ -174,7 +174,7 @@ namespace XNAVERGE {
         // pushing against an obstruction. 
         // (No effect if there is no movestring callback)
         public void do_timeout() {
-            if (on_done != null) on_done(ent, true);
+            stop(true);
         }
 
         // Processes the movestring, returning when it gets to a blocking point or requires outside handling. It takes as an
@@ -191,6 +191,7 @@ namespace XNAVERGE {
         //      counter is decremented, and if this reduces it to 0, the Loop command is replaced with Stop.
         // In other words it won't return until it reaches a move, face, frame, or stop command, OR a wait whose time hasn't yet elapsed.
         public int ready(int elapsed) {
+            if (done) return 0;
             while (true) {
                 switch (commands[step]) {
                     case MovestringCommand.Wait:
@@ -237,5 +238,46 @@ namespace XNAVERGE {
 
     public class MalformedMovestringException : Exception {
         public MalformedMovestringException(String movestring) : base("\"" + movestring + "\" is not a valid movestring. Each term must be one of U, D, L, R, W, Z, F, or B followed by a nonnegative number, or one of Z, B, P, or T by itself. For more information, consult http://verge-rpg.com/docs/the-verge-3-manual/entity-functions/entitymove/.") { }
+    }
+
+    // An enumeration of wander styles. The first, "scripted", covers both the "static" and "scripted" modes in normal VERGE and denotes an entity
+    // that does not wander at random.
+    public enum WanderMode { Scripted, Zone, Rectangle };
+
+    // A state variable for VERGE-style entity wandering. 
+    // TODO: Eventually, Entity.movestring should be moved inside this.
+    public class WanderState {
+        public WanderMode mode;
+        public Entity ent;
+        public Rectangle rect; // If mode = Rectangle, this defines the wanderable tile region 
+        public int delay; // if mode = Rectangle or Zone, this is the wait time between wander steps.
+
+        public WanderState(Entity entity) { 
+            ent = entity;
+            mode = WanderMode.Scripted;
+            delay = 0;
+            rect = default(Rectangle);
+        }
+
+        // Returns true if the given tile is within the entity's wander rectangle (if in Rectangle mode)
+        // or is of the same zone (if in Zone mode). Otherwise, returns false. Note that this doesn't
+        // check that there's actually a path from the entity's current position to the given tile,
+        // or that it's unobstructed.
+        public bool can_wander_to(int tx, int ty) {
+            Point pt;
+            VERGEMap map = VERGEGame.game.map;
+            if (tx < 0 || ty < 0 || tx >= map.width || ty >= map.height) return false; // can't leave map
+            if (mode == WanderMode.Rectangle &&
+                tx >= rect.Left && tx < rect.Right && ty >= rect.Top && ty < rect.Bottom) return true;
+            else if (mode == WanderMode.Zone) {
+                pt = ent.hitbox.Center;
+                pt.X /= map.tileset.tilesize;
+                pt.Y /= map.tileset.tilesize;
+                if (pt.X < 0 || pt.Y < 0 || pt.X >= map.width || pt.Y >= map.height) return true; // can't leave map
+                return (map.zone_layer.data[tx][ty] ==
+                        map.zone_layer.data[pt.X][pt.Y]);
+            }
+            return false;
+        }
     }
 }

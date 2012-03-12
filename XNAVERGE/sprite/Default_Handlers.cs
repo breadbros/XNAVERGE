@@ -15,18 +15,18 @@ namespace XNAVERGE {
 
         // A general purpose VERGE-emulation handler that defers to various other handlers depending on
         // the entity's state.
-        public static int omnibus_vergestyle_handler(Entity ent, ref EntityMovementData data) {
+        public static int omnibus_vergestyle_handler(Entity ent, Object state, ref EntityMovementData data) {            
             if (ent == VERGEGame.game.player && VERGEGame.game.player_controllable)
-                return vergestyle_player_movement_handler(ent, ref data);
-            else
-                return entity_movescript_handler(ent, ref data);
+                return vergestyle_player_movement_handler(ent, state, ref data);
+            else                 
+                return entity_movescript_handler(ent, state, ref data);
         }
 
         // Moves the entity in accordance with the player's inputs. This works like VERGE player input
         // EXCEPT that, when diagonals are enabled, it moves the player at the same speed overall 
         // (unlike VERGE, which moved them both vertically and horizontally as fast as if they were 
         //  moving in that direction alone)
-        public static int vergestyle_player_movement_handler(Entity ent, ref EntityMovementData data) {
+        public static int vergestyle_player_movement_handler(Entity ent, Object state, ref EntityMovementData data) {
             int x = 0, y = 0;            
             float factor;
             Vector2 ofs;
@@ -193,7 +193,7 @@ namespace XNAVERGE {
             return 0;
         }
 
-        public static int entity_movescript_handler(Entity ent, ref EntityMovementData data) {
+        public static int entity_movescript_handler(Entity ent, Object state, ref EntityMovementData data) {
             int cur_param, time_left;
             Movestring movestring;            
 
@@ -281,6 +281,33 @@ namespace XNAVERGE {
             return 0;
         }
 
+        public static void entity_wander_callback(Entity ent, bool aborted) {
+            int tilesize;
+            WanderState state = (WanderState)(ent.move_state);
+            Direction dir = (Direction)VERGEGame.rand.Next(4); // random cardinal direction
+            Point goal = ent.hitbox.Center;
+            Point ofs = Utility.signs_from_direction(dir, false);
+            tilesize = VERGEGame.game.map.tileset.tilesize;
+            goal.X = goal.X / tilesize + ofs.X;
+            goal.Y = goal.Y / tilesize + ofs.Y;
+            if (state.can_wander_to(goal.X, goal.Y)) {
+                switch (dir) {
+                    case Direction.Up:
+                        ent.move("TW" + state.delay + "U1", Default_Handlers.entity_wander_callback, 0);
+                        break;
+                    case Direction.Down:
+                        ent.move("TW" + state.delay + "D1", Default_Handlers.entity_wander_callback, 0);
+                        break;
+                    case Direction.Left:
+                        ent.move("TW" + state.delay + "L1", Default_Handlers.entity_wander_callback, 0);
+                        break;
+                    case Direction.Right:
+                        ent.move("TW" + state.delay + "R1", Default_Handlers.entity_wander_callback, 0);
+                        break;
+                }
+            }
+            else ent.move("W" + state.delay, Default_Handlers.entity_wander_callback, 0);
+        }
 
         // A helper function for entity movement. Sets up the entity to go a certain distance in a certain cardinal direction.
         // The distance is either pixels or tiles, depending on the value of in_tiles.

@@ -13,12 +13,30 @@ namespace XNAVERGE {
         public const int DEFAULT_MOVE_ARRAY_LENGTH = 10; // starting movestring action array size (will be expanded as necessary).        
 
         public EntityMovementDelegate handler;
+        public Object move_state; // any special state needed by the movement handler goes here 
         public Movestring movestring;
 
         public virtual void move(String movestring) { this.move(movestring, null, Movestring.NEVER_TIMEOUT); }
         public virtual void move(String movestring, MovestringEndingDelegate callback) { this.move(movestring, callback, Movestring.NEVER_TIMEOUT); }
         public virtual void move(String movestring, MovestringEndingDelegate callback, int timeout) {
             this.movestring = new Movestring(movestring, callback, this, timeout);
+        }
+
+        // Changes the entity's wander state. If given a single integer, sets the entity to wander within its zone
+        // with the given delay. If given five integers, the first four are tile coordinates defining a wander
+        // rectangle, and the last is the delay.
+        public virtual void wander(int delay) {
+            WanderState state = (WanderState)move_state;            
+            state.mode = WanderMode.Zone;
+            state.delay = Math.Max(0,delay);
+            Default_Handlers.entity_wander_callback(this, true);
+        }
+        public virtual void wander(int tx1, int ty1, int tx2, int ty2, int delay) {
+            WanderState state = (WanderState)move_state;
+            state.mode = WanderMode.Rectangle ;
+            state.delay = Math.Max(0, delay);
+            state.rect = new Rectangle(tx1, ty1, tx2 - tx1 + 1, ty2 - ty1 + 2);
+            Default_Handlers.entity_wander_callback(this, true);
         }
 
         public virtual void try_to_move(ref EntityMovementData data) {
@@ -38,9 +56,6 @@ namespace XNAVERGE {
             // moves the full possible distance.
             pixel_path = new Point(((int)Math.Floor(_exact_pos.X + data.attempted_path.X)) - hitbox.X, 
                                    ((int)Math.Floor(_exact_pos.Y + data.attempted_path.Y)) - hitbox.Y);
-            if (false && this == VERGEGame.game.player) Console.WriteLine("Hitbox ({0},{1}), Path ({2},{3}), {4}",
-                                                   hitbox.X, hitbox.Y, pixel_path.X, pixel_path.Y, 
-                                                   VERGEGame.game.map.obs_at_pixel(hitbox.X+pixel_path.X, hitbox.Y+pixel_path.Y));
             sign = new Point(Math.Sign(pixel_path.X), Math.Sign(pixel_path.Y));
             if (sign.X == 0 && sign.Y == 0) return; // no between-pixel movement;
 
@@ -265,7 +280,12 @@ namespace XNAVERGE {
             _moving = false;
             handler = VERGEGame.game.default_entity_handler;
             time_pushing = 0;
-            movestring = new Movestring("");            
+            movestring = new Movestring("");
+            initialize_move_state();
+        }
+
+        protected virtual void initialize_move_state() {
+            move_state = new WanderState(this);
         }
         /*
         // gets the appropriate distance to move (in hundredths of pixels) when in tile mode with align_to_grid true, assuming the 
@@ -289,9 +309,6 @@ namespace XNAVERGE {
         
     }
 
-    // An enumeration of wander styles. The first, "scripted", covers both the "static" and "scripted" modes in normal VERGE and denotes an entity
-    // that does not wander at random.
-    public enum WanderMode { Scripted, Zone, Rectangle };
 
 
 
