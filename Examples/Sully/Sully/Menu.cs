@@ -234,7 +234,9 @@ namespace Sully {
             RenderDelegate drawItem = ( int x, int y ) => { 
 
                 for( int i = 0; i < _.sg.inventory.consumables.items.Count; i++ ) {
-                    itemBox.PrintText( "" + _.sg.inventory.consumables.items[i].quant + "x " + _.sg.inventory.consumables.items[i].item.name, x, y + ( i * 10 ) );
+
+                    _.DrawIcon( i, x, y + ( i * 10 ) );
+                    itemBox.PrintText( "" + _.sg.inventory.consumables.items[i].quant + "x " + _.sg.inventory.consumables.items[i].item.name, x + 20, y + ( i * 10 ) );
                 }
             };
 

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using Microsoft.Xna.Framework.Content;
 
 using XNAVERGE;
 
@@ -60,6 +60,41 @@ namespace Sully {
         }
 
 
+        public static int xFromFlat( int flatval, int yMax ) {
+            return flatval % yMax;
+        }
+
+        public static int yFromFlat( int flatval, int yMax ) {
+            flatval = flatval - xFromFlat( flatval, yMax );
+            return flatval / yMax;
+        }
+
+        public static readonly int ICON_WIDTH = 16;
+        public static readonly int ICON_HEIGHT = 16;
+
+        public static Rectangle icon_get( int idx ) {
+
+            int x, y;
+            int _icon_cols = 18; //specific to this specific file.
+
+            x = xFromFlat( idx, _icon_cols );
+            y = yFromFlat( idx, _icon_cols );
+
+            x = ( x * ( ICON_WIDTH + 1 ) ) + 1;
+            y = ( y * ( ICON_HEIGHT + 1 ) ) + 1;
+
+
+            return new Rectangle( x, y, ICON_WIDTH, ICON_HEIGHT );
+        }
+
+        static Texture2D iconAtlas = null;
+        public static void DrawIcon( int idx, int x, int y ) {
+            if( iconAtlas == null ) {
+                iconAtlas = _.sg.Content.Load<Texture2D>( "ItemIcons" );
+            }
+
+            _.sg.spritebatch.Draw( iconAtlas, new Rectangle(x,y,16,16), icon_get( idx ), Color.White );
+        }
 
         public static Boolean ItemIsConsumable( Item i ) { return true; }
         public static Boolean ItemIsEquipment( Item i ) { return false; }
