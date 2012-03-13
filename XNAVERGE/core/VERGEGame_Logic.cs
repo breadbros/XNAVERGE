@@ -24,6 +24,8 @@ namespace XNAVERGE {
         public const bool PLAYER_CONTROLLABLE_DEFAULT = true;
         public bool player_controllable; // true if player responds to input
         public Stack<bool> player_controllable_stack; // a stack of previous player_controllable states
+        public bool entities_paused; // when true, entities are not processed
+        public Stack<bool> entities_paused_stack; // a stack of previous entities_paused states
 
         public Queue<Action> action_queue;
         public EntityMovementDelegate default_entity_handler; // the movement handler assigned to new entities
@@ -173,6 +175,25 @@ namespace XNAVERGE {
             if (player_controllable_stack.Count > 0) player_controllable = player_controllable_stack.Pop();
             else player_controllable = PLAYER_CONTROLLABLE_DEFAULT;
             return player_controllable;
+        }
+
+        // Stops all entities from being processed. This sets entities_paused to true, but unlike doing 
+        // so directly, it also saves the previous state of that variable in the entities_paused_stack.
+        // That previous state is returned by pause_entities.
+        public virtual bool pause_entities() {
+            bool previous = entities_paused;
+            entities_paused_stack.Push(previous);
+            entities_paused = true;
+            return previous;
+        }
+
+        // Restores entities_paused to the state it was in when pause_entities was last called. 
+        // This pops the top entities_paused value off the stack into entities_paused, and
+        // returns that value for good measure. If the stack is empty, it sets the value to false.
+        public virtual bool unpause_entities() {
+            if (entities_paused_stack.Count > 0) entities_paused = entities_paused_stack.Pop();
+            else entities_paused = false;
+            return entities_paused;
         }
 
     }    
