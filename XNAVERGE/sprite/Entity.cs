@@ -238,6 +238,7 @@ namespace XNAVERGE {
 
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used
         // for standard entity blitting. The elaborate y-sorting term will be ignored if you draw outside the entity render phase.
+        
         public override void Draw() {
             VERGEGame game = VERGEGame.game;
 
@@ -250,8 +251,11 @@ namespace XNAVERGE {
             );
         }
 
+        public void DrawAt( Rectangle dest ) {
+            VERGEGame game = VERGEGame.game;
 
+            game.spritebatch.Draw( basis.image, dest, basis.frame_box[current_frame], Color.White );
+        }
     }
-
 }
 

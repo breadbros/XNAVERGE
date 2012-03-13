@@ -137,8 +137,8 @@ namespace Sully {
             party = new List<Entity>();
         }
 
-        public void AddPartyMember() {
-
+        public void AddPartyMember( PartyMember pm ) {
+            
         }
     }
 }

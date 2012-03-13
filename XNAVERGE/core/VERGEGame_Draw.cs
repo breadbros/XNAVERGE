@@ -46,7 +46,6 @@ namespace XNAVERGE {
             // Update entity frames
             for (int i = 0; i < map.num_entities; i++) { map.entities[i].advance_frame(); }
 
-
             // Draw to native-size buffer at 1x size
             GraphicsDevice.SetRenderTarget(screen.true_size_buffer);
             map.renderstack.Draw();
