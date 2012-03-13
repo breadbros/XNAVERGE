@@ -25,6 +25,7 @@ namespace XNAVERGE {
         public bool player_controllable; // true if player responds to input
         public Stack<bool> player_controllable_stack; // a stack of previous player_controllable states
 
+        public Queue<Action> action_queue;
         public EntityMovementDelegate default_entity_handler; // the movement handler assigned to new entities
 
         public GameControlDelegate game_input_handler;
@@ -105,6 +106,12 @@ namespace XNAVERGE {
                             && map.zone_at( facing_coords.X, facing_coords.Y, true ).adjacent )
                             map.zone_at( facing_coords.X, facing_coords.Y, true ).activate( facing_coords.X, facing_coords.Y, true );
                     }
+
+                    foreach (Action act in action_queue) {
+                        act.Invoke();
+                    }
+                    action_queue.Clear();
+                    // END OF UPDATING
                 }
 
                 // END OF UPDATING
@@ -121,6 +128,31 @@ namespace XNAVERGE {
             T script = VERGEGame.game.map.scripts.get_script<T>(name);
             if (script == null) return global.get_script<T>(name);
             return script;
+        }
+
+        // Switches the player to movestring-based movement until it completes the specified movestring, 
+        // then returns player_controllable to its prior state. By default, the player is unobstructable
+        // while moving; to retain obstructability use the longer form with obstructable = true.
+        // Note that this will still leave the player unobstructable if it was that way to begin with!
+        public virtual void move_player(String movestring) { move_player(movestring, false); }
+        public virtual void move_player(String movestring, bool obstructable) {
+            bool old_obstructability;
+            if (player == null) return; // Or should this raise an exception?
+            lock_player();
+
+            if (obstructable) player.move(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => { 
+                    unlock_player();
+                    player.movestring = new Movestring("");
+                }), 0);
+            else {
+                old_obstructability = player.obstructable;
+                player.obstructable = false;
+                player.move(movestring, (MovestringEndingDelegate)((Entity e, bool aborted) => {
+                    unlock_player();
+                    player.obstructable = old_obstructability;
+                    player.movestring = new Movestring("");
+                }), 0);
+            }
         }
 
         // Suppresses player input. This sets player_controllable to false, but unlike doing that 
@@ -142,5 +174,6 @@ namespace XNAVERGE {
             else player_controllable = PLAYER_CONTROLLABLE_DEFAULT;
             return player_controllable;
         }
+
     }    
 }

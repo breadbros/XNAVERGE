@@ -26,7 +26,7 @@ namespace XNAVERGE {
     /// return true if you want normal map handling to occur after, false if you don't.
     public delegate bool GameControlDelegate();
 
-    public delegate int EntityMovementDelegate(Entity ent, ref EntityMovementData data); 
+    public delegate int EntityMovementDelegate(Entity ent, Object state, ref EntityMovementData data); 
 
     // MovescriptDelegates can be associated with movestrings and are called when the movestring completes. Currently
     // the "aborted" value is always false, but eventually it will be possible to set movestrings to timeout, in which

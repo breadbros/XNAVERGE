@@ -41,6 +41,12 @@ namespace XNAVERGE {
         }
         protected bool _moving;
 
+        public virtual bool pushing {
+            get { return (time_pushing > 0); }
+        }
+        public float time_pushing; // length of time the entity has been pushing against an obs, in ticks
+
+
         public String move_animation_prefix, idle_animation_prefix; // used to determine which animations to load. Generally "Walk " and "Idle ".
 
         public int speed { // Speed in pixels per second. For entities, this also determines animation rate, as per VERGE.
@@ -146,7 +152,7 @@ namespace XNAVERGE {
 
 
         public override void Update() {
-            // This function, like the movement handlers, mostly handles "speed-adjusted" rather than real time.
+            // This function, like the movement handlers, mostly works with "speed-adjusted" rather than real time.
             // A unit difference in the time variables it employs corresponds to a difference of 1/Entity.speed ticks.
             int elapsed; 
             float time_factor;
@@ -158,79 +164,89 @@ namespace XNAVERGE {
             data.time_shortfall = 0;
             data.first_call = true;
             data.collided = false;
+            data.collided_entity = null;
             data.actual_path = data.attempted_path = Vector2.Zero;
             data.starting_point = _exact_pos;
+            time_factor = 0f;
 
             // Now for the gross part. Maybe this should be moved to another function?
             while (data.time > 0) {
-                data.time_shortfall = elapsed = data.time - handler(this, ref data);                
+                data.time_shortfall = elapsed = data.time - handler(this, move_state, ref data);                
                 time_factor = ((float)elapsed) / speed; // time passed this step, in ticks, as a float.
                 velocity_change = time_factor * acceleration;
                 data.actual_path = data.attempted_path = time_factor * (velocity + velocity_change / 2); // cur_pos = old_pos + v*t + a*(t^2)/2
                 
-                data.collided = false;
-                data.collided_entity = null;
-                if (this.obstructable && data.attempted_path != Vector2.Zero)
-                    try_to_move(ref data); // maybe truncate actual_path
-                if (data.actual_path == Vector2.Zero) {
-                    if (data.collided) {                        
-                        elapsed = 0;
-                        velocity_change = Vector2.Zero;
-                    }
-                }
-                else {
-                    // If the entity was interrupted by a collision, "give back" some of its spent time
-                    if (data.collided) {
-                        // If acceleration is 0, we can just interpolate.
-                        if (acceleration == Vector2.Zero) {
-                            // we only need to look at one dimension, so we'll take the bigger one
-                            if (Math.Abs(data.actual_path.X) > Math.Abs(data.actual_path.Y))
-                                elapsed = (int)Math.Ceiling(elapsed * data.actual_path.X / data.attempted_path.X);
-                            else
-                                elapsed = (int)Math.Ceiling(elapsed * data.actual_path.Y / data.attempted_path.Y);
-                        }
-                        else {
-                            // Okay, hunker down because this is the gross part. When acceleration is a nonzero 
-                            // constant, we can't simply interpolate but must instead solve a quadratic equation
-                            // in the elapsed time: new_pos = A/2*t^2 + V*t + old_pos. The constraints of the 
-                            // scenario ensure that there is at least one positive root, but there could also be 
-                            // two, in which case we want the smallest positive root, which represents the earliest
-                            // time in the future that the obstruction will be hit.
-
-                            // we only need to look at one dimension, so we'll take the bigger one
-                            if (Math.Abs(data.actual_path.X) > Math.Abs(data.actual_path.Y)) {
-                                root1 = Math.Sqrt(velocity.X * velocity.X + 2 * acceleration.X * data.actual_path.X);
-                                root2 = (-velocity.X + root1) / acceleration.X;
-                                root1 = (-velocity.X - root1) / acceleration.X;
+                if (this.obstructable) {                    
+                    if (data.attempted_path != Vector2.Zero) {
+                        data.collided = false;
+                        data.collided_entity = null;
+                        try_to_move(ref data); // maybe truncate actual_path
+                        if (data.collided) {
+                            // If the entity was interrupted by a collision, "give back" some of its spent time                        
+                            if (data.actual_path == Vector2.Zero) {
+                                elapsed = 0;
+                                velocity_change = Vector2.Zero;
+                            }
+                            // If acceleration is 0, we can just interpolate.
+                            else if (acceleration == Vector2.Zero) {
+                                // we only need to look at one dimension, so we'll take the bigger one
+                                if (Math.Abs(data.actual_path.X) > Math.Abs(data.actual_path.Y))
+                                    elapsed = (int)Math.Ceiling(elapsed * data.actual_path.X / data.attempted_path.X);
+                                else
+                                    elapsed = (int)Math.Ceiling(elapsed * data.actual_path.Y / data.attempted_path.Y);
                             }
                             else {
-                                root1 = Math.Sqrt(velocity.Y * velocity.Y + 2 * acceleration.Y * data.actual_path.Y);
-                                root2 = (-velocity.Y + root1) / acceleration.Y;
-                                root1 = (-velocity.Y - root1) / acceleration.Y;
+                                // Okay, hunker down because this is the gross part. When acceleration is a nonzero 
+                                // constant, we can't simply interpolate but must instead solve a quadratic equation
+                                // in the elapsed time: new_pos = A/2*t^2 + V*t + old_pos. The constraints of the 
+                                // scenario ensure that there is at least one positive root, but there could also be 
+                                // two, in which case we want the smallest positive root, which represents the earliest
+                                // time in the future that the obstruction will be hit.
+
+                                // we only need to look at one dimension, so we'll take the bigger one
+                                if (Math.Abs(data.actual_path.X) > Math.Abs(data.actual_path.Y)) {
+                                    root1 = Math.Sqrt(velocity.X * velocity.X + 2 * acceleration.X * data.actual_path.X);
+                                    root2 = (-velocity.X + root1) / acceleration.X;
+                                    root1 = (-velocity.X - root1) / acceleration.X;
+                                }
+                                else {
+                                    root1 = Math.Sqrt(velocity.Y * velocity.Y + 2 * acceleration.Y * data.actual_path.Y);
+                                    root2 = (-velocity.Y + root1) / acceleration.Y;
+                                    root1 = (-velocity.Y - root1) / acceleration.Y;
+                                }
+                                // Set root1 to the root we actually want (smallest positive).
+                                if (root1 < 0 || root1 > root2 && root2 > 0) root1 = root2;
+
+                                elapsed = (int)Math.Ceiling(root1 * speed);
+                                velocity_change = ((float)elapsed) / speed * acceleration;
                             }
-                            // Set root1 to the root we actually want (smallest positive).
-                            if (root1 < 0 || root1 > root2 && root2 > 0) root1 = root2;
-                            
-                            elapsed = (int)Math.Ceiling(root1*speed);
-                            velocity_change = ((float)elapsed) / speed * acceleration;
                         }
-                        
                     }
+                    else if (elapsed < data.time) {
+                        data.collided = false;
+                        data.collided_entity = null;
+                    }
+                }
+                if (data.actual_path != Vector2.Zero) {
                     exact_x += data.actual_path.X;
                     exact_y += data.actual_path.Y;
-                    /*if (this == VERGEGame.game.player) {
-                        for (int xx = 0; xx < hitbox.Width; xx++) {
-                            for (int yy = 0; yy < hitbox.Height; yy++) {
-                                if (VERGEGame.game.map.obs_at_pixel(hitbox.X + xx, hitbox.Y + yy)) VERGEGame.game.Exit();
-                            }
-                        }
-                    }*/
-                }                
+                }
+
                 velocity += velocity_change;
                 data.time_shortfall -= elapsed;
                 data.time -= elapsed;
                 data.first_call = false;
             }
+            
+            if (data.collided) {
+                time_pushing += time_factor; 
+                // Pushing-related triggers happen here.
+                if (movestring != null) {
+                    if (movestring.timeout != Movestring.NEVER_TIMEOUT && time_pushing > movestring.timeout)
+                        movestring.do_timeout();
+                }                
+            }
+            else time_pushing = 0f;
 
             VERGEGame.game.entity_space.Update(this);
             last_logic_tick = VERGEGame.game.tick;

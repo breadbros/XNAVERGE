@@ -59,12 +59,13 @@ namespace M
                         e.obstructing = true;
                         e.obstructable = true;
                         e.movestring = new Movestring("L1D1R1U1B");
+                        e.wander(3, 3, 10, 10, 10);
+                        //e.wander(100);
                     }
                 }
-            }
+            }            
 
-            global.get_script<BasicDelegate>("testing")();
-            map.zones[1].script = script<ZoneDelegate>("zonetrigger");
+            global.get_script<BasicDelegate>("testing")();            
             
             system_font = Content.Load<SpriteFont>("Garamond");
         }        
