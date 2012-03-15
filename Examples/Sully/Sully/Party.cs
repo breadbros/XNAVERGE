@@ -122,14 +122,57 @@ namespace Sully {
 
         Dictionary<Stat, int> basestats;
         public Entity ent;
-        public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;  
+        public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
+
+        public PartyMember( Entity e ) {
+            basestats = new Dictionary<Stat, int>();
+            ent = e;
+        }
 
         public PartyMember() {
             basestats = new Dictionary<Stat, int>();
         }
-        
+
         public int getStat( Stat s ) {
             return (int)s;
+        }
+    }
+
+    class LevelUpData {
+        public int level;
+        public int xp;
+        public Dictionary<Stat, int> stat_increases;
+
+        public LevelUpData( string[] data ) {
+
+            stat_increases = new Dictionary<Stat, int>();
+
+            if( data.Length != 14 ) {
+                throw new Exception( "Sully Level up data expects 14 particles passed in..." );
+            }
+
+            try {
+                level = Int32.Parse( data[0] );
+                xp = Int32.Parse( data[1] );
+
+                //hp  mp  str end mag mgr hit dod stk fer rea ctr
+                stat_increases.Add( Stat.HP,  Int32.Parse( data[2] ) );
+                stat_increases.Add( Stat.MP,  Int32.Parse( data[3] ) );
+                stat_increases.Add( Stat.STR, Int32.Parse( data[4] ) );
+                stat_increases.Add( Stat.END, Int32.Parse( data[5] ) );
+                stat_increases.Add( Stat.MAG, Int32.Parse( data[6] ) );
+                stat_increases.Add( Stat.MGR, Int32.Parse( data[7] ) );
+                stat_increases.Add( Stat.HIT, Int32.Parse( data[8] ) );
+                stat_increases.Add( Stat.DOD, Int32.Parse( data[9] ) );
+                stat_increases.Add( Stat.STK, Int32.Parse( data[10] ) );
+                stat_increases.Add( Stat.FER, Int32.Parse( data[11] ) );
+                stat_increases.Add( Stat.REA, Int32.Parse( data[12] ) );
+                stat_increases.Add( Stat.CTR, Int32.Parse( data[13] ) );
+
+            } catch( FormatException e ) {
+                throw new Exception( "Sully Level up data expects 14 well-formed int particles passed in..." );
+            }
+
         }
     }
 
@@ -140,41 +183,52 @@ namespace Sully {
             party = new List<Entity>();
         }
 
-        public void AddPartyMember( PartyMember pm ) {
+        public void AddPartyMember( string name ) {
             
         }
 
+        public static PartyMember GetPartyMember( string name ) {
 
+            return null;
+        }
+    }
 
+    
+    class PartyData {
+
+        public static Dictionary<string, LevelUpData[]> partyLevelUpData;
         public static Dictionary<string, PartyMember> partymemberData;
 
-        public static void InitializePartyData(  ) {
-            
+        public static void InitializePartyData() {
+
             partymemberData = new Dictionary<string, PartyMember>();
+            partyLevelUpData = new Dictionary<string, LevelUpData[]>();
 
-            string output = System.IO.File.ReadAllText( "content/dat/cast.txt" );
+            {
+                string output = System.IO.File.ReadAllText( "content/dat/cast.txt" );
 
-            string[] lines = output.Split( '\n' );
+                string[] lines = output.Split( '\n' );
 
-            foreach( string line in lines ) {
-                
-                string[] particles = line.Split( '\t' );
+                foreach( string line in lines ) {
 
-                if( particles.Length == 2 ) {
-                    string description = particles[1];
-                    string[] words = _.explode( particles[0], ' ' );
+                    string[] particles = line.Split( '\t' );
+                    
+                    if( particles.Length == 2 ) {
+                        string description = particles[1];
+                        string[] words = _.explode( particles[0], ' ' );
 
-                    if( words.Length == 6 ) {
-                        PartyMember pm = new PartyMember();
-                        pm.name             = words[0];
-                        pm.klass            = words[1];
-                        pm.normal_chr       = words[2];
-                        pm.overworld_chr    = words[3];
-                        pm.battle_spr       = words[4];
-                        pm.statfile         = words[5];
-                        pm.description = description;
+                        if( words.Length == 6 ) {
+                            PartyMember pm = new PartyMember();
+                            pm.name = words[0];
+                            pm.klass = words[1];
+                            pm.normal_chr = words[2];
+                            pm.overworld_chr = words[3];
+                            pm.battle_spr = words[4];
+                            pm.statfile = words[5];
+                            pm.description = description;
 
-                        partymemberData.Add( pm.name.ToLower(), pm );
+                            partymemberData.Add( pm.name.ToLower(), pm );
+                        }
                     }
                 }
             }
@@ -185,26 +239,31 @@ namespace Sully {
 
             foreach( string key in partymemberData.Keys ) {
                 PartyMember pm = partymemberData[key];
-            }
+                string output = System.IO.File.ReadAllText( "content/dat/statfiles/" + pm.statfile );
 
-            int i = 1;
-            /*
-            string s = cm.Load<string>( "dat/cast.dat" );
+                string[] lines = output.Split( '\n' );
 
-            using( TextReader rdr = new StreamReader( s ) ) {
-                string line;
+                List<LevelUpData> data = new List<LevelUpData>();
 
-                while( ( line = rdr.ReadLine() ) != null ) {
-                    // use line here
+                foreach( string line in lines ) {
+                    string l = line.Trim();
+                    string[] stats = _.explode( l, ' ' );
+
+                    if( line.StartsWith( "//" ) ) {
+                        continue;
+                    }
+
+                    if( stats.Length == 14 ) {
+                        data.Add( new LevelUpData(stats) );
+                    }
                 }
+
+                if( data.Count != 50 ) {
+                    throw new Exception( "There must be 50 entries in your levelup datafile, holmes." );
+                }
+
+                partyLevelUpData.Add( pm.name.ToLower(), data.ToArray() );
             }
-             * */
         }
-
-        public static PartyMember GetPartyMember( string name ) {
-
-            return null;
-        }
-
     }
 }
