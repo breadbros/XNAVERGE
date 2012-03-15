@@ -44,6 +44,8 @@ namespace Sully {
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new SullyGlobalScripts(this);
 
+            Party.InitializePartyData();
+
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );

@@ -289,7 +289,12 @@ namespace Sully {
             };
 
             RenderDelegate drawParty = ( int x, int y ) => {
-                partyBox.PrintText( "Party...", x, y );
+
+                /*
+                foreach( int i in fibarray ) {
+                    _.sg.player.DrawAt( new Rectangle( x, y, 16, 32 ), 0 );
+                }
+                */ 
             };
 
             ControlDelegate updateItem = ( DirectionalButtons dir, VERGEActions action ) => {

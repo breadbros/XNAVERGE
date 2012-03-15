@@ -13,6 +13,23 @@ namespace Sully {
     public partial class _ {
         public static SullyGame sg;
 
+
+
+        public static string[] explode( string input, char exploder ) {
+
+            List<string> ret = new List<string>();
+            string[] tmp = input.Split( exploder );
+
+            foreach( string s in tmp ) {
+                if( s.Length > 0 ) {
+                    ret.Add( s );
+                }
+            }
+
+            return ret.ToArray();
+        }
+
+
         public static void SavePoint( int x, int y, bool adj ) { }
         public static void SaveDisable() { }
 

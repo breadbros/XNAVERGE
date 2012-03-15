@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+
+using Microsoft.Xna.Framework.Content;
 
 using XNAVERGE;
 
@@ -112,16 +115,16 @@ namespace Sully {
     }
 
     enum Stat {
-        STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
+        HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
     };
 
     class PartyMember {
 
         Dictionary<Stat, int> basestats;
-        Entity ent;
+        public Entity ent;
+        public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;  
 
-        public PartyMember( Entity e ) {
-            ent = e;
+        public PartyMember() {
             basestats = new Dictionary<Stat, int>();
         }
         
@@ -140,5 +143,68 @@ namespace Sully {
         public void AddPartyMember( PartyMember pm ) {
             
         }
+
+
+
+        public static Dictionary<string, PartyMember> partymemberData;
+
+        public static void InitializePartyData(  ) {
+            
+            partymemberData = new Dictionary<string, PartyMember>();
+
+            string output = System.IO.File.ReadAllText( "content/dat/cast.txt" );
+
+            string[] lines = output.Split( '\n' );
+
+            foreach( string line in lines ) {
+                
+                string[] particles = line.Split( '\t' );
+
+                if( particles.Length == 2 ) {
+                    string description = particles[1];
+                    string[] words = _.explode( particles[0], ' ' );
+
+                    if( words.Length == 6 ) {
+                        PartyMember pm = new PartyMember();
+                        pm.name             = words[0];
+                        pm.klass            = words[1];
+                        pm.normal_chr       = words[2];
+                        pm.overworld_chr    = words[3];
+                        pm.battle_spr       = words[4];
+                        pm.statfile         = words[5];
+                        pm.description = description;
+
+                        partymemberData.Add( pm.name.ToLower(), pm );
+                    }
+                }
+            }
+
+            if( partymemberData.Count != 8 ) {
+                throw new Exception( "Currently expect 8 party members, got: " + partymemberData.Count );
+            }
+
+            foreach( string key in partymemberData.Keys ) {
+                PartyMember pm = partymemberData[key];
+            }
+
+            int i = 1;
+            /*
+            string s = cm.Load<string>( "dat/cast.dat" );
+
+            using( TextReader rdr = new StreamReader( s ) ) {
+                string line;
+
+                while( ( line = rdr.ReadLine() ) != null ) {
+                    // use line here
+                }
+            }
+             * */
+        }
+
+        public static PartyMember GetPartyMember( string name ) {
+
+            return null;
+        }
+
     }
 }
