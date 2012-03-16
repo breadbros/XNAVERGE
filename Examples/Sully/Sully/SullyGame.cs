@@ -18,6 +18,7 @@ namespace Sully {
     /// </summary>
     public class SullyGame : VERGEGame {
 
+        public Party party;
         public Inventory inventory;
         public Textbox textbox;
         public Menu mainMenu;
@@ -114,8 +115,11 @@ namespace Sully {
 
             this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
 
-            /// spawn the player
+            this.party = new Party( Content );
+            party.AddPartyMember( "Darin", 3 );
 
+            /// spawn the player
+            
             //player = map.spawn_entity( 13, 19, "darin" );     
             player = map.spawn_entity( 63, 59, "darin" );
         }

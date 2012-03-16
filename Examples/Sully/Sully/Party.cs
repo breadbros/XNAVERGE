@@ -114,15 +114,21 @@ namespace Sully {
         }
     }
 
-    enum Stat {
+    public enum Stat {
         HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
     };
 
-    class PartyMember {
+    public class PartyMember {
 
         Dictionary<Stat, int> basestats;
         public Entity ent;
         public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
+
+        private int _level, _cur_xp, _cur_mp, _cur_hp;
+        public int level  { get { return _level; }  }
+        public int cur_xp { get { return _cur_xp; } } 
+        public int cur_mp { get { return _cur_mp; } }
+        public int cur_hp { get { return _cur_hp; } }
 
         public PartyMember( Entity e ) {
             basestats = new Dictionary<Stat, int>();
@@ -135,6 +141,51 @@ namespace Sully {
 
         public int getStat( Stat s ) {
             return (int)s;
+        }
+
+        /// scans for a discrepancy between your current level and your current xp.
+        private void _handleLevelUp() {
+            int newlevel = 0;
+            LevelUpData[] lud = PartyData.partyLevelUpData[name.ToLower()];
+
+            foreach( LevelUpData l in lud ) {
+                if( l.xp <= this._cur_xp ) {
+                    newlevel = l.level;
+                }
+            }
+
+            /// congrats, you've levelled up!
+            while( this._level < newlevel ) {
+                LevelUpData nextLevel = lud[this._level];
+
+                if( nextLevel.level != this._level + 1 ) {
+                    throw new Exception( "Expected nextLevel.level to be " + ( this._level + 1 ) + ", got " + nextLevel.level );
+                }
+
+                foreach( Stat s in nextLevel.stat_increases.Keys ) {
+
+                    if( this.basestats.ContainsKey( s ) ) {
+                        this.basestats[s] += nextLevel.stat_increases[s];
+                    } else {
+                        this.basestats.Add( s, nextLevel.stat_increases[s] );
+                    }
+                }
+
+                this._level++;
+            }
+
+            // should probably return all of the LevelUpDatas for all new levels?  Deal with this when you can actually earn experience in-engine.
+        }
+
+
+        public void setXP( int new_xp ) {
+            if( cur_xp > new_xp ) {
+                throw new Exception( "No backsies!  Tried to set a lower XP amount for " + this.name + " (XP was " + cur_xp + ", tried to set to " + new_xp +")" );
+            }
+
+            _cur_xp = new_xp;
+
+            _handleLevelUp();
         }
     }
 
@@ -170,26 +221,68 @@ namespace Sully {
                 stat_increases.Add( Stat.CTR, Int32.Parse( data[13] ) );
 
             } catch( FormatException e ) {
-                throw new Exception( "Sully Level up data expects 14 well-formed int particles passed in..." );
+                throw new Exception( "Sully Level up data expects 14 well-formed int particles passed in...", e );
             }
 
         }
     }
 
-    class Party {
-        List<Entity> party;
+    public class Party {
+        List<PartyMember> party;
+        ContentManager content;
 
-        public Party() {
-            party = new List<Entity>();
+        public Party( ContentManager cm ) {
+            party = new List<PartyMember>();
+            content = cm;
         }
 
-        public void AddPartyMember( string name ) {
+        public void AddPartyMember( string name, int level ) {
+
+            string safename = name.ToLower();
+
+            PartyMember pm = PartyData.partymemberData[safename];
             
+            if( pm == null ) {
+                throw new Exception( "The party member '"+safename+"' didnt exist.  WHAT ARE YOU PLAYING AT?" );
+            }
+
+            if( party.Contains( pm ) ) {
+                throw new Exception( "'"+safename+"' is already in your party.  NO CLONES ALLOWED." );
+            }
+
+            if( level <= 0 || level > 50 ) {
+                throw new Exception( "Invalid level '" + level + "' for sully.  This game only supports [1,50]." );
+            }
+
+            if( pm.level > level ) {
+                throw new Exception( "You can't go backwards in level for '" + name + "'!  You asked for level " + level + ", and they had " + pm.level );
+            }
+
+            if( pm.level < level ) {
+                LevelUpData lud = PartyData.partyLevelUpData[safename][level - 1];
+
+                if( lud.level != level ) {
+                    throw new Exception( "What devilry is this?  lookup for level "+level+" said it was actually for level " + lud.level +"!  Something is foul in your datafile." );
+                }
+
+                pm.setXP(lud.xp);
+            }
+
+            party.Add( pm );
         }
 
-        public static PartyMember GetPartyMember( string name ) {
+        public PartyMember[] getMembers() {
+            return party.ToArray();
+        }
 
-            return null;
+        public Entity[] getEntities() {
+            List<Entity> ents = new List<Entity>();
+
+            foreach( PartyMember pm in party ) {
+                ents.Add( pm.ent );
+            }
+
+            return ents.ToArray();
         }
     }
 
