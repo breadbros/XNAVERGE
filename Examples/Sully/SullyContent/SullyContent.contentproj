@@ -155,6 +155,31 @@
       <Name>Sara</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="dexter.chr">
+      <Name>dexter</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="galfrey.chr">
+      <Name>galfrey</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="lance.chr">
+      <Name>lance</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="sara.chr">
+      <Name>sara</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="paxton.chr">
+      <Name>paxton</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="dat\statfiles\Darin.txt">

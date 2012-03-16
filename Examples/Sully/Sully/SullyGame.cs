@@ -117,6 +117,10 @@ namespace Sully {
 
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );
+            party.AddPartyMember( "Lance", 17 );
+            party.AddPartyMember( "Paxton", 2 );
+            party.AddPartyMember( "Galfrey", 48 );
+            party.AddPartyMember( "Sara", 9 );
 
             /// spawn the player
             

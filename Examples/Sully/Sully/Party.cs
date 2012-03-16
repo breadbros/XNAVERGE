@@ -140,7 +140,7 @@ namespace Sully {
         }
 
         public int getStat( Stat s ) {
-            return (int)s;
+            return this.basestats[s];
         }
 
         /// scans for a discrepancy between your current level and your current xp.
@@ -170,6 +170,9 @@ namespace Sully {
                         this.basestats.Add( s, nextLevel.stat_increases[s] );
                     }
                 }
+
+                this._cur_hp = this.basestats[Stat.HP];
+                this._cur_mp = this.basestats[Stat.MP];
 
                 this._level++;
             }
@@ -256,6 +259,10 @@ namespace Sully {
 
             if( pm.level > level ) {
                 throw new Exception( "You can't go backwards in level for '" + name + "'!  You asked for level " + level + ", and they had " + pm.level );
+            }
+
+            if( pm.ent == null ) {
+                pm.ent = new Entity( pm.normal_chr, "" ); // what's the purpose of entity name?
             }
 
             if( pm.level < level ) {
