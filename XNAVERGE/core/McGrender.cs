@@ -25,18 +25,21 @@ namespace XNAVERGE {
         Texture2D image = null;
         Rectangle im_bounds;
 
-        public McgNode( RenderDelegate act, McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
+        public McgNode(RenderDelegate act, McgLayer l, int start_x, int start_y) : this(act, l, start_x, start_y, null, null, null) { }
+        public McgNode( RenderDelegate act, McgLayer l, int start_x, int start_y, int? end_x, int? end_y, int? delay) {
             OnDraw = act;
             _Node( l, start_x, start_y, end_x, end_y, delay );
         }
 
-        public McgNode( Texture2D im, Rectangle bounds, McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
+        public McgNode(Texture2D im, Rectangle bounds, McgLayer l, int start_x, int start_y) : this(im, bounds, l, start_x, start_y, null, null, null) { }
+        public McgNode( Texture2D im, Rectangle bounds, McgLayer l, int start_x, int start_y, int? end_x, int? end_y, int? delay) {
             image = im;
             im_bounds = bounds;
             _Node( l, start_x, start_y, end_x, end_y, delay );
         }
 
-        private void _Node( McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
+        private void _Node(McgLayer l, int start_x, int start_y) { _Node(l, start_x, start_y); }
+        private void _Node( McgLayer l, int start_x, int start_y, int? end_x, int? end_y, int? delay) {
             layer = l;
 
             this.start_x = start_x;

@@ -83,6 +83,8 @@ namespace XNAVERGE {
             player_controllable = PLAYER_CONTROLLABLE_DEFAULT;
             player_tile_obstruction = true;
             default_entity_handler = Default_Handlers.omnibus_vergestyle_handler;
+            entities_paused = false;
+            entities_paused_stack = new Stack<bool>();
             action_queue = new Queue<Action>();
         }
 
