@@ -38,7 +38,8 @@ namespace XNAVERGE {
             _Node( l, start_x, start_y, end_x, end_y, delay );
         }
 
-        private void _Node( McgLayer l, int start_x, int start_y, int? end_x = null, int? end_y = null, int? delay = null ) {
+        private void _Node(McgLayer l, int start_x, int start_y) { _Node(l, start_x, start_y); }
+        private void _Node( McgLayer l, int start_x, int start_y, int? end_x, int? end_y, int? delay) {
             layer = l;
 
             this.start_x = start_x;

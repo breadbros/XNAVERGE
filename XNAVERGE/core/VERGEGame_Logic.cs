@@ -54,9 +54,12 @@ namespace XNAVERGE {
 
                 input.Update();
 
-                if( game_input_handler() ) {
+                if (game_input_handler() && !entities_paused) {
                     _handleMapMovementInput();
-                }   
+                }
+                else if (map != null) {
+                    _idleMap(elapsed);
+                }
             }
 
             base.Update(gameTime);
@@ -117,6 +120,15 @@ namespace XNAVERGE {
                 }
 
                 // END OF UPDATING
+            }
+        }
+
+        // Does background maintenance on map timers when _handleMapMovementInput isn't being called.
+        // Possibly this should be converted to something that's called in all cases, handling only
+        // essentials.
+        private void _idleMap(int elapsed) {
+            for (int i=0; i < map.num_entities; i++) {
+                map.entities[i].last_logic_tick += elapsed;
             }
         }
 
