@@ -45,6 +45,7 @@
     <Compile Include="content\SpriteReader.cs" />
     <Compile Include="content\TilesetReader.cs" />
     <Compile Include="content\VERGEMapReader.cs" />
+    <Compile Include="core\McGrender.cs" />
     <Compile Include="core\Screen.cs" />
     <Compile Include="core\VERGEGame.cs" />
     <Compile Include="core\VERGEGame_Draw.cs" />
