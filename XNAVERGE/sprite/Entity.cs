@@ -267,10 +267,10 @@ namespace XNAVERGE {
             );
         }
 
-        public void DrawAt( Rectangle dest ) {
+        public void DrawAt( Rectangle dest, int frame ) {
             VERGEGame game = VERGEGame.game;
 
-            game.spritebatch.Draw( basis.image, dest, basis.frame_box[current_frame], Color.White );
+            game.spritebatch.Draw( basis.image, dest, basis.frame_box[frame], Color.White );
         }
     }
 }

@@ -63,7 +63,7 @@ namespace M
                         //e.wander(100);
                     }
                 }
-            }            
+            }
 
             global.get_script<BasicDelegate>("testing")();            
             

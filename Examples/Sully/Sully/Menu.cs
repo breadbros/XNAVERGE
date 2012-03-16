@@ -58,6 +58,14 @@ namespace Sully {
             }
 
             public void PrintText( string s, int rx, int ry ) {
+                PrintText( s, rx, ry, Color.White );
+            }
+
+            public void PrintTextRight( string s, int rx, int ry ) {
+                PrintTextRight( s, rx, ry, Color.White );
+            }
+
+            public void PrintText( string s, int rx, int ry, Color c ) {
 
                 int x = color_bounds.Location.X + rx;
                 int y = color_bounds.Location.Y + ry;
@@ -66,10 +74,10 @@ namespace Sully {
                 game.print_string( s, x, y + 1, Color.Black, false );
                 game.print_string( s, x + 1, y + 1, Color.Black, false );
                 game.print_string( s, x + 1, y, Color.Black, false );
-                game.print_string( s, x, y, Color.White, false );
+                game.print_string( s, x, y, c, false );
             }
 
-            public void PrintTextRight( string s, int rx, int ry ) {
+            public void PrintTextRight( string s, int rx, int ry, Color c ) {
                 int x = color_bounds.Location.X + rx;
                 int y = color_bounds.Location.Y + ry;
 
@@ -77,7 +85,7 @@ namespace Sully {
                 game.print_right( s, x, y + 1, Color.Black, false );
                 game.print_right( s, x + 1, y + 1, Color.Black, false );
                 game.print_right( s, x + 1, y, Color.Black, false );
-                game.print_right( s, x, y, Color.White, false );
+                game.print_right( s, x, y, c, false );
             }
         }
 
@@ -289,7 +297,24 @@ namespace Sully {
             };
 
             RenderDelegate drawParty = ( int x, int y ) => {
-                partyBox.PrintText( "Party...", x, y );
+
+                int i = 0;
+                foreach( PartyMember pm in _.sg.party.getMembers() ) {
+                    int _y = y + ( 43 * i );
+                    int _x = x - 8;
+
+                    pm.ent.DrawAt( new Rectangle( x, _y, 16, 32 ), 0 );
+                    partyBox.PrintText( pm.name, _x + 32, _y );
+                    partyBox.PrintText( pm.klass, _x + 90, _y, Color.LightGray );
+                    partyBox.PrintTextRight( "LV.    ", x + 200, _y, Color.LightGray );
+                    partyBox.PrintTextRight( "" + pm.level, x + 200, _y, Color.LightGray );
+
+                    partyBox.PrintText( "HP: " + pm.cur_hp + "/" + pm.getStat( Stat.HP ) , _x + 33, _y + 10 );
+                    partyBox.PrintText( "MP: " + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 32, _y + 20 );
+
+                    i++;
+                }
+
             };
 
             ControlDelegate updateItem = ( DirectionalButtons dir, VERGEActions action ) => {

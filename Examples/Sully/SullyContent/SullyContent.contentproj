@@ -120,6 +120,75 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="dat\cast.txt">
+      <Name>cast</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\statfiles\Crystal.txt">
+      <Name>Crystal</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\statfiles\Dexter.txt">
+      <Name>Dexter</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\statfiles\Galfrey.txt">
+      <Name>Galfrey</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\statfiles\Lance.txt">
+      <Name>Lance</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\statfiles\MrE.txt">
+      <Name>MrE</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\statfiles\Paxton.txt">
+      <Name>Paxton</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\statfiles\Sara.txt">
+      <Name>Sara</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="dexter.chr">
+      <Name>dexter</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="galfrey.chr">
+      <Name>galfrey</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="lance.chr">
+      <Name>lance</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="sara.chr">
+      <Name>sara</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="paxton.chr">
+      <Name>paxton</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dat\statfiles\Darin.txt">
+      <Name>Darin</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

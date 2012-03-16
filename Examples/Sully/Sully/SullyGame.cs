@@ -18,6 +18,7 @@ namespace Sully {
     /// </summary>
     public class SullyGame : VERGEGame {
 
+        public Party party;
         public Inventory inventory;
         public Textbox textbox;
         public Menu mainMenu;
@@ -43,6 +44,8 @@ namespace Sully {
             _.init( this );
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new SullyGlobalScripts(this);
+
+            PartyData.InitializePartyData();
 
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
@@ -112,8 +115,15 @@ namespace Sully {
 
             this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
 
-            /// spawn the player
+            this.party = new Party( Content );
+            party.AddPartyMember( "Darin", 3 );
+            party.AddPartyMember( "Lance", 17 );
+            party.AddPartyMember( "Paxton", 2 );
+            party.AddPartyMember( "Galfrey", 48 );
+            party.AddPartyMember( "Sara", 9 );
 
+            /// spawn the player
+            
             //player = map.spawn_entity( 13, 19, "darin" );     
             player = map.spawn_entity( 63, 59, "darin" );
         }
