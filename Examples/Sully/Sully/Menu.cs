@@ -21,6 +21,8 @@ namespace Sully {
             public McgNode rendernode;
 
             public int cursor;
+            public bool has_party_select = false;
+
             public ControlDelegate OnControlUpdate;
             public RenderDelegate OnDraw;
             public MenuBox child = null;
@@ -87,9 +89,32 @@ namespace Sully {
                 game.print_right( s, x + 1, y, Color.Black, false );
                 game.print_right( s, x, y, c, false );
             }
+
+
+
+            // This really shouldn't be in the submenu.  Meeeh, porting is fun.
+            public void MenuPrintStat( int x, int y, Stat stat, int value ) {
+                // Current HP/MP aren't stats in the same sense as the maximums, so they're not drawn by
+                // this function. They get drawn by a separate function, MenuBlitCast in menu_system.vc.
+                // It's kind of weird, but that's how Zip coded it.
+                if( stat == Stat.HP ) { // HP gets drawn in its own place  
+                    //PrintTextRight( x + 115 + TextWidth( menu_font[0], "MP:000/000" ), y + 10, screen, menu_font[0], str( value ) );
+                    return;
+                }
+                if( stat == Stat.MP ) { // MP gets drawn in its own place  
+                    //PrintTextRight( x + 115 + TextWidth( menu_font[0], "MP:000/000" ), y + 20, screen, menu_font[0], str( value ) );
+                    return;
+                }
+                // Other stats get printed in order in a two-line block. 
+                int xpos = ((int)stat) / 2; // This ensures that the stats are printed across two lines.
+                int ypos = ((int)stat) % 2; // This ensures that even-numbered stats go on the top row while odd-numbered stats go on the bottom   
+                PrintText( stat.ToString(), x + ( 32 * xpos ) - 32, y + 35 + ( 24 * ypos ) ); // print name
+                PrintText( ""+value, x + ( 32 * xpos ) - 32, y + 45 + ( 24 * ypos ) );  // print value
+            }
         }
 
         public int itemSubmenu = 0;
+        public int partyCursor = -1;
 
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
         public MenuBox itemBox, skillBox, equipBox, statusBox, optionBox, saveBox;
@@ -98,6 +123,8 @@ namespace Sully {
         public static Texture2D activeBgColor, inactiveBgColor;
 
         public MenuState state;
+
+
 
         public MenuBox activeMenu, highlightedMenu;
 
@@ -133,6 +160,7 @@ namespace Sully {
             activeMenu = commandBox;
             highlightedMenu = commandBox;
             mainBox.child = partyBox;
+            this.partyCursor = -1;
         }
 
         public Menu() {
@@ -163,6 +191,13 @@ namespace Sully {
 
                 if( action.confirm.pressed ) {
                     mainBox.child = activeMenu = menus[menuOrder[commandBox.cursor]];
+
+                    /// turn on the partyCursor. (-1 is the off state.)
+                    if( activeMenu.has_party_select ) {
+                        this.partyCursor = 0;
+                        activeMenu.cursor = -1; 
+                    }
+
                     highlightedMenu = mainBox;
                 }
 
@@ -284,10 +319,6 @@ namespace Sully {
                 itemBox.PrintText( "Equip...", x, y );
             };
 
-            RenderDelegate drawStatus = ( int x, int y ) => { 
-                itemBox.PrintText( "Status...", x, y );
-            };
-
             RenderDelegate drawOption = ( int x, int y ) => { 
                 itemBox.PrintText( "Option...", x, y );
             };
@@ -303,18 +334,73 @@ namespace Sully {
                     int _y = y + ( 43 * i );
                     int _x = x - 8;
 
-                    pm.ent.DrawAt( new Rectangle( x, _y, 16, 32 ), 0 );
-                    partyBox.PrintText( pm.name, _x + 32, _y );
-                    partyBox.PrintText( pm.klass, _x + 90, _y, Color.LightGray );
-                    partyBox.PrintTextRight( "LV.    ", x + 200, _y, Color.LightGray );
-                    partyBox.PrintTextRight( "" + pm.level, x + 200, _y, Color.LightGray );
+                    if( this.partyCursor == i ) {
+                        partyBox.PrintText( ">", x-3, _y );
+                    }
 
-                    partyBox.PrintText( "HP: " + pm.cur_hp + "/" + pm.getStat( Stat.HP ) , _x + 33, _y + 10 );
-                    partyBox.PrintText( "MP: " + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 32, _y + 20 );
+                    Color lightColor = ( this.partyCursor >= 0 && this.partyCursor == i ) ? Color.White : Color.DarkGray;
+                    Color darkColor = ( this.partyCursor >= 0 && this.partyCursor == i ) ? Color.LightGray : Color.DarkGray;
+
+                    pm.ent.DrawAt( new Rectangle( x, _y, 16, 32 ), 0 );
+                    partyBox.PrintText( pm.name, _x + 32, _y, lightColor );
+                    partyBox.PrintText( pm.klass, _x + 90, _y, darkColor );
+                    partyBox.PrintTextRight( "LV.    ", x + 200, _y, darkColor );
+                    partyBox.PrintTextRight( "" + pm.level, x + 200, _y, darkColor );
+
+                    partyBox.PrintText( "HP: " + pm.cur_hp + "/" + pm.getStat( Stat.HP ), _x + 33, _y + 10, lightColor );
+                    partyBox.PrintText( "MP: " + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 32, _y + 20, lightColor );
 
                     i++;
                 }
+            };
 
+            RenderDelegate drawStatus = ( int x, int y ) => {
+
+                if( this.partyCursor >= 0 && this.partyCursor == statusBox.cursor ) {
+
+                    PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+
+                    int _x = x + 4;
+                    int _y = y + 4;
+
+                    pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
+                    statusBox.PrintText( pm.name, _x + 24, _y  );
+                    statusBox.PrintText( pm.klass, _x + 32, _y + 12 );
+
+                    statusBox.PrintText( "Level:", _x + 112, _y );      statusBox.PrintTextRight( ""+pm.level, _x + 190, _y );
+                    statusBox.PrintText( "HP:", _x + 112, _y + 12 );    statusBox.PrintTextRight( "" + pm.cur_hp + "/" + pm.getStat(Stat.HP), _x + 190, _y+12 );
+                    statusBox.PrintText( "MP:", _x + 112, _y + 24 );    statusBox.PrintTextRight( "" + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 190, _y + 24 );
+
+                    //
+
+                    foreach( Stat s in Enum.GetValues(typeof(Stat)) ) {
+                        statusBox.MenuPrintStat(_x+8, _y+12, s, pm.getStat(s));
+                    }
+
+                    statusBox.PrintText( "EXP " + pm.cur_xp, _x + 8, _y + 100 );
+                    statusBox.PrintText( "NEXT " + pm.getXpUntilNextLevel(), _x + 104, _y + 100 );
+
+                    int autotext;
+                    statusBox.PrintText( "DESCRIPTION - FIX WITH AUTOTEXT LATER", _x, _y + 170 );
+                    statusBox.PrintText( pm.description, _x, _y + 182 );
+
+
+                } else {
+                    drawParty( x, y );
+                }
+            };
+
+            ControlDelegate updatePartySelect = ( DirectionalButtons dir, VERGEActions action ) => {
+
+                int partySize = _.sg.party.getMembers().Length;
+
+                if( dir.up.DelayPress() || dir.left.DelayPress() ) {
+                    this.partyCursor--;
+                    if( this.partyCursor < 0 ) this.partyCursor = partySize - 1;
+                } else if( dir.down.DelayPress() || dir.right.DelayPress() ) {
+                    this.partyCursor++;
+                    if( this.partyCursor >= partySize ) this.partyCursor = 0;
+                }
             };
 
             ControlDelegate updateItem = ( DirectionalButtons dir, VERGEActions action ) => {
@@ -368,8 +454,23 @@ namespace Sully {
             };
 
             ControlDelegate updateStatus = ( DirectionalButtons dir, VERGEActions action ) => {
-                if( action.cancel.pressed ) {
-                    LeaveMainMenu();
+
+                if( this.partyCursor >= 0 && statusBox.cursor < 0 ) {
+
+                    updatePartySelect( dir, action );
+
+                    if( action.confirm.pressed ) {
+                        statusBox.cursor = this.partyCursor;
+                    }
+                    
+                    if( action.cancel.pressed ) {
+                        LeaveMainMenu();
+                    }
+                
+                } else {
+                    if( action.cancel.pressed ) {
+                        statusBox.cursor = -1;
+                    }
                 }
             };
             
@@ -397,6 +498,10 @@ namespace Sully {
             statusBox = new MenuBox( updateStatus, drawStatus );
             optionBox = new MenuBox( updateOption, drawOption );
             saveBox = new MenuBox( updateSave, drawSave );
+
+            skillBox.has_party_select = true;
+            equipBox.has_party_select = true;
+            statusBox.has_party_select = true;
 
             menus[menuOrder[0]] = itemBox;
             menus[menuOrder[1]] = skillBox;

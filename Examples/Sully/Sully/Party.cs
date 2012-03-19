@@ -137,10 +137,20 @@ namespace Sully {
 
         public PartyMember() {
             basestats = new Dictionary<Stat, int>();
+            basestats.Add( Stat.ATK, 0 );
+            basestats.Add( Stat.DEF, 0 );
         }
 
         public int getStat( Stat s ) {
             return this.basestats[s];
+        }
+
+        public string getXpUntilNextLevel() {
+            if( level >= 50 ) return "---";
+
+            LevelUpData lud = PartyData.partyLevelUpData[name.ToLower()][this.level];
+
+            return "" + ( lud.xp - this.cur_xp ); 
         }
 
         /// scans for a discrepancy between your current level and your current xp.

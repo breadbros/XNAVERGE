@@ -90,6 +90,7 @@ namespace XNAVERGE {
         public virtual void print_string(String str, int x, int y, SpriteFont font, Color color, bool new_batch) {
             if (new_batch) spritebatch.Begin();
             spritebatch.DrawString(font, str, new Vector2(x,y),color);
+
             if (new_batch) spritebatch.End();
         }
         public virtual void print_string(String str, int x, int y, Color color, bool new_batch) { 
