@@ -52,18 +52,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="crystal.chr">
-      <Name>crystal</Name>
-      <Importer>CHRImporter</Importer>
-      <Processor>CHRProcessor</Processor>
-    </Compile>
-    <Compile Include="darin.chr">
-      <Name>darin</Name>
-      <Importer>CHRImporter</Importer>
-      <Processor>CHRProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="troupe_-_cabedge_sailing.mp3">
       <Name>troupe_-_cabedge_sailing</Name>
       <Importer>Mp3Importer</Importer>
@@ -107,6 +95,41 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="chrs\crystal.chr">
+      <Name>crystal</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="chrs\darin.chr">
+      <Name>darin</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="chrs\dexter.chr">
+      <Name>dexter</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="chrs\galfrey.chr">
+      <Name>galfrey</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="chrs\lance.chr">
+      <Name>lance</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="chrs\paxton.chr">
+      <Name>paxton</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
+    <Compile Include="chrs\sara.chr">
+      <Name>sara</Name>
+      <Importer>CHRImporter</Importer>
+      <Processor>CHRProcessor</Processor>
+    </Compile>
     <None Include="dat\cast.txt">
       <Name>cast</Name>
       <Importer>EffectImporter</Importer>
@@ -141,31 +164,6 @@
       <Name>Sara</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="dexter.chr">
-      <Name>dexter</Name>
-      <Importer>CHRImporter</Importer>
-      <Processor>CHRProcessor</Processor>
-    </Compile>
-    <Compile Include="galfrey.chr">
-      <Name>galfrey</Name>
-      <Importer>CHRImporter</Importer>
-      <Processor>CHRProcessor</Processor>
-    </Compile>
-    <Compile Include="lance.chr">
-      <Name>lance</Name>
-      <Importer>CHRImporter</Importer>
-      <Processor>CHRProcessor</Processor>
-    </Compile>
-    <Compile Include="sara.chr">
-      <Name>sara</Name>
-      <Importer>CHRImporter</Importer>
-      <Processor>CHRProcessor</Processor>
-    </Compile>
-    <Compile Include="paxton.chr">
-      <Name>paxton</Name>
-      <Importer>CHRImporter</Importer>
-      <Processor>CHRProcessor</Processor>
-    </Compile>
     <Compile Include="maps\underwater.map">
       <Name>underwater</Name>
       <Importer>VERGEMapImporter</Importer>
@@ -205,6 +203,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
