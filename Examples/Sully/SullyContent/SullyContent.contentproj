@@ -52,20 +52,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="paradise_isle2.map">
-      <Name>paradise_isle2</Name>
-      <Importer>VERGEMapImporter</Importer>
-      <Processor>VERGEMapProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="tropic2.vsp">
-      <Name>tropic2</Name>
-      <Importer>VSPImporter</Importer>
-      <Processor>VSPProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="crystal.chr">
       <Name>crystal</Name>
       <Importer>CHRImporter</Importer>
@@ -197,6 +183,16 @@
     </Compile>
     <Compile Include="maps\sandtnl1.vsp">
       <Name>sandtnl1</Name>
+      <Importer>VSPImporter</Importer>
+      <Processor>VSPProcessor</Processor>
+    </Compile>
+    <Compile Include="maps\paradise_isle2.map">
+      <Name>paradise_isle2</Name>
+      <Importer>VERGEMapImporter</Importer>
+      <Processor>VERGEMapProcessor</Processor>
+    </Compile>
+    <Compile Include="maps\tropic2.vsp">
+      <Name>tropic2</Name>
       <Importer>VSPImporter</Importer>
       <Processor>VSPProcessor</Processor>
     </Compile>
