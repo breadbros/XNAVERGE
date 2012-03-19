@@ -180,6 +180,26 @@
       <Importer>CHRImporter</Importer>
       <Processor>CHRProcessor</Processor>
     </Compile>
+    <Compile Include="maps\underwater.map">
+      <Name>underwater</Name>
+      <Importer>VERGEMapImporter</Importer>
+      <Processor>VERGEMapProcessor</Processor>
+    </Compile>
+    <Compile Include="maps\underwater_1.map">
+      <Name>underwater_1</Name>
+      <Importer>VERGEMapImporter</Importer>
+      <Processor>VERGEMapProcessor</Processor>
+    </Compile>
+    <Compile Include="maps\underwater_2.map">
+      <Name>underwater_2</Name>
+      <Importer>VERGEMapImporter</Importer>
+      <Processor>VERGEMapProcessor</Processor>
+    </Compile>
+    <Compile Include="maps\sandtnl1.vsp">
+      <Name>sandtnl1</Name>
+      <Importer>VSPImporter</Importer>
+      <Processor>VSPProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="dat\statfiles\Darin.txt">

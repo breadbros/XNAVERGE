@@ -110,11 +110,6 @@ namespace Sully {
 
             system_font = Content.Load<SpriteFont>( "RondaSeven" );
 
-            // load up the map
-            VERGEMap.switch_map( "paradise_isle2" );
-
-            this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
-
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );
             party.AddPartyMember( "Lance", 17 );
@@ -123,9 +118,17 @@ namespace Sully {
             party.AddPartyMember( "Sara", 9 );
 
             /// spawn the player
-            
-            //player = map.spawn_entity( 13, 19, "darin" );     
-            player = map.spawn_entity( 63, 59, "darin" );
+
+            // load up the map
+            //VERGEMap.switch_map( "paradise_isle2" );
+            VERGEMap.switch_map( "underwater" );
+            player = map.spawn_entity( 29, 12, "darin" );
+
+
+            //player = map.spawn_entity( 13, 19, "darin" );     // paradise isle real
+            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug
+
+            this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
         }
 
         /// <summary>

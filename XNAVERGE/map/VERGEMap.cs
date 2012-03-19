@@ -356,7 +356,11 @@ namespace XNAVERGE {
             // TODO: out-transition here
             if (game.map != null) game.map.scripts.do_on_exit();
             game.MapContent.Unload();
-            game.map = VERGEGame.game.MapContent.Load<VERGEMap>(new_map);
+            try {
+                game.map = VERGEGame.game.MapContent.Load<VERGEMap>( new_map );
+            } catch( Exception e ) {
+                game.map = VERGEGame.game.MapContent.Load<VERGEMap>( "maps/"+new_map );
+            }
             tileset_override = null;
             game.init_map();
         }
@@ -389,8 +393,17 @@ namespace XNAVERGE {
                             ts = VERGEMap._default_tileset;
                         }
                         else {
-                            throw new ArgumentException("Couldn't find a tileset asset named " + filename +
-                                ", with or without extension, and there was no default tileset or override given.");
+
+                            /// this is dirty and bad and I am ashamed.  But whatever.
+                            try {
+                                filename = "maps/" + filename;
+                                pos = filename.LastIndexOf( "." );
+                                if( pos < 0 ) throw e;
+                                ts = VERGEGame.game.MapContent.Load<Tileset>( (filename).Substring( 0, pos ) ); 
+                            } catch( Exception ) {
+                                throw new ArgumentException( "Couldn't find a tileset asset named " + filename +
+                                                                ", with or without extension, and there was no default tileset or override given." );
+                            }
                         }
                     }
                 }
