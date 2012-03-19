@@ -23,8 +23,8 @@ namespace M
             (new MGame()).Run();            
         }        
 
-        protected override void Initialize() {            
-
+        protected override void Initialize() {
+            setMcGrender(new McGrenderStack());
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new MGlobalScripts();
             base.Initialize();                        
@@ -51,6 +51,11 @@ namespace M
                 map.entities[i].obstructing = true;
             }
 
+            for (int i = 0; i < 4; i++) {
+                e = map.spawn_entity(player.x / 16, player.y / 16, "chap");
+                followers.add(e);
+            }
+            player.speed = 151;
             for (int x = 0; false && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
                     if (rand.NextDouble() < 0.5) {
@@ -65,7 +70,7 @@ namespace M
                 }
             }
 
-            global.get_script<BasicDelegate>("testing")();            
+            global.get_script<BasicDelegate>("testing")();
             
             system_font = Content.Load<SpriteFont>("Garamond");
         }        

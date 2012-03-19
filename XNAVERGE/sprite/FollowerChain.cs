@@ -6,57 +6,172 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 namespace XNAVERGE {
-    //    Represents a chain of entities trailing behind the player. As long as there is a player on the 
-    // map, those entities will not be updated normally (their movement and obstruction handling isn't even 
-    // called, though they can still obstruct others if set to obstructing = true). They mimic the player's
-    // movements exactly, onward down the chain, even when player_controllable is false.
-    // If the current player is in the list of followers, it will simply be treated as though it weren't.
+    //    Represents a chain of entities trailing behind the player. Those entities will not be updated 
+    // normally (their movement and obstruction handling isn't even called, so they can neither be
+    // obstructed nor obstruct others). They mimic the player's movements exactly, onward down the 
+    // chain, even when player_controllable is false. If the player is in the list of followers, it will 
+    // simply be treated as though it weren't.
     //    The first entity in the list follows the player, the second follows that entity, and so on. 
-    class FollowerChain {
+    public class FollowerChain {
+        public Entity leader { get; private set; }
+        protected List<FollowerData> list;         
+        public bool is_empty { get { return (list.Count == 0); } }
 
-        // When true, followers found to be missing or lazy-deleted during Update() will be silently 
-        // removed from the chain. When false, an exception will be thrown.
-        public static bool CULL_MISSING_FOLLOWERS = true; 
+        // A ring buffer storing the player's recent path. The length of the buffer is determined by 
+        // the number of followers and the entity's hitbox size.
+        protected Point[] path_buffer; 
+        protected int first, last; // start and end of the buffer (which may not use the entire array)
+        protected int step; // approximate distance between entities in the chain, in pixels         
+        protected Point prev_leader_position; 
 
-        public List<Entity> list;
-        protected FollowerData prev_leader_data;
-
-        public Entity leader { // currently the player has to be the leader
-            get {
-                Entity player = VERGEGame.game.player;
-                if (player != null && !player.deleted) return player;
-                return null;
-            } 
-        }
-
-        public FollowerChain() {
-            list = new List<Entity>();
-        }
-
-        // True if the entity is in this chain and the leader entity is still on the map.
-        public bool has_follower(Entity ent) {
-            if (leader == null || ent == leader) return false;
-            return list.Contains(ent);
-        }
-
-        // This is called before entities are moved, so the list knows how the leader moved.
-        public void store_leader_position() {
-        }
-
-        public void Update() {
-            Entity last = leader;
-            if (last == null) return;
-            for (int i = 0; i < list.Count; i++) {
-                
+        public FollowerChain(Entity leader) {
+            this.leader = leader;
+            list = new List<FollowerData>();
+            if (leader != null) {
+                step = Math.Max(leader.hitbox.Width, leader.hitbox.Height);
+                reset_buffer();
             }
         }
 
+        // This is called before entities are moved, so the list knows how the leader moved.
+        public void store_leader_position() { if (leader != null) { prev_leader_position = leader.hitbox.Location; } }
+
+        public void Update() {
+            FollowerData cur;
+            Point old_pos, new_pos = leader.hitbox.Location;
+            int distance, goal_dist, num_followers = list.Count;
+
+            if (num_followers == 0) return;
+
+            new_pos.X -= prev_leader_position.X;
+            new_pos.Y -= prev_leader_position.Y;
+
+            distance = Math.Abs(new_pos.X) + Math.Abs(new_pos.Y);
+
+            if (distance > 0) {
+                _inc_first();
+                path_buffer[first] = new_pos;                
+            }
+
+            for (int i = 0; i < num_followers; i++) {                
+                goal_dist = (1+i)*step;
+                cur = list[i];
+                old_pos = cur.entity.hitbox.Location;
+                cur.dist += distance;                
+                while (cur.dist > goal_dist && cur.idx != first) {
+                    cur.entity.last_logic_tick = VERGEGame.game.tick;                    
+                    if (i == (num_followers - 1)) { // bringing up the rear
+                        _inc_last();
+                        cur.idx = last;
+                    }
+                    else cur.idx = _next_idx(cur.idx);                    
+                    new_pos = path_buffer[cur.idx];                    
+                    cur.entity.x += new_pos.X;
+                    cur.entity.y += new_pos.Y;
+                    cur.dist -= Math.Abs(new_pos.X) + Math.Abs(new_pos.Y);                    
+                }
+
+                new_pos = cur.entity.hitbox.Location;
+                if (old_pos == new_pos) {
+                    if (cur.entity.moving && !leader.moving) cur.entity.set_walk_state(false);
+                }
+                else {
+                    if (!cur.entity.moving) cur.entity.set_walk_state(true);
+                    cur.entity.facing = Utility.direction_from_signs(Math.Sign(new_pos.X - old_pos.X),
+                                                                     Math.Sign(new_pos.Y - old_pos.Y), false);
+                }
+
+            }
+        }
+
+        protected void reset_buffer() {
+            if (list.Count == 0) path_buffer = new Point[1];
+            else {
+                path_buffer = new Point[list.Count * step + 2];
+                foreach (FollowerData d in list) {
+                    d.idx = 0;
+                    d.dist = Math.Abs(leader.x - d.entity.x) + Math.Abs(leader.y - d.entity.y);
+                }
+            }
+            first = 0;
+            last = 0;
+        }
+
+        protected void _inc_first() {            
+            first++;
+            if (first >= path_buffer.Length) first = 0;
+            System.Diagnostics.Debug.Assert(first != last);
+        }
+
+        protected void _inc_last() {
+            if (last != first) {
+                last++;
+                if (last >= path_buffer.Length) last = 0;
+            }
+        }
+
+        protected int _next_idx(int idx) {            
+            if (idx == first) return idx; // can't go any farther
+            idx++;
+            if (idx >= path_buffer.Length) return 0;
+            return idx;
+        }
+
+        // -------------------------------
+        //  Follower management functions
+        // -------------------------------
+        // These functions change the follower list, which always wipes out the path data. 
+        // Thus, you should stack all current and future followers on top of the leader 
+        // before you add or remove followers.
+
+        // Adds a new follower to the end of the follow chain. Returns false if the entity
+        // given was already in the chain. This sets the follower to non-obstructing and
+        // unobstructable.
+        public bool add(Entity ent) {
+            FollowerData fd;
+            if (ent == leader || position_of(ent) >= 0) return false;
+            fd = new FollowerData(ent);            
+            list.Add(fd);
+            reset_buffer();
+            ent.obstructable = false;
+            ent.obstructing = false;
+            return true;
+        }
+
+        public bool remove(Entity ent) {
+            int idx = position_of(ent);
+            if (idx < 0) return false;
+            list.RemoveAt(idx);
+            return true;
+        }
+
+
+        public int position_of(Entity ent) {
+            int result = -1;
+            if (ent == leader) return -1;
+            for (int i = 0; i < list.Count; i++) {
+                if (list[i].entity == ent) {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        protected class FollowerData {
+            public Entity entity;
+            public int dist;
+            public int idx;
+
+            public FollowerData(Entity e) { entity = e; }
+        }
+
     }
 
-    public class FollowerData {
-        public Point position;
-        public Direction facing;
-        public bool moving;
-    }
+
+
+    public class FollowException : Exception { public FollowException(string msg) : base("FollowChain error: " + msg) {} }
 }
+
+
 

@@ -188,14 +188,16 @@ namespace XNAVERGE {
              
             ent_enum = VERGEGame.game.entity_space.elements_within_bounds(Rectangle.Union(hitbox, goal), true, this);
             while (ent_enum.GetNext(out ent)) {
-                cur_path = pixel_path;
-                if (test_collision(ent.hitbox, ref cur_path)) {                    
-                    cur_distance = Math.Abs(cur_path.X) + Math.Abs(cur_path.Y);
-                    System.Diagnostics.Debug.Assert(cur_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y));                    
-                    if (cur_distance < best_distance) {
-                        best_distance = cur_distance;
-                        best_path = cur_path;
-                        nearest_ent = ent;
+                if (ent.obstructing) {
+                    cur_path = pixel_path;
+                    if (test_collision(ent.hitbox, ref cur_path)) {
+                        cur_distance = Math.Abs(cur_path.X) + Math.Abs(cur_path.Y);
+                        System.Diagnostics.Debug.Assert(cur_distance < Math.Abs(pixel_path.X) + Math.Abs(pixel_path.Y));
+                        if (cur_distance < best_distance) {
+                            best_distance = cur_distance;
+                            best_path = cur_path;
+                            nearest_ent = ent;
+                        }
                     }
                 }
             }
