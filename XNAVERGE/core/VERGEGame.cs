@@ -28,8 +28,15 @@ namespace XNAVERGE {
                 followers = new FollowerChain(value);
             }
         }
-        protected Entity _player;
-        public FollowerChain followers;
+        private Entity _player;
+        public virtual FollowerChain followers {
+            get { return _followers; }
+            set {
+                if (_followers != value && _followers != null) _followers.clear();
+                _followers = value;
+            }
+        }
+        private FollowerChain _followers;
 
         public bool player_tile_obstruction; // UNIMPLEMENTED: true if player uses tile-based, rather than pixel-based, obstruction 
 

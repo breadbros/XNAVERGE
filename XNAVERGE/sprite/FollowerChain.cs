@@ -33,7 +33,7 @@ namespace XNAVERGE {
         }
 
         // This is called before entities are moved, so the list knows how the leader moved.
-        public void store_leader_position() {
+        internal void store_leader_position() {
             if (leader != null) prev_leader_position = leader.exact_pos;
         }
 
@@ -49,7 +49,7 @@ namespace XNAVERGE {
             new_pos = leader.hitbox.Location;
             new_pos.X -= old_pos.X;
             new_pos.Y -= old_pos.Y;
-            Console.WriteLine("!!!");
+            
             dir = Utility.direction_from_signs(Math.Sign(exact_pos.X), Math.Sign(exact_pos.Y), false);            
             while (new_pos != Point.Zero) {
                 _inc_first();
@@ -66,6 +66,7 @@ namespace XNAVERGE {
             cur_idx = first;
             distance = 0;
             for (int i = 0; i < num_followers; i++) {
+                if (leader.speed != list[i].entity.speed) list[i].entity.speed = leader.speed;
                 goal_dist = (i+1)*step;
                 old_pos = list[i].entity.hitbox.Location;
                 while (distance < goal_dist) {                                        
@@ -92,10 +93,14 @@ namespace XNAVERGE {
             if (list.Count == 0) path_buffer = new MovementData[1];
             else {
                 path_buffer = new MovementData[list.Count * step + 1];
+                foreach (FollowerData fd in list) {
+                    fd.entity.x = leader.x;
+                    fd.entity.y = leader.y;
+                }
             }
             first = 0;
             last = 0;
-            path_buffer[0].position = leader.hitbox.Location;
+            if (leader != null) path_buffer[0].position = leader.hitbox.Location;
         }
 
         protected void _inc_first() {            
@@ -134,21 +139,29 @@ namespace XNAVERGE {
         public bool add(Entity ent) {
             FollowerData fd;
             if (ent == leader || position_of(ent) >= 0) return false;
-            fd = new FollowerData(ent);            
+            fd = new FollowerData(ent, this);
             list.Add(fd);
-            reset_buffer();
             ent.obstructable = false;
             ent.obstructing = false;
+            reset_buffer();            
             return true;
         }
 
         public bool remove(Entity ent) {
             int idx = position_of(ent);
             if (idx < 0) return false;
+            list[idx].restore_params();
             list.RemoveAt(idx);
             return true;
         }
 
+        public void clear() {
+            foreach (FollowerData fd in list) {
+                fd.restore_params();
+            }
+            list.Clear();
+            reset_buffer();
+        }
 
         public int position_of(Entity ent) {
             int result = -1;
@@ -162,6 +175,10 @@ namespace XNAVERGE {
             return result;
         }
 
+        // -----------
+        //  INTERNALS
+        // -----------
+
         protected struct MovementData {
             public Point position;
             public Direction direction; // may be different than offset implies, due to subpixel movement
@@ -171,10 +188,22 @@ namespace XNAVERGE {
         protected class FollowerData {
             public Entity entity;
             public int original_speed;
-            public FollowerData(Entity e) { 
+            public bool original_obstructable, original_obstructing;
+            public FollowerData(Entity e, FollowerChain chain) { 
                 entity = e;
-                original_speed = entity.speed;
+                original_speed = e.speed;
+                original_obstructable = e.obstructable;
+                original_obstructing = e.obstructing;
+                e.follow = chain;
             }
+            // Restores original entity data, which has likely been destroyed by the follower chain/
+            public void restore_params() {
+                entity.speed = original_speed;
+                entity.obstructable = original_obstructable;
+                entity.obstructing = original_obstructing;
+                entity.follow = null;
+            }
+
         }
 
     }
