@@ -194,6 +194,12 @@
       <Importer>VSPImporter</Importer>
       <Processor>VSPProcessor</Processor>
     </Compile>
+    <Compile Include="TitilliumBold.spritefont">
+      <Name>TitilliumBold</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <SubType>Designer</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="dat\statfiles\Darin.txt">

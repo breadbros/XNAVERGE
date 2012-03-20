@@ -399,8 +399,8 @@ namespace XNAVERGE {
                                 filename = "maps/" + filename;
                                 pos = filename.LastIndexOf( "." );
                                 if( pos < 0 ) throw e;
-                                ts = VERGEGame.game.MapContent.Load<Tileset>( (filename).Substring( 0, pos ) ); 
-                            } catch( Exception ) {
+                                ts = VERGEGame.game.MapContent.Load<Tileset>( (filename).Substring( 0, pos ) );
+                            } catch( Microsoft.Xna.Framework.Content.ContentLoadException ) {
                                 throw new ArgumentException( "Couldn't find a tileset asset named " + filename +
                                                                 ", with or without extension, and there was no default tileset or override given." );
                             }

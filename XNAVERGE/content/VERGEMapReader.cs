@@ -19,12 +19,19 @@ namespace XNAVERGE.Content {
     public class VERGEMapReader : ContentTypeReader<TRead> {
         protected override TRead Read(ContentReader input, TRead nobody_seems_to_know_what_this_argument_is_for) {            
             String vsp, rstring;
-            System.Diagnostics.Debug.WriteLine("DEBUG: Loading map from " + input.AssetName + ".xnb.");            
+            System.Diagnostics.Debug.WriteLine("DEBUG: Loading map from " + input.AssetName + ".xnb.");
 
-            VERGEMap map = new VERGEMap(input.ReadString(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
+            string mapname = input.ReadString();
+            VERGEMap map = new VERGEMap(mapname, input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
             map.initscript = input.ReadString(); // currently ignored in lieu of a general initscript for all maps. wise/unwise? consider.
 
-            if (!set_script_bank(map, input.AssetName)) System.Diagnostics.Debug.WriteLine("DEBUG: No script bank found for " + input.AssetName + ". Defaulting to an empty script bank.");
+            if( !set_script_bank( map, input.AssetName ) ) {
+                System.Diagnostics.Debug.WriteLine( "DEBUG: No script bank found for " + input.AssetName + ". Attempting mapname..." );
+
+                if( !set_script_bank( map, mapname ) ) {
+                    System.Diagnostics.Debug.WriteLine( "DEBUG: No script bank found for " + mapname + "Defaulting to an empty script bank." );
+                }
+            }
 
             map.default_music = input.ReadString();
             vsp = input.ReadString();

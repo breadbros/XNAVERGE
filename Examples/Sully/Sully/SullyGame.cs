@@ -100,6 +100,26 @@ namespace Sully {
         /// </summary>
         protected override void LoadContent() {
 
+/*
+            string familyName;
+            string familyList = "";
+            FontFamily[] fontFamilies;
+
+            InstalledFontCollection installedFontCollection = new InstalledFontCollection();
+
+            // Get the array of FontFamily objects.
+            fontFamilies = installedFontCollection.Families;
+
+            // The loop below creates a large string that is a comma-separated
+            // list of all font family names.
+
+            int count = fontFamilies.Length;
+            for( int j = 0; j < count; ++j ) {
+                familyName = fontFamilies[j].Name;
+                familyList = familyList + familyName;
+                familyList = familyList + ",  ";
+            }
+*/
             Console.WriteLine( "SullyGmae::LoadContent(), mothafuckas!" );
 
             // always do this first
@@ -109,6 +129,7 @@ namespace Sully {
             init_textbox();
 
             system_font = Content.Load<SpriteFont>( "RondaSeven" );
+            //system_font = Content.Load<SpriteFont>( "TitilliumBold" );
 
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );
@@ -123,7 +144,6 @@ namespace Sully {
             //VERGEMap.switch_map( "paradise_isle2" );
             VERGEMap.switch_map( "underwater" );
             player = map.spawn_entity( 29, 12, "darin" );
-
 
             //player = map.spawn_entity( 13, 19, "darin" );     // paradise isle real
             //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug

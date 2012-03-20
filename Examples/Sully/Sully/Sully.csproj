@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapScripts\UnderwaterCavern.cs" />
     <Compile Include="Party.cs" />
     <Compile Include="GlobalScripts\Box.cs" />
     <Compile Include="GlobalScripts\Time.cs" />
