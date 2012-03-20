@@ -110,6 +110,7 @@
     <Compile Include="sprite\Entity_Movement.cs" />
     <Compile Include="sprite\Entity.cs" />
     <Compile Include="map\RenderStack.cs" />
+    <Compile Include="sprite\FollowerChain.cs" />
     <Compile Include="sprite\Movestring.cs" />
     <Compile Include="sprite\Sprite.cs" />
     <Compile Include="sprite\SpriteAnimation.cs" />

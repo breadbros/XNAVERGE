@@ -75,6 +75,7 @@ namespace XNAVERGE {
                 // HANDLE MOVEMENT AND COLLISIONS
                 // ------------------------------
 
+                followers.store_leader_position();
                 if( player != null ) {
                     //Console.WriteLine("{0},{1}", player.exact_x, player.exact_y);
                     prev_player_coords = player.hitbox.Center;
@@ -83,8 +84,9 @@ namespace XNAVERGE {
                 } else prev_player_coords = default( Point );
                 for( int i = 0; i < map.num_entities; i++ ) {
                     ent = map.entities[i];
-                    ent.Update();
+                    if (followers.position_of(ent) < 0) ent.Update();
                 }
+                followers.Update();
 
                 if( player != null ) { // update player zone
                     cur_player_coords = player.hitbox.Center;
