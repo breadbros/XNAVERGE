@@ -51,11 +51,11 @@ namespace M
                 map.entities[i].obstructing = true;
             }
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 e = map.spawn_entity(player.x / 16, player.y / 16, "chap");
                 followers.add(e);
             }
-            player.speed = 151;
+            player.speed = 125;
             for (int x = 0; false && x < map.width; x++) {
                 for (int y = 0; y < map.height; y++) {
                     if (rand.NextDouble() < 0.5) {

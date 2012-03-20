@@ -19,10 +19,10 @@ namespace XNAVERGE {
 
         // A ring buffer storing the player's recent path. The length of the buffer is determined by 
         // the number of followers and the entity's hitbox size.
-        protected Point[] path_buffer; 
+        protected MovementData[] path_buffer;         
         protected int first, last; // start and end of the buffer (which may not use the entire array)
         protected int step; // approximate distance between entities in the chain, in pixels         
-        protected Point prev_leader_position; 
+        protected Vector2 prev_leader_position;        
 
         public FollowerChain(Entity leader) {
             this.leader = leader;
@@ -34,23 +34,30 @@ namespace XNAVERGE {
         }
 
         // This is called before entities are moved, so the list knows how the leader moved.
-        public void store_leader_position() { if (leader != null) { prev_leader_position = leader.hitbox.Location; } }
+        public void store_leader_position() {
+            if (leader != null) prev_leader_position = leader.exact_pos;
+        }
 
         public void Update() {
             FollowerData cur;
-            Point old_pos, new_pos = leader.hitbox.Location;
+            Vector2 exact_pos;
+            Point old_pos, new_pos;            
             int distance, goal_dist, num_followers = list.Count;
-
             if (num_followers == 0) return;
+            exact_pos = leader.exact_pos - prev_leader_position;
 
-            new_pos.X -= prev_leader_position.X;
-            new_pos.Y -= prev_leader_position.Y;
+            old_pos = new Point((int)prev_leader_position.X, (int)prev_leader_position.Y);
+            new_pos = leader.hitbox.Location;
+            
+            new_pos.X -= old_pos.X;
+            new_pos.Y -= old_pos.Y;
 
             distance = Math.Abs(new_pos.X) + Math.Abs(new_pos.Y);
 
             if (distance > 0) {
                 _inc_first();
-                path_buffer[first] = new_pos;                
+                path_buffer[first].offset = new_pos;
+                path_buffer[first].direction = Utility.direction_from_signs(Math.Sign(exact_pos.X), Math.Sign(exact_pos.Y), false);
             }
 
             for (int i = 0; i < num_followers; i++) {                
@@ -65,7 +72,7 @@ namespace XNAVERGE {
                         cur.idx = last;
                     }
                     else cur.idx = _next_idx(cur.idx);                    
-                    new_pos = path_buffer[cur.idx];                    
+                    new_pos = path_buffer[cur.idx].offset;
                     cur.entity.x += new_pos.X;
                     cur.entity.y += new_pos.Y;
                     cur.dist -= Math.Abs(new_pos.X) + Math.Abs(new_pos.Y);                    
@@ -77,17 +84,16 @@ namespace XNAVERGE {
                 }
                 else {
                     if (!cur.entity.moving) cur.entity.set_walk_state(true);
-                    cur.entity.facing = Utility.direction_from_signs(Math.Sign(new_pos.X - old_pos.X),
-                                                                     Math.Sign(new_pos.Y - old_pos.Y), false);
+                    cur.entity.facing = path_buffer[cur.idx].direction;
                 }
 
             }
         }
 
         protected void reset_buffer() {
-            if (list.Count == 0) path_buffer = new Point[1];
+            if (list.Count == 0) path_buffer = new MovementData[1];
             else {
-                path_buffer = new Point[list.Count * step + 2];
+                path_buffer = new MovementData[list.Count * step + 2];
                 foreach (FollowerData d in list) {
                     d.idx = 0;
                     d.dist = Math.Abs(leader.x - d.entity.x) + Math.Abs(leader.y - d.entity.y);
@@ -156,6 +162,11 @@ namespace XNAVERGE {
                 }
             }
             return result;
+        }
+
+        protected struct MovementData {
+            public Point offset;
+            public Direction direction; // may be different than offset implies, due to subpixel movement
         }
 
         protected class FollowerData {
