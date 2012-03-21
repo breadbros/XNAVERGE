@@ -45,7 +45,7 @@ namespace XNAVERGE {
             get { return ( time_pushing > 0 ); }
         }
         public float time_pushing; // length of time the entity has been pushing against an obs, in ticks
-
+        public FollowerChain follow; 
 
         public String move_animation_prefix, idle_animation_prefix; // used to determine which animations to load. Generally "Walk " and "Idle ".
 
@@ -68,6 +68,7 @@ namespace XNAVERGE {
             tile_obstruction = true;
             autoface = true;
             visible = true;
+            follow = null;
             name = ent_name;
 
             index = -1; // it's up to the map to maintain this

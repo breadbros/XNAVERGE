@@ -21,9 +21,24 @@ namespace XNAVERGE {
         public String main_namespace;
 
         public VERGEMap map;
-        public Entity player;
+        public virtual Entity player {
+            get { return _player; }
+            set {
+                _player = value;
+                followers = new FollowerChain(value);
+            }
+        }
+        private Entity _player;
+        public virtual FollowerChain followers {
+            get { return _followers; }
+            set {
+                if (_followers != value && _followers != null) _followers.clear();
+                _followers = value;
+            }
+        }
+        private FollowerChain _followers;
 
-        public bool player_tile_obstruction; // true if player uses tile-based, rather than pixel-based, obstruction
+        public bool player_tile_obstruction; // UNIMPLEMENTED: true if player uses tile-based, rather than pixel-based, obstruction 
 
         public InputManager input;
         public DirectionalButtons dir;
@@ -48,9 +63,11 @@ namespace XNAVERGE {
             Type sourcetype = stack.GetFrame(1).GetMethod().DeclaringType; 
             main_assembly = sourcetype.Assembly;
             main_namespace = sourcetype.Namespace;
+            game_input_handler = () => { return true; }; // unless overriden, always pass control to the map handler
 
             VERGEGame.game = this;
             Default_Handlers.game = this;
+            followers = new FollowerChain(null);
 
             // Set up timing
             this.IsFixedTimeStep = false;
