@@ -351,18 +351,27 @@ namespace XNAVERGE {
             tileset_override = tileset_override_name;
             switch_map(new_map);
         }        
-        public static void  switch_map(String new_map) {
+
+
+
+        public static void switch_map(String new_map) {
+            BasicDelegate bs = null;
+            switch_map( new_map, bs );   
+        }
+
+        public static void switch_map( String new_map, BasicDelegate doTransition ) {
             VERGEGame game = VERGEGame.game;
             // TODO: out-transition here
-            if (game.map != null) game.map.scripts.do_on_exit();
+            if( game.map != null ) game.map.scripts.do_on_exit();
             game.MapContent.Unload();
             try {
                 game.map = VERGEGame.game.MapContent.Load<VERGEMap>( new_map );
             } catch( Exception e ) {
-                game.map = VERGEGame.game.MapContent.Load<VERGEMap>( "maps/"+new_map );
+                game.map = VERGEGame.game.MapContent.Load<VERGEMap>( "maps/" + new_map );
             }
             tileset_override = null;
-            game.init_map();
+
+            game.init_map( doTransition );
         }
 
         // Attempts to load the map's tileset. If there is a manual tileset override specified, it looks for

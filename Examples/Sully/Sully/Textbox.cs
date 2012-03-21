@@ -18,7 +18,7 @@ namespace Sully {
         public int short_step, long_step;
         
         public BasicDelegate callback;
-        public event Action OnDone;
+        public BasicDelegate OnDone;
 
         public Texture2D bgColor;
         public Texture2D speechPortraits;

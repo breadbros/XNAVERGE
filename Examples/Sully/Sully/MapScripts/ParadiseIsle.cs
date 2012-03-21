@@ -113,7 +113,7 @@ namespace Sully {
         }
 
         public void undersea( int x, int y, bool adj ) {
-            //_.ChangeMap( "underwater", 30, 11, _.TCIRCLE );
+            _.MapSwitch( "underwater", 30, 11 ); //, _.TCIRCLE );
         }
 
         public void pearl_cave( int x, int y, bool adj ) {
@@ -176,62 +176,70 @@ namespace Sully {
                 // ./vc_lib/util/v1_maineffects.vc
                 FadeInImg( 100, v1_vclayer );
     
-
+            */
                 // Now we do the talking!
-                TextBoxM(T_CRYSTAL, "Darin.... Hello. How are you today? I",
+                _.TextBox( _.T_CRYSTAL, "Darin.... Hello. How are you today? I",
                                     "needed to talk to you about something..." ,"");
-                TextBox(T_CRYSTAL,  "I... I've been thinking and I've decided",
+                _.TextBox( _.T_CRYSTAL,  "I... I've been thinking and I've decided",
                                     "we need to leave Paradise Island.", "");
-                TextBox(T_DARIN,    "But Crystal! What's wrong? I kinda like",
+                _.TextBox( _.T_DARIN,    "But Crystal! What's wrong? I kinda like",
                                     "this blue lagoon thing we have going on.","");
             
-                TextBox(T_CRYSTAL,  "No... it has to be this way. We'll go",
+                _.TextBox( _.T_CRYSTAL,  "No... it has to be this way. We'll go",
                                     "insane if we don't have some adventure", 
                                     "soon!");
-                TextBox(T_DARIN,    "I suppose you're right. I'd like to go",
+                _.TextBox( _.T_DARIN,    "I suppose you're right. I'd like to go",
                                     "exploring some caves and stuff.", "");
-    
+            /*
     
 
-                //Fade out so we can switch from the vclayer to regular map-rendering
-                // without anyone seeing the old switcheroo!
-                FadeOut(50);
+                        //Fade out so we can switch from the vclayer to regular map-rendering
+                        // without anyone seeing the old switcheroo!
+                        FadeOut(50);
     
-                //We're done with the vclayer for now, so let's wipe it clean
-                ClearVCLayer();
+                        //We're done with the vclayer for now, so let's wipe it clean
+                        ClearVCLayer();
     
-                //now that the vclayer is clear, trigger the map-rendering.
-                Render();
-                FadeIn(30);
-                TextBox(T_CRYSTAL,  "I'm glad you understand. I suppose we",
-                                    "can use the undersea passage. Let's go!", "");
+                        //now that the vclayer is clear, trigger the map-rendering.
+                        Render();
+                        FadeIn(30);
+             */
+                _.TextBox( _.T_CRYSTAL, "I'm glad you understand. I suppose we",
+                                            "can use the undersea passage. Let's go!", "");
+                
+                _.sg.textbox.OnDone = () => {
+                    map.entities[0].x = 30000;
 
-                // We're about to want to have darin's entity index, so let's fetch it.
-                int darin = GetPartyEntity( "Darin" );
-                Wait(20);
-                // let's move the on-map crystal 'onto' Darin.
-                // The trigger.beforeEntityScript has turned off crystal's movement,
-                // so we need to restore it before she can move. We needn't turn it
-                // off again after since we're done with her.
-                // We know crystal is entity 0 because we placed her first on the map.
-                entity.speed[0] = 100; // 100 is the "average" speed
-                AlignStalker( 0, darin );
+                    _.setFlag( _.F.F_CRYS_JOIN, 1 );
+                };
 
-                // let's wait until the on-map crystal has stopped moving
-                WaitForEntity(0);
+            /*
+                        // We're about to want to have darin's entity index, so let's fetch it.
+                        int darin = GetPartyEntity( "Darin" );
+                        Wait(20);
+                        // let's move the on-map crystal 'onto' Darin.
+                        // The trigger.beforeEntityScript has turned off crystal's movement,
+                        // so we need to restore it before she can move. We needn't turn it
+                        // off again after since we're done with her.
+                        // We know crystal is entity 0 because we placed her first on the map.
+                        entity.speed[0] = 100; // 100 is the "average" speed
+                        AlignStalker( 0, darin );
+
+                        // let's wait until the on-map crystal has stopped moving
+                        WaitForEntity(0);
         
-                //now we add the in-party Crystal, which will appear right on top 
-                //of darin...
-                JoinParty("Crystal");
-                FullHeal(IsCharacter("Crystal")); // joinparty doesn't heal, so do that here
+                        //now we add the in-party Crystal, which will appear right on top 
+                        //of darin...
+                        JoinParty("Crystal");
+                        FullHeal(IsCharacter("Crystal")); // joinparty doesn't heal, so do that here
     
-                //and we move the on-map crystal way off-screen.  We've successfully added
-                //her to the party!
-                entity.x[0] = 30000;
+                        //and we move the on-map crystal way off-screen.  We've successfully added
+                        //her to the party!
+                        entity.x[0] = 30000;
     
-                //let's save a flag that Crystal's joined.
-                flags[F_CRYS_JOIN] = 1;
-*/
+                        //let's save a flag that Crystal's joined.
+                        
+        */
         }
 
         void do_flashback() {

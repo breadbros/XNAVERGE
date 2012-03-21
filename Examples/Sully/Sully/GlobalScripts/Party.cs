@@ -10,6 +10,23 @@ namespace Sully {
 
         public static Action _PlayerMove_Action;
 
+        public static int _ms_x = -1, _ms_y = -1;
+        public static void MapSwitch( string map, int x, int y ) {
+            _ms_x = x;
+            _ms_y = y;
+
+            BasicDelegate bs = () => {
+                if( _ms_x >= 0 && _ms_y >= 0 ) {
+                    _.sg.player = _.sg.map.spawn_entity(_ms_x, _ms_y, "darin" );
+                }
+
+                _ms_x = -1;
+                _ms_y = -1;
+            };
+
+            VERGEMap.switch_map( map, bs );
+        }
+
         public static void PlayerMove( string movescript ) {
             if( sg.player_controllable ) {
                 VERGEGame.game.lock_player();

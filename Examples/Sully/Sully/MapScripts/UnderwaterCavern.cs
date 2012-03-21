@@ -37,8 +37,7 @@ namespace Sully {
         public void Lucent_100( int x, int y, bool adj ) { ( (TileLayer)_.sg.map.renderstack.list[6] ).alpha = 0; }
 
         public void warp_paradise( int x, int y, bool adj ) {
-            VERGEMap.switch_map( "paradise_isle2" );
-            _.sg.player = map.spawn_entity( 63, 59, "darin" );
+            _.MapSwitch( "paradise_isle2", 63, 59 );
         }
                   
         public void warp_world( int x, int y, bool adj ) { }                  

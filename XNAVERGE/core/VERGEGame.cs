@@ -165,7 +165,7 @@ namespace XNAVERGE {
         }
 
 
-        public virtual void init_map() { // TODO: dehackify this, move to VERGEMap                         
+        public virtual void init_map( BasicDelegate DoTransition ) { // TODO: dehackify this, move to VERGEMap                         
 
             entity_space = new BoundedSpace<Entity>(-screen.width, -screen.height, map.pixel_width + 2*screen.width, map.pixel_height + 2*screen.height);
             for (int i = 0; i < map.num_entities; i++) {
@@ -179,7 +179,7 @@ namespace XNAVERGE {
             camera.mode = CameraMode.FollowPlayer;
             if (map.scripts != null) {
                 map.scripts.initialize();
-                // TODO: in-transition here
+                if( DoTransition != null ) DoTransition();
                 map.scripts.do_after_transition();
             }
 
