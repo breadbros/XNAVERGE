@@ -17,7 +17,17 @@ namespace Sully {
 
             BasicDelegate bs = () => {
                 if( _ms_x >= 0 && _ms_y >= 0 ) {
-                    _.sg.player = _.sg.map.spawn_entity(_ms_x, _ms_y, "darin" );
+
+                    PartyMember[] pm = _.sg.party.getMembers();
+
+                    pm[0].ent = _.sg.player = _.sg.map.spawn_entity(_ms_x, _ms_y, pm[0].normal_chr );
+                    _.sg.followers.clear();
+                
+                    for( int i = 1; i<pm.Length; i++ ) {
+                        pm[i].ent = _.sg.map.spawn_entity(_ms_x, _ms_y, pm[i].normal_chr );
+                        _.sg.followers.add( pm[i].ent );
+                    }
+
                 }
 
                 _ms_x = -1;
