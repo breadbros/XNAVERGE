@@ -147,10 +147,7 @@ namespace XNAVERGE {
             // At this point we know there was a collision, and that the dragged box is moving diagonally.
 
             distance = (box_nose.Y - drag_nose.Y)/vpath.Y;
-            vertical_side = (sign.X > 0) ^ (box_nose.X < drag_nose.X + path.X * distance);
-
-            //if (this == VERGEGame.game.player) Console.WriteLine("{0},{1}", sign.X, sign.Y);            
-
+            vertical_side = (sign.X > 0) ^ (box_nose.X < drag_nose.X + path.X * distance);            
 
             if (vertical_side) { // collision is between the left and right sides of the rectangles
                 path.X = box_nose.X - sign.X - drag_nose.X;
