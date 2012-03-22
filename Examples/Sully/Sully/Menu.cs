@@ -519,19 +519,30 @@ namespace Sully {
         }
 
         bool isInMenu = true;
+        bool isLeavingMenu = false;
+        bool isEnteringMenu = false;
         public bool IsInMenu() {
             return isInMenu;
         }
 
         public void _enterMenuEvent() {
             this.isInMenu = true;
+            this.isEnteringMenu = false;
         }
 
         public void _exitMenuEvent() {
             this.isInMenu = false;
+            isLeavingMenu = false;
         }
 
         public void SummonMenu() {
+            isLeavingMenu = false;
+            if( isEnteringMenu ) {
+                return;
+            }
+
+            isEnteringMenu = true;
+
             this.activeMenu = this.commandBox;
 
             mainBox.rendernode.Reverse();
@@ -543,6 +554,12 @@ namespace Sully {
         }
 
         public void DismissMenu() {
+
+            if( isLeavingMenu ) {
+                return;
+            }
+
+            isLeavingMenu = true;
 
             mainBox.rendernode.OnStop -= _enterMenuEvent;
             mainBox.rendernode.OnStop += _exitMenuEvent;
