@@ -162,17 +162,17 @@ namespace Sully {
 
         public static string getFormattedTime( TimeSpan ts ) {
 
-            string t = _.sg.stopWatch.Elapsed.Hours + ":";
+            string t = ts.Hours + ":";
 
-            if( _.sg.stopWatch.Elapsed.Minutes < 10 ) {
+            if( ts.Minutes < 10 ) {
                 t += "0";
             }
-            t += _.sg.stopWatch.Elapsed.Minutes + ":";
+            t += ts.Minutes + ":";
 
-            if( _.sg.stopWatch.Elapsed.Seconds < 10 ) {
+            if( ts.Seconds < 10 ) {
                 t += "0";
             }
-            t += _.sg.stopWatch.Elapsed.Seconds;
+            t += ts.Seconds;
 
             return t;
         }
