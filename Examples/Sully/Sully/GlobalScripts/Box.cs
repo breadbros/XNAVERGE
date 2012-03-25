@@ -14,6 +14,10 @@ namespace Sully {
         public static Texture2D pixel;
         public static SpriteBatch sb;
 
+        public static void setDrawTarget( SpriteBatch _sb ) {
+            sb = _sb;
+        }
+
         public static void DrawPixel( int x, int y, Color color, Texture2D target ) {
             //DrawLine( x, y, x+1, y+1, color, target );
                 
@@ -24,27 +28,30 @@ namespace Sully {
             sb.Draw( pixel, new Rectangle( x1,y1, w,h ), color );
         }
 
-        public static void DrawRect( int x1, int y1, int x2, int y2, Color color) {
+        public static void DrawRect( int x1, int y1, int x2, int y2, Color color ) {
             int w = x2 - x1;
             int h = y2 - y1;
-            
+
             DrawLine( x1, y1, 1, h, color );
             DrawLine( x1, y1, w, 1, color );
             DrawLine( x2, y1, 1, h, color );
             DrawLine( x1, y2, w, 1, color );
         }
 
+        public static void DrawRectFill( int x1, int y1, int x2, int y2, Color color ) {
+            int w = x2 - x1;
+            int h = y2 - y1;
+
+            sb.Draw( pixel, new Rectangle(x1,y1,w,h), color );
+        }
+
         public static Texture2D MakeBox( int w, int h, Color[] boxcolors ) {
 
             RenderTarget2D dest = new RenderTarget2D( _.sg.GraphicsDevice, w, h, true, SurfaceFormat.Color, DepthFormat.Depth24 );
-            if( sb != null ) {
-                sb.Dispose();
-            }
-            sb = new SpriteBatch( _.sg.GraphicsDevice );
 
+            sb = new SpriteBatch( _.sg.GraphicsDevice );
             _.sg.GraphicsDevice.SetRenderTarget( dest );
             _.sg.GraphicsDevice.Clear( ClearOptions.Target, Color.Transparent, 0, 0 );
-
             sb.Begin();
 
             Color _0 = boxcolors[0];

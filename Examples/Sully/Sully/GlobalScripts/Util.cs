@@ -117,5 +117,55 @@ namespace Sully {
         public static Boolean ItemIsConsumable( Item i ) { return true; }
         public static Boolean ItemIsEquipment( Item i ) { return false; }
         public static Boolean ItemIsKey( Item i ) { return false; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+        // A generic control method for 2 dimensions
+        public static int MenuControlTwoArrows( Integer int_one, int lim_one, Integer int_two, int lim_two ) {
+            int change = 0;
+            if( ButtonUp( 1 ) ) {
+                if( lastpress + MENU_PRESS_DELAY < timer ) {
+                    SetInt( int_one, ( GetInt( int_one ) - 1 + lim_one ) % lim_one );
+                    lastpress = timer;
+                    change = 1;
+                }
+            } else if( ButtonDown( 1 ) ) {
+                if( lastpress + MENU_PRESS_DELAY < timer ) {
+                    SetInt( int_one, ( GetInt( int_one ) + 1 ) % lim_one );
+                    change = 1;
+                }
+            } else lastpress = 0;
+
+            if( ButtonLeft( 1 ) || ButtonLeftTop( 1 ) ) {
+                SetInt( int_two, ( GetInt( int_two ) - 1 + lim_two ) % lim_two );
+                change += 2;
+
+                CallFunction( _m2ASnd2 ); //call the sound function defined with Menu2ArrowSetSounds()
+            } else if( ButtonRight( 1 ) || ButtonRightTop( 1 ) ) {
+                SetInt( int_two, ( GetInt( int_two ) + 1 ) % lim_two );
+                change += 2;
+
+                CallFunction( _m2ASnd2 ); //call the sound function defined with Menu2ArrowSetSounds()
+            }
+
+            return change;
+        }
+*/
+
+
+
+
     }
 }

@@ -22,6 +22,9 @@ namespace Sully {
         public Inventory inventory;
         public Textbox textbox;
         public Menu mainMenu;
+        public Color[] boxcolors;
+        public Color menuColor;
+
         McGrenderStack mcg;
 
         public 
@@ -69,12 +72,20 @@ namespace Sully {
                 return true;
             };
 
+
+            boxcolors = new Color[3];
+            boxcolors[0] = new Color( 0, 0, 0 );
+            boxcolors[1] = new Color( 112, 112, 112 );
+            boxcolors[2] = new Color( 144, 144, 144 );
+
+            menuColor = new Color( 128,0,128 );
+
             inventory = new Inventory();
 
             Item i = new Item();
             i.name = "Delicious Herb";
             i.description = "This herb really is quite delicious.";
-            inventory.AddItem(i, 3);
+            inventory.AddItem( i, 3 );
 
             i = new Item();
             i.name = "Bitter Root";
@@ -88,6 +99,66 @@ namespace Sully {
 
             i = new Item();
             i.name = "A Thing";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 42 );
+
+            i = new Item();
+            i.name = "Delicious Herb A";
+            i.description = "This herb really is quite delicious.";
+            inventory.AddItem( i, 3 );
+
+            i = new Item();
+            i.name = "Bitter Root A";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 9 );
+
+            i = new Item();
+            i.name = "Poop A";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 99 );
+
+            i = new Item();
+            i.name = "A Thing A";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 42 );
+            
+            i = new Item();
+            i.name = "Delicious Herb B";
+            i.description = "This herb really is quite delicious.";
+            inventory.AddItem( i, 3 );
+
+            i = new Item();
+            i.name = "Bitter Root B";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 9 );
+
+            i = new Item();
+            i.name = "Poop B";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 99 );
+
+            i = new Item();
+            i.name = "A Thing B";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 42 );
+            
+            i = new Item();
+            i.name = "Delicious Herb C";
+            i.description = "This herb really is quite delicious.";
+            inventory.AddItem( i, 3 );
+
+            i = new Item();
+            i.name = "Bitter Root C";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 9 );
+
+            i = new Item();
+            i.name = "Poop C";
+            i.description = "Bitter. Just like my wife.";
+            inventory.AddItem( i, 99 );
+
+            i = new Item();
+            i.name = "A Thing C";
             i.description = "Bitter. Just like my wife.";
             inventory.AddItem( i, 42 );
 
@@ -133,19 +204,15 @@ namespace Sully {
 
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );
-            party.AddPartyMember( "Lance", 17 );
-            party.AddPartyMember( "Paxton", 2 );
-            party.AddPartyMember( "Galfrey", 48 );
-            party.AddPartyMember( "Sara", 9 );
 
             /// spawn the player
 
             // load up the map
-            //VERGEMap.switch_map( "paradise_isle2" );
-            VERGEMap.switch_map( "underwater" );
-            player = map.spawn_entity( 29, 12, "darin" );
+            VERGEMap.switch_map( "paradise_isle2" );
+            //VERGEMap.switch_map( "underwater" );
+            //player = map.spawn_entity( 29, 12, "darin" );
 
-            //player = map.spawn_entity( 13, 19, "darin" );     // paradise isle real
+            player = map.spawn_entity( 13, 19, "darin" );     // paradise isle real
             //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug
 
             this.hook_render = script<RenderLayerDelegate>( "draw_UI" );

@@ -159,6 +159,9 @@ namespace Sully {
         }
 
         public void crystal_event( Entity ent ) {
+
+            ent.move( "" ); //set_walk_state( false );
+
             /*
                 FadeOut(100);
     
@@ -208,6 +211,9 @@ namespace Sully {
                                             "can use the undersea passage. Let's go!", "");
                 
                 _.sg.textbox.OnDone = () => {
+
+                    _.sg.party.AddPartyMember( "Crystal", 3 );
+                    
                     map.entities[0].x = 30000;
 
                     _.setFlag( _.F.F_CRYS_JOIN, 1 );

@@ -45,11 +45,8 @@ namespace Sully {
             full_reset();
 
             //textbox.image = Content.Load<Texture2D>( "textbox" );
-            Color[] boxcolors = new Color[3];
-            boxcolors[0] = new Color( 0, 0, 0 );
-            boxcolors[1] = new Color( 112, 112, 112 );
-            boxcolors[2] = new Color( 144, 144, 144 );
-            image = _.MakeBox( 317, 50, boxcolors );
+            
+            image = _.MakeBox( 317, 50, _.sg.boxcolors );
 
             speechPortraits = speechPorts;
 

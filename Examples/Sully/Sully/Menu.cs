@@ -91,6 +91,29 @@ namespace Sully {
             }
 
 
+            // Draws a sub window with vertical scroll bar and cursor, but draws none of the contents
+            // This function is a god amoungst men
+            public void MenuDrawSubWindow( int x1, int y1, int x2, int y2, int current_cursor_pos, int entry_y_height, int total_entry_count, int entry_start, int y_fuzz_factor )
+                // Pass: Dimensions of box by top left and bottom right coords, current selected entry (pass negative for none),
+                //          height of one entry, total number of entries, entry at top of window, and size modifier
+                // No error checking, and can display strangely if odd values are passed
+            {
+                _.setDrawTarget(_.sg.spritebatch);
+
+                int ydiff = y2 - y1 - 8;
+                int entry_fit = ( y2 - y1 ) / entry_y_height;
+                if( total_entry_count < entry_fit ) entry_fit = total_entry_count;
+
+                _.DrawRect( x1, y1, x2, y2, _.sg.boxcolors[2] );
+                _.DrawRect( x2 - 10, y1 + 2, x2 - 2, y2 - 2, _.sg.boxcolors[2] );
+
+                _.DrawRectFill( x2 - 8, y1 + 4 + ( ( ydiff * entry_start ) / total_entry_count ),
+                 x2 - 4, y1 + 4 + ( ( ydiff * ( entry_fit + entry_start ) ) / total_entry_count ), _.sg.boxcolors[2] );
+                if( current_cursor_pos >= 0 ) {
+                    _.DrawRect( x1 + 4, y1 + 4 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 10, y1 + entry_y_height - y_fuzz_factor + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
+                    _.DrawRectFill( x1 + 6, y1 + 6 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 8, y1 + entry_y_height - y_fuzz_factor - 2 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
+                }
+            }
 
             // This really shouldn't be in the submenu.  Meeeh, porting is fun.
             public void MenuPrintStat( int x, int y, Stat stat, int value ) {
@@ -123,8 +146,6 @@ namespace Sully {
         public static Texture2D activeBgColor, inactiveBgColor;
 
         public MenuState state;
-
-
 
         public MenuBox activeMenu, highlightedMenu;
 
@@ -174,7 +195,6 @@ namespace Sully {
 
             inactiveBgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
             inactiveBgColor.SetData( new[] { new Color( new Vector4( 0, 0, 0, 63 ) ) } );
-
 
             ControlDelegate cd1 = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( commandBox.child != null ) {
@@ -278,36 +298,70 @@ namespace Sully {
 
             RenderDelegate drawItem = ( int x, int y ) => { 
 
-                switch(itemSubmenu) {
+                int menu_start = 0;
+                if( menu_start + 9 < itemBox.cursor ) {
+                    menu_start = itemBox.cursor - 9;
+                } else if( menu_start > itemBox.cursor && itemBox.cursor >= 0 ) {
+                    menu_start = itemBox.cursor - 1;
+                }
+
+                itemBox.PrintText( "Supply", 20, 18, ( itemSubmenu == 0 ) ? Color.White : Color.DarkGray );
+                itemBox.PrintText( "Equip", 100, 18, ( itemSubmenu == 1 ) ? Color.White : Color.DarkGray );
+                itemBox.PrintText( "Key", 186, 18, ( itemSubmenu == 2 ) ? Color.White : Color.DarkGray );
+
+                int _x = x;
+                int _y = y + 20;
+
+                int lineSize = 14;
+                int displayNumber = 10;
+
+                ItemSet curInv = _.sg.inventory.consumables;
+                switch( itemSubmenu ) {
                     case 0:
-                        itemBox.PrintText( "Supplies", 0, 0 );
+                        curInv = _.sg.inventory.consumables;
                         break;
                     case 1:
-                        itemBox.PrintText( "Equipment", 0, 0 );
+                        curInv = _.sg.inventory.equipment;
                         break;
                     case 2:
-                        itemBox.PrintText( "Key", 0, 0 );
+                        curInv = _.sg.inventory.key;
                         break;
                 }
 
-                if(  _.sg.inventory.consumables.items.Count == 0 ) {
-                    itemBox.PrintText( "No items.", 0, 0 );
+                if( curInv.items.Count == 0 ) {
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 180, itemBox.cursor, 13, 1, 0, 0 );
+                    itemBox.PrintText( "No items.", _x + 32, _y );
+
                 } else {
 
-                    itemBox.PrintText( ">", x, y + itemBox.cursor * 10 );
-                    
-                    for( int i = 0; i < _.sg.inventory.consumables.items.Count; i++ ) {
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.items.Count, menu_start, 4 );
+                    _y += 4;
 
+                    for( int i = menu_start; i < curInv.items.Count && menu_start + displayNumber > i; i++ ) {
+/*
+
+                        if( master_items[supply_inventory[i].item_ref].use_flag & USE_MENU ) use = 0;
+                        else use = 1;
+                        PrintString( 55, 56 + ( 13 * ( i - menu_start ) ), screen, menu_font[use], master_items[supply_inventory[i].item_ref].name );
+                        PrintRight( 205, 56 + ( 13 * ( i - menu_start ) ), screen, menu_font[use], str( supply_inventory[i].quant ) );
+                        use = icon_get( master_items[supply_inventory[i].item_ref].icon );
+                        if( i == menu_item ) TBlit( 35, 54 + ( 13 * ( i - menu_start ) ), use, screen );
+                        else TScaleBlit( 35, 58 + ( 13 * ( i - menu_start ) ), 8, 8, use, screen );
+                        FreeImage( use );
+                        if( menu_start + 10 <= i ) i = _supply_count + 1;
+*/
                         if( i != itemBox.cursor ) {
-                            _.DrawIcon( i, x + 10, y + 4 + ( i * 10 ), i != itemBox.cursor );
+                            _.DrawIcon( i, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != itemBox.cursor );
                         }
 
-                        itemBox.PrintText(  _.sg.inventory.consumables.items[i].item.name, x + 30, y + ( i * 10 ) );
-                        itemBox.PrintTextRight( "" + _.sg.inventory.consumables.items[i].quant, x + 200, y + ( i * 10 ) ); 
+                        itemBox.PrintText( curInv.items[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ) );
+                        itemBox.PrintTextRight( "" + curInv.items[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
                     }
 
                     int j = itemBox.cursor;
-                    _.DrawIcon( j, x + 10, y + ( j * 10 ), false );
+                    _.DrawIcon( j, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
+
+                    itemBox.PrintText( curInv.items[j].item.description, _x, _y + 154 );
                 }
             };
 
