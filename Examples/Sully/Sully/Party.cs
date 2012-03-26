@@ -32,6 +32,7 @@ namespace Sully {
 
 
     public class PartyMember {
+        public const int MAX_LEVEL = 50;
 
         Dictionary<Stat, int> basestats;
 
@@ -76,7 +77,7 @@ namespace Sully {
         }
 
         public string getXpUntilNextLevel() {
-            if( level >= 50 ) return "---";
+            if( level >= PartyMember.MAX_LEVEL ) return "---";
 
             LevelUpData lud = PartyData.partyLevelUpData[name.ToLower()][this.level];
 
@@ -193,8 +194,8 @@ namespace Sully {
                 throw new Exception( "'"+safename+"' is already in your party.  NO CLONES ALLOWED." );
             }
 
-            if( level <= 0 || level > 50 ) {
-                throw new Exception( "Invalid level '" + level + "' for sully.  This game only supports [1,50]." );
+            if( level <= 0 || level > PartyMember.MAX_LEVEL ) {
+                throw new Exception( "Invalid level '" + level + "' for sully.  This game only supports [1," + PartyMember.MAX_LEVEL + "]." );
             }
 
             if( pm.level > level ) {
@@ -298,8 +299,8 @@ namespace Sully {
                     }
                 }
 
-                if( data.Count != 50 ) {
-                    throw new Exception( "There must be 50 entries in your levelup datafile, holmes." );
+                if( data.Count != PartyMember.MAX_LEVEL ) {
+                    throw new Exception( "There must be " + PartyMember.MAX_LEVEL + " entries in your levelup datafile, holmes." );
                 }
 
                 partyLevelUpData.Add( pm.name.ToLower(), data.ToArray() );
