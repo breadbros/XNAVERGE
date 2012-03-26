@@ -88,13 +88,22 @@ namespace Sully {
         // Always returns true.
         protected bool _write_to_save(BinaryWriter writer, int version) {
             PartyMember[] party;
+            long old_pos, new_pos;
             
             // SAVE HEADER
             // -----------
 
             writer.Write(SAVE_SIGNATURE); // write save file signature
             writer.Write(CURRENT_VERSION);
+
+            old_pos = writer.BaseStream.Position;
+            writer.Write(0); // reserve this space for an int            
             write_thumbnail_screencap(writer.BaseStream);
+            new_pos = writer.BaseStream.Position;
+            writer.Seek((int)old_pos, SeekOrigin.Begin);
+            writer.Write((int)(new_pos - old_pos - 4)); // how far you need to skip to bypass the screenshot
+            writer.Seek((int)new_pos, SeekOrigin.Begin);
+
             writer.Write(game.total_time.Ticks); // playtime (1 TimeSpan tick = 100 nanoseconds) as a long. 
             // Note that this is NOT the same as the Stopwatch class's "ticks", 
             // whose length is hardware-dependent.
@@ -143,5 +152,10 @@ namespace Sully {
             return true;
         }
 
+        public void load(int save_num) {
+            String save_path;
+            save_path = get_save_filepath(save_num);
+            if (!File.Exists(save_path)) throw new FileNotFoundException(save_path + " was not found.");
+        }
     }
 }
