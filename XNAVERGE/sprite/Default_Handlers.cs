@@ -52,9 +52,10 @@ namespace XNAVERGE {
                     box = data.collided_entity.hitbox;
                     if (box.Top < ent.hitbox.Bottom && box.Bottom > ent.hitbox.Top) x = 0;
                     if (box.Left < ent.hitbox.Right && box.Right > ent.hitbox.Left) y = 0;
+                    if (x != 0 && y != 0) { x = 0; y = 0; }
                 }
 
-                if (x == 0) {                    
+                if (x == 0 && y != 0) {
                     pt = new Point(ent.hitbox.X + 1,
                                    ent.hitbox.Y + y + (1 + y) * (ent.hitbox.Height - 1) / 2);
                     for (int i = 0; i < ent.hitbox.Width - 2; i++) { // first check all but the ends
@@ -88,7 +89,7 @@ namespace XNAVERGE {
                         }
                     }
                 }
-                else if (y == 0) {                    
+                else if (y == 0 && x != 0) {                    
                     pt = new Point(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
                                    ent.hitbox.Y + 1);
                                    
@@ -123,7 +124,7 @@ namespace XNAVERGE {
                         }
                     }                    
                 }
-                else {
+                else if (x != 0 && y != 0) {
                     pt = new Point(ent.hitbox.X + x + (1 + x) * (ent.hitbox.Width - 1) / 2,
                                    ent.hitbox.Y + (1 + y) * (ent.hitbox.Height - 1) / 2);
                     for (int i=0; i < ent.hitbox.Height; i++) {
@@ -154,12 +155,9 @@ namespace XNAVERGE {
                     if (x == 0 && y == 0) return 0;
                     
                 }
-                Vector2 aaa;
-                //Console.WriteLine("Attempted {0},{1}. Direction {2},{3}", data.attempted_path.X, data.attempted_path.Y,x, y);
                 if (x != 0 && y != 0) { // adjust alignment for diagonal movement
                     ofs = new Vector2( Math.Abs((float) (ent.hitbox.X + (1 + x) / 2) - ent.exact_x),
                                        Math.Abs((float) (ent.hitbox.Y + (1 + y) / 2) - ent.exact_y));
-                    aaa = new Vector2(ent.exact_x + x * ofs.X, ent.exact_y + y * ofs.Y);
                     if (ofs.X < ofs.Y) ent.exact_y += y * (ofs.Y - ofs.X);
                     else if (ofs.X > ofs.Y) ent.exact_x += x * (ofs.X - ofs.Y);
 
