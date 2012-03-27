@@ -60,10 +60,6 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="fastJSON, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\fastJSON.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -130,11 +126,14 @@
     <Compile Include="Textbox.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fastJSON.dll" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Upstream\fastJSON\fastJSON\fastJSON.csproj">
+      <Project>{207E91B1-C9F8-4913-88E1-3549EF5F3273}</Project>
+      <Name>fastJSON</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\XNAVERGE\XNAVERGE.csproj">
       <Project>{0D524863-D249-4CCC-8C99-349EF7AAA0FF}</Project>
       <Name>XNAVERGE</Name>
