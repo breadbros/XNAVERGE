@@ -91,8 +91,37 @@ namespace Sully {
         public string func_targetting, func_effect;
         public string[] equip_classes;
         public string equip_slot, equip_modcode;
+        public Dictionary<Stat, int> equip_stats;
 
         public static Dictionary<string, Item> masterItemList;
+
+        public static Item get( string key ) {
+            return masterItemList[key];
+        }
+
+        private Dictionary<Stat, int> _statsHelper( string modcode ) {
+
+            if( modcode.Length == 0 ) {
+                return null;
+            }
+
+            Dictionary<Stat, int> d = new Dictionary<Stat, int>();
+
+            string[] pairs = modcode.Split( ';' );
+            foreach( string line in pairs ) {
+                string[] s = line.Split( ',' );
+                if( s.Length == 2 ) {
+                    d.Add( _.getStat( s[0] ), int.Parse( s[1] ) );
+                } else if( s.Length == 1 && s[0].Equals( "" ) ) {
+
+                } else {
+                    throw new Exception( "Invalid parse. '" + modcode + "'" );
+                }
+                
+            }
+
+            return d;
+        }
 
         public Item( Dictionary<string, Object> d ) {
 
@@ -108,6 +137,7 @@ namespace Sully {
 
             equip_slot = (string)d["equip_slot"];
             equip_modcode = (string)d["equip_modcode"];
+            equip_stats = _statsHelper( equip_modcode );
 
             ArrayList al = d["equip_by"] as ArrayList;
 
@@ -135,6 +165,8 @@ namespace Sully {
                 
                 masterItemList.Add( ((string)d["name"]).ToLower(), i );
             }
+
+            int j = 9;
         }
     }
 

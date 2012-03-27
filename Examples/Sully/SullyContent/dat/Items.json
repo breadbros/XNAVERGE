@@ -571,7 +571,7 @@
             "Avatar"
         ],
         "equip_slot": "Right Hand",
-        "equip_modcode": "ATK,+25;MAG,+25;MAX_MP,+10;"
+        "equip_modcode": "ATK,+25;MAG,+25;MP,+10;"
     },
     {
         "name": "Croziest",
@@ -586,7 +586,7 @@
             "Cleric"
         ],
         "equip_slot": "Right Hand",
-        "equip_modcode": "ATK,+40;MAG,+20;FER,+20;MAX_HP,+15;"
+        "equip_modcode": "ATK,+40;MAG,+20;FER,+20;HP,+15;"
     },
     {
         "name": "Wonder_Wand",
@@ -1276,7 +1276,7 @@
             "Avatar"
         ],
         "equip_slot": "Left Hand",
-        "equip_modcode": "MAX_MP,+10;"
+        "equip_modcode": "MP,+10;"
     },
     {
         "name": "Wristwatch",
@@ -1504,7 +1504,7 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+35;MGR,+15;MAX_HP,+15;"
+        "equip_modcode": "DEF,+35;MGR,+15;HP,+15;"
     },
     {
         "name": "Flame_Robe",
@@ -1578,7 +1578,7 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+46;MGR,+15;MAX_MP,+10;"
+        "equip_modcode": "DEF,+46;MGR,+15;MP,+10;"
     },
     {
         "name": "Leather_Vest",
@@ -1753,7 +1753,7 @@
             "Spearguy"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+60;MAX_HP,+15;CTR,+15;"
+        "equip_modcode": "DEF,+60;HP,+15;CTR,+15;"
     },
     {
         "name": "Atlas_Plate",
@@ -1868,7 +1868,7 @@
             "Engineer"
         ],
         "equip_slot": "Acc. 1",
-        "equip_modcode": "MAX_HP,+5;"
+        "equip_modcode": "HP,+5;"
     },
     {
         "name": "Neutralizer",
@@ -2129,7 +2129,7 @@
             ""
         ],
         "equip_slot": "Acc. 1",
-        "equip_modcode": "MAX_HP,+12;"
+        "equip_modcode": "HP,+12;"
     },
     {
         "name": "Maiden_Flower",
