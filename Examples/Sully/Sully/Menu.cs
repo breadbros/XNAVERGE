@@ -369,10 +369,6 @@ namespace Sully {
                 itemBox.PrintText( "Skill...", x, y );
             };
 
-            RenderDelegate drawEquip = ( int x, int y ) => { 
-                itemBox.PrintText( "Equip...", x, y );
-            };
-
             RenderDelegate drawOption = ( int x, int y ) => { 
                 itemBox.PrintText( "Option...", x, y );
             };
@@ -408,6 +404,50 @@ namespace Sully {
                 }
             };
 
+            RenderDelegate _drawStatusTop = ( int _x, int _y ) => {
+                PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+                pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
+                statusBox.PrintText( pm.name, _x + 24, _y );
+                statusBox.PrintText( pm.klass, _x + 32, _y + 12 );
+
+                statusBox.PrintText( "Level:", _x + 112, _y ); statusBox.PrintTextRight( "" + pm.level, _x + 190, _y );
+                statusBox.PrintText( "HP:", _x + 112, _y + 12 ); statusBox.PrintTextRight( "" + pm.cur_hp + "/" + pm.getStat( Stat.HP ), _x + 190, _y + 12 );
+                statusBox.PrintText( "MP:", _x + 112, _y + 24 ); statusBox.PrintTextRight( "" + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 190, _y + 24 );
+
+                //
+
+                foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
+                    statusBox.MenuPrintStat( _x + 8, _y + 4, s, pm.getStat( s ) );
+                }
+            };
+
+            RenderDelegate drawEquip = ( int x, int y ) => {
+                PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+
+                int _x = x + 4;
+                int _y = y + 4;
+
+                _drawStatusTop( _x, _y );
+
+
+                for( int i = 0; i < PartyMember.equipment_slot_order.Length; i++ ) {
+
+                    statusBox.PrintText( PartyMember.equipment_slot_order[i].ToUpper(), _x+8, _y + 94 + (i*12) );
+
+                    Item item = pm.equipment[PartyMember.equipment_slot_order[i]].getItem();
+                    if( item != null ) {
+                        statusBox.PrintText( item.name, _x + 72, _y + 94 + ( i * 12 ) );
+                    } else {
+                        statusBox.PrintText( "(none)", _x + 72, _y + 94 + ( i * 12 ), Color.DarkGray );
+                    }
+                }
+
+
+                
+
+                
+            };
+
             RenderDelegate drawStatus = ( int x, int y ) => {
 
                 if( this.partyCursor >= 0 && this.partyCursor == statusBox.cursor ) {
@@ -417,19 +457,7 @@ namespace Sully {
                     int _x = x + 4;
                     int _y = y + 4;
 
-                    pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
-                    statusBox.PrintText( pm.name, _x + 24, _y  );
-                    statusBox.PrintText( pm.klass, _x + 32, _y + 12 );
-
-                    statusBox.PrintText( "Level:", _x + 112, _y );      statusBox.PrintTextRight( ""+pm.level, _x + 190, _y );
-                    statusBox.PrintText( "HP:", _x + 112, _y + 12 );    statusBox.PrintTextRight( "" + pm.cur_hp + "/" + pm.getStat(Stat.HP), _x + 190, _y+12 );
-                    statusBox.PrintText( "MP:", _x + 112, _y + 24 );    statusBox.PrintTextRight( "" + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 190, _y + 24 );
-
-                    //
-
-                    foreach( Stat s in Enum.GetValues(typeof(Stat)) ) {
-                        statusBox.MenuPrintStat(_x+8, _y+12, s, pm.getStat(s));
-                    }
+                    _drawStatusTop( _x, _y );
 
                     statusBox.PrintText( "EXP " + pm.cur_xp, _x + 8, _y + 100 );
                     statusBox.PrintText( "NEXT " + pm.getXpUntilNextLevel(), _x + 104, _y + 100 );

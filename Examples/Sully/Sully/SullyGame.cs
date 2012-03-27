@@ -137,7 +137,6 @@ namespace Sully {
             party.getMembers()[0].equipment["l. hand"].Equip( Item.get( "Buckler" ) );
             party.getMembers()[0].equipment["acc. 2"].Equip( Item.get( "Jaunty_Cap" ) );
 
-
             /// spawn the player
 
             // load up the map

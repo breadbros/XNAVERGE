@@ -53,7 +53,6 @@ namespace Sully {
         }
     }
 
-
     public class PartyMember {
 
         Dictionary<Stat, int> basestats;
