@@ -351,15 +351,15 @@ namespace Sully {
                         if( menu_start + 10 <= i ) i = _supply_count + 1;
 */
                         if( i != itemBox.cursor ) {
-                            _.DrawIcon( i, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != itemBox.cursor );
+                            _.DrawIcon( curInv.items[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != itemBox.cursor );
                         }
 
-                        itemBox.PrintText( curInv.items[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ) );
+                        itemBox.PrintText( curInv.items[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), curInv.items[i].item.use_menu ? Color.White : Color.DarkGray );
                         itemBox.PrintTextRight( "" + curInv.items[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
                     }
 
                     int j = itemBox.cursor;
-                    _.DrawIcon( j, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
+                    _.DrawIcon( curInv.items[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
 
                     itemBox.PrintText( curInv.items[j].item.description, _x, _y + 154 );
                 }

@@ -26,101 +26,18 @@ namespace Sully {
     }
 */
 
-    public class Inventory {
-        public ItemSet consumables, equipment, key;
-
-        public Inventory() {
-            consumables = new ItemSet(); 
-            equipment = new ItemSet();
-            key = new ItemSet();
-        }
-
-        public Boolean HasItem( Item i ) {
-            return HasItem( i.name );
-        }
-
-        public Boolean HasItem( String s ) {
-            foreach( ItemSlot slot in consumables.items ) {
-                if( slot.item.name == s ) return true;
-            }
-
-            foreach( ItemSlot slot in equipment.items ) {
-                if( slot.item.name == s ) return true;
-            }
-
-            foreach( ItemSlot slot in key.items ) {
-                if( slot.item.name == s ) return true;
-            }
-
-            return false;
-        }
-
-
-        public void AddItem( Item i, int quant ) {
-            if( _.ItemIsConsumable( i ) ) {
-                consumables.AddItem( i, quant );
-            } else if( _.ItemIsEquipment( i ) ) {
-                equipment.AddItem( i, quant );
-            } else if( _.ItemIsKey( i ) ) {
-                key.AddItem( i, quant );
-            } else {
-                throw new System.InvalidOperationException( "Invalid item type." );
-            }
-        }
-    }
-
-    public class ItemSet {
-        public List<ItemSlot> items;
-
-        public ItemSet() {
-            items = new List<ItemSlot>(); 
-        }
-
-        public void AddItem( Item item, int quant ) {
-            if( quant <= 0 ) {
-                throw new System.InvalidOperationException( "You can only add positive numbers of items to your inventory." );
-            }
-            
-            foreach( ItemSlot slot in items ) {
-                if( slot.item.name == item.name ) {
-                    slot.quant += quant;
-                    return;
-                }
-            }
-
-            items.Add( new ItemSlot(item, quant) );
-        }
-    }
-
-    public class ItemSlot {
-        public Item item;
-        public int quant;
-
-        public ItemSlot( Item i, int quant ) {
-            this.item = i;
-            this.quant = quant;
-        }
-    }
-
-    public class Item {
-        public string name, description;
-    }
-
-    class EquipmentSlot {
-//        Equipment equipped;
-
-        public EquipmentSlot() {
-
-        }
-    }
-
     public enum Stat {
         HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
     };
 
+
     public class PartyMember {
 
         Dictionary<Stat, int> basestats;
+
+        Dictionary<string, EquipmentSlot> equipment_slots;
+        public static readonly string[] equipment_slot_order = new string[] { "head", "body", "l. hand", "r. hand", "acc. 1", "acc. 2" };
+
         public Entity ent;
         public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
 
@@ -130,15 +47,28 @@ namespace Sully {
         public int cur_mp { get { return _cur_mp; } }
         public int cur_hp { get { return _cur_hp; } }
 
+        private void _initEquipmentSlots() {
+            equipment_slots = new Dictionary<string, EquipmentSlot>();
+
+            equipment_slots["head"] = new EquipmentSlot();
+            equipment_slots["body"] = new EquipmentSlot();
+            equipment_slots["l. hand"] = new EquipmentSlot();
+            equipment_slots["r. hand"] = new EquipmentSlot();
+            equipment_slots["acc. 1"] = new EquipmentSlot();
+            equipment_slots["acc. 2"] = new EquipmentSlot();
+        }
+
         public PartyMember( Entity e ) {
             basestats = new Dictionary<Stat, int>();
             ent = e;
+            _initEquipmentSlots();
         }
 
         public PartyMember() {
             basestats = new Dictionary<Stat, int>();
             basestats.Add( Stat.ATK, 0 );
             basestats.Add( Stat.DEF, 0 );
+            _initEquipmentSlots();
         }
 
         public int getStat( Stat s ) {

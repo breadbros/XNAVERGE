@@ -1,0 +1,15 @@
+// Name     Icon    Visibility  Disabling_Statuses  "Description"],
+{
+	["Black_Magic",1,   "NORMAL",      ["Silence","Seal"],	"The magic dealing in hurting!"],
+	["White_Magic", 2,   "NORMAL",      ["Silence","Seal"],	"The magic dealing in anti-hurting!"],
+	["Fuchsia_Magic", 3, "NORMAL",      ["Silence","Seal"],	"The magic of interior decorating!"],
+	["Swordsmanship", 4, "NORMAL",      ["Seal"],	"Masterful techniques for swordsmen."],
+	["Jive",        5,   "NORMAL",      ["Seal"],	"Secret arts known only to funkmasters."],
+	["Gadgetry",    6,   "NORMAL",      ["Seal"],	"Engineering skills."],
+	["Summon",      7,   "NORMAL",      ["Silence","Seal"],	"Talk to the gods and make them hit stuff for you."],
+	["Fortune",     8,   "HIDDEN",      [],               "Favored skills of the bold."],
+	["Trickery",    9,   "NORMAL",      ["Seal"],	"Chicanery.  Flim-flammery.  Shenanigans."],
+	["Shake_Spear", 10,  "NORMAL",      ["Seal"],	"Skills dealing with neither slings nor arrows."]
+}
+
+

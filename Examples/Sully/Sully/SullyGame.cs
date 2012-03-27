@@ -82,85 +82,13 @@ namespace Sully {
 
             inventory = new Inventory();
 
-            Item i = new Item();
-            i.name = "Delicious Herb";
-            i.description = "This herb really is quite delicious.";
-            inventory.AddItem( i, 3 );
+            Item.initItems();
+            Random random = new Random();
+            foreach( String key in Item.masterItemList.Keys ) {
+                inventory.AddItem( Item.masterItemList[key], random.Next( 1, 99 ) );
+            }
 
-            i = new Item();
-            i.name = "Bitter Root";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 9 );
-
-            i = new Item();
-            i.name = "Poop";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 99 );
-
-            i = new Item();
-            i.name = "A Thing";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 42 );
-
-            i = new Item();
-            i.name = "Delicious Herb A";
-            i.description = "This herb really is quite delicious.";
-            inventory.AddItem( i, 3 );
-
-            i = new Item();
-            i.name = "Bitter Root A";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 9 );
-
-            i = new Item();
-            i.name = "Poop A";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 99 );
-
-            i = new Item();
-            i.name = "A Thing A";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 42 );
-            
-            i = new Item();
-            i.name = "Delicious Herb B";
-            i.description = "This herb really is quite delicious.";
-            inventory.AddItem( i, 3 );
-
-            i = new Item();
-            i.name = "Bitter Root B";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 9 );
-
-            i = new Item();
-            i.name = "Poop B";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 99 );
-
-            i = new Item();
-            i.name = "A Thing B";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 42 );
-            
-            i = new Item();
-            i.name = "Delicious Herb C";
-            i.description = "This herb really is quite delicious.";
-            inventory.AddItem( i, 3 );
-
-            i = new Item();
-            i.name = "Bitter Root C";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 9 );
-
-            i = new Item();
-            i.name = "Poop C";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 99 );
-
-            i = new Item();
-            i.name = "A Thing C";
-            i.description = "Bitter. Just like my wife.";
-            inventory.AddItem( i, 42 );
+//            inventory.AddItem( i, 3 );
 
             base.Initialize();
         }

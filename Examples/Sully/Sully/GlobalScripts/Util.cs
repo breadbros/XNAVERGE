@@ -114,12 +114,6 @@ namespace Sully {
             else _.sg.spritebatch.Draw( iconAtlas, new Rectangle(x,y,16,16), icon_get( idx ), Color.White );
         }
 
-        public static Boolean ItemIsConsumable( Item i ) { return true; }
-        public static Boolean ItemIsEquipment( Item i ) { return false; }
-        public static Boolean ItemIsKey( Item i ) { return false; }
-
-
-
 
 
 
