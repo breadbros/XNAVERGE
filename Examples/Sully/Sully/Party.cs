@@ -58,8 +58,10 @@ namespace Sully {
 
         Dictionary<Stat, int> basestats;
 
-        Dictionary<string, EquipmentSlot> equipment_slots;
-        public static readonly string[] equipment_slot_order = new string[] { "head", "body", "l. hand", "r. hand", "acc. 1", "acc. 2" };
+        private Dictionary<string, EquipmentSlot> equipment_slots;
+        public Dictionary<string, EquipmentSlot> equipment { get { return equipment_slots; } }
+
+        public static readonly string[] equipment_slot_order = new string[] { "r. hand", "l. hand", "body", "acc. 1", "acc. 2" };
 
         public Entity ent;
         public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
@@ -73,10 +75,9 @@ namespace Sully {
         private void _initEquipmentSlots() {
             equipment_slots = new Dictionary<string, EquipmentSlot>();
 
-            equipment_slots["head"] = new EquipmentSlot();
-            equipment_slots["body"] = new EquipmentSlot();
-            equipment_slots["l. hand"] = new EquipmentSlot();
             equipment_slots["r. hand"] = new EquipmentSlot();
+            equipment_slots["l. hand"] = new EquipmentSlot();
+            equipment_slots["body"] = new EquipmentSlot();
             equipment_slots["acc. 1"] = new EquipmentSlot();
             equipment_slots["acc. 2"] = new EquipmentSlot();
         }
@@ -95,7 +96,14 @@ namespace Sully {
         }
 
         public int getStat( Stat s ) {
-            return this.basestats[s];
+            int mod = 0;
+
+            foreach( string key in equipment_slots.Keys ) {
+                EquipmentSlot es = equipment_slots[key];
+                mod += es.getStatMod( s );
+            }
+
+            return this.basestats[s] + mod;
         }
 
         public string getXpUntilNextLevel() {

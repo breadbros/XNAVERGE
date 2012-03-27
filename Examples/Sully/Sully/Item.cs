@@ -96,7 +96,7 @@ namespace Sully {
         public static Dictionary<string, Item> masterItemList;
 
         public static Item get( string key ) {
-            return masterItemList[key];
+            return masterItemList[key.ToLower()];
         }
 
         private Dictionary<Stat, int> _statsHelper( string modcode ) {
@@ -165,16 +165,46 @@ namespace Sully {
                 
                 masterItemList.Add( ((string)d["name"]).ToLower(), i );
             }
-
-            int j = 9;
         }
     }
 
-    class EquipmentSlot {
-        //        Equipment equipped;
+    public class EquipmentSlot {
+        Item equipped;
 
         public EquipmentSlot() {
+            equipped = null;
+        }
 
+        public void Equip(Item i) {
+            if( equipped != null ) {
+                throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );
+            }
+
+            equipped = i;
+        }
+
+        public Item Dequip() {
+            if( equipped == null ) {
+                throw new Exception( "Tried to Dequip when nothing was equipped." );
+            }
+
+            Item i = equipped;
+            equipped = null;
+            return i;
+        }
+
+        public Item getItem() {
+            return equipped;
+        }
+
+        public int getStatMod( Stat s ) {
+            if( equipped == null ) return 0;
+
+            int value;
+            if( equipped.equip_stats.TryGetValue( s, out value ) )
+                return value;
+
+            return 0;
         }
     }
 
