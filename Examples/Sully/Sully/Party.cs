@@ -30,7 +30,7 @@ namespace Sully {
         HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
     };
 
-
+    [Serializable]
     public class PartyMember {
         public const int MAX_LEVEL = 50;
 
@@ -39,7 +39,7 @@ namespace Sully {
         Dictionary<string, EquipmentSlot> equipment_slots;
         public static readonly string[] equipment_slot_order = new string[] { "head", "body", "l. hand", "r. hand", "acc. 1", "acc. 2" };
 
-        public Entity ent;
+        [NonSerialized] public Entity ent;
         public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
 
         private int _level, _cur_xp, _cur_mp, _cur_hp;
@@ -203,7 +203,7 @@ namespace Sully {
             }
 
             if( pm.ent == null ) {
-                pm.ent = new Entity( pm.normal_chr, "" ); // what's the purpose of entity name?
+                pm.ent = new Entity( pm.normal_chr, "" ); 
             }
 
             if( pm.level < level ) {
@@ -217,6 +217,21 @@ namespace Sully {
             }
 
             party.Add( pm );
+        }
+
+        // This removes a character from the party. If delete_entity is true, it will also get rid of the entity.
+        // Returns true if the character was actually in the party, false if not.
+        public bool RemovePartyMember(string name, bool delete_entity) {            
+            bool found = false;
+            foreach (PartyMember p in party) {
+                if (String.Equals(name, p.name, StringComparison.CurrentCultureIgnoreCase)) {
+                    found = true;
+                    party.Remove(p);
+
+                    break;
+                }
+            }
+            return found;
         }
 
         public PartyMember[] getMembers() {

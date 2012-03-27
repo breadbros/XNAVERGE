@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using XNAVERGE;
 using Microsoft.Xna.Framework;
@@ -87,7 +89,8 @@ namespace Sully {
 
         // Always returns true.
         protected bool _write_to_save(BinaryWriter writer, int version) {
-            PartyMember[] party;
+            PartyMember[] cur_party;
+            
             long old_pos, new_pos;
             
             // SAVE HEADER
@@ -107,20 +110,16 @@ namespace Sully {
             writer.Write(game.total_time.Ticks); // playtime (1 TimeSpan tick = 100 nanoseconds) as a long. 
             // Note that this is NOT the same as the Stopwatch class's "ticks", 
             // whose length is hardware-dependent.
-            party = game.party.getMembers();
-            writer.Write(party.Length);
-            foreach (PartyMember p in party) writer.Write(p.name); // Only the names go in the header
+            cur_party = game.party.getMembers();
+            writer.Write(cur_party.Length);
+            foreach (PartyMember p in cur_party) writer.Write(p.name); // Order of characters in current party
             writer.Write("location name"); // not supported yet
 
             // PARTY DATA (in same order as the list of names)
-            // -----------------------------------------------
-
-            foreach (PartyMember p in party) {
-                writer.Write(p.level);                
-                writer.Write(p.cur_hp);
-                writer.Write(p.cur_mp);
-                writer.Write(p.cur_xp);
-                // other stuff to go here in the future: status effects, equipment
+            // -----------------------------------------------            
+            BinaryFormatter formatter = new BinaryFormatter();            
+            foreach (PartyMember p in PartyData.partymemberData.Values) {
+                formatter.Serialize(writer.BaseStream, p);
             }
 
             // INVENTORY DATA (in same order as the list of names)
@@ -156,6 +155,19 @@ namespace Sully {
             String save_path;
             save_path = get_save_filepath(save_num);
             if (!File.Exists(save_path)) throw new FileNotFoundException(save_path + " was not found.");
+
+            using (FileStream fs = new FileStream(save_path, FileMode.Open)) {
+                using (BinaryReader reader = new BinaryReader(fs)) {
+                    _read_from_save(reader, CURRENT_VERSION);
+                }
+            }
         }
+
+        protected void _read_from_save(BinaryReader reader, int version) {
+            List<String> names;
+            
+            
+        }
+       
     }
 }
