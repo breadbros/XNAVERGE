@@ -107,6 +107,25 @@ namespace Sully {
             return Math.Max(this.basestats[s] + mod, 1);
         }
 
+        public int getPretendStat( Stat s, string slotKeyName, Item newItem ) {
+            int mod = 0;
+
+            foreach( string key in equipment_slots.Keys ) {
+
+                if( key != slotKeyName ) {
+                    EquipmentSlot e = equipment_slots[key];
+                    mod += e.getStatMod( s );
+                }
+            }
+
+            int value = 0;
+            newItem.equip_stats.TryGetValue( s, out value );
+
+            mod += value;
+
+            return Math.Max( this.basestats[s] + mod, 1 );
+        }
+
         public string getXpUntilNextLevel() {
             if( level >= 50 ) return "---";
 

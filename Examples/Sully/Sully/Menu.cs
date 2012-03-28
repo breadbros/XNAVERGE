@@ -132,7 +132,7 @@ namespace Sully {
             }
 
             // This really shouldn't be in the submenu.  Meeeh, porting is fun.
-            public void MenuPrintStat( int x, int y, Stat stat, int value ) {
+            public void MenuPrintStat( int x, int y, Stat stat, int value, Color c ) {
                 // Current HP/MP aren't stats in the same sense as the maximums, so they're not drawn by
                 // this function. They get drawn by a separate function, MenuBlitCast in menu_system.vc.
                 // It's kind of weird, but that's how Zip coded it.
@@ -147,8 +147,8 @@ namespace Sully {
                 // Other stats get printed in order in a two-line block. 
                 int xpos = ((int)stat) / 2; // This ensures that the stats are printed across two lines.
                 int ypos = ((int)stat) % 2; // This ensures that even-numbered stats go on the top row while odd-numbered stats go on the bottom   
-                PrintText( stat.ToString(), x + ( 32 * xpos ) - 32, y + 35 + ( 24 * ypos ) ); // print name
-                PrintText( ""+value, x + ( 32 * xpos ) - 32, y + 45 + ( 24 * ypos ) );  // print value
+                PrintText( stat.ToString(), x + ( 32 * xpos ) - 32, y + 35 + ( 24 * ypos ), c ); // print name
+                PrintText( ""+value, x + ( 32 * xpos ) - 32, y + 45 + ( 24 * ypos ), c );  // print value
             }
         }
 
@@ -158,6 +158,10 @@ namespace Sully {
         public int itemSubmenu = 0;
         public int equipSlotSubmenu = -1;
         public int partyCursor = -1;
+
+        // equip specific stuff
+        public Item pretendEquipItem = null;
+        public string pretendEquipSlotName = "";
 
         // font specific stuff.  Dumb to be here.
         int lineSize = 14;
@@ -417,9 +421,24 @@ namespace Sully {
                 statusBox.PrintText( "MP:", _x + 112, _y + 24 ); statusBox.PrintTextRight( "" + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 190, _y + 24 );
 
                 //
+                if( pretendEquipItem == null ) {
+                    foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
+                        statusBox.MenuPrintStat( _x + 8, _y + 4, s, pm.getStat( s ), Color.White );
+                    }
+                } else {
 
-                foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
-                    statusBox.MenuPrintStat( _x + 8, _y + 4, s, pm.getStat( s ) );
+                    foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
+                        int ps = pm.getPretendStat( s, pretendEquipSlotName, this.pretendEquipItem );
+                        int rs = pm.getStat( s );
+
+                        if( ps > rs ) {
+                            statusBox.MenuPrintStat( _x + 8, _y + 4, s, ps, Color.LimeGreen );
+                        } else if( ps < rs ) {
+                            statusBox.MenuPrintStat( _x + 8, _y + 4, s, ps, Color.Red );
+                        } else {
+                            statusBox.MenuPrintStat( _x + 8, _y + 4, s, ps, Color.White );
+                        }
+                    }
                 }
             };
 
@@ -577,9 +596,11 @@ namespace Sully {
 
                         PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
 
+                        pretendEquipSlotName = PartyMember.equipment_slot_order[equipSlotSubmenu];
+
                         subEquipment = _.sg.inventory.GetWearableEquipmentSet(
                             pm.klass,
-                            pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].getSlotType() 
+                            pm.equipment[pretendEquipSlotName].getSlotType() 
                         );
                     }
 
@@ -589,6 +610,9 @@ namespace Sully {
                         equipBox.cursor = equipSlotSubmenu; 
                         equipSlotSubmenu = -1;
                         subEquipment = null;
+                        pretendEquipSlotName = "";
+                        pretendEquipItem = null;
+
                     } else {
                         if( dir.up.DelayPress() ) {
                             equipBox.cursor--;
@@ -597,6 +621,8 @@ namespace Sully {
                             equipBox.cursor++;
                             if( equipBox.cursor >= subEquipment.items.Count ) equipBox.cursor = 0;
                         }
+
+                        pretendEquipItem = subEquipment.items[equipBox.cursor].item;
 
                         if( action.confirm.pressed ) {
 
@@ -610,6 +636,8 @@ namespace Sully {
                             equipBox.cursor = equipSlotSubmenu;
                             equipSlotSubmenu = -1;
                             subEquipment = null;
+                            pretendEquipSlotName = "";
+                            pretendEquipItem = null;
                         }
                     }
                 }
