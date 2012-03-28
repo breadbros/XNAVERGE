@@ -227,11 +227,18 @@ namespace Sully {
                 if (String.Equals(name, p.name, StringComparison.CurrentCultureIgnoreCase)) {
                     found = true;
                     party.Remove(p);
-
+                    if (delete_entity) {
+                        VERGEGame.game.map.delete_entity(p.ent);
+                        p.ent = null;
+                    }
                     break;
                 }
             }
             return found;
+        }
+
+        // Remove everyone from the party, such as before loading a save.
+        public void ClearParty() {
         }
 
         public PartyMember[] getMembers() {

@@ -138,6 +138,7 @@ namespace Sully {
         }
     }
 
+    [Serializable]
     class EquipmentSlot {
         //        Equipment equipped;
 

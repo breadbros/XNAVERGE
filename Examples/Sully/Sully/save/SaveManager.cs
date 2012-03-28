@@ -117,7 +117,8 @@ namespace Sully {
 
             // PARTY DATA (in same order as the list of names)
             // -----------------------------------------------            
-            BinaryFormatter formatter = new BinaryFormatter();            
+            BinaryFormatter formatter = new BinaryFormatter();
+            writer.Write(PartyData.partymemberData.Values.Count);
             foreach (PartyMember p in PartyData.partymemberData.Values) {
                 formatter.Serialize(writer.BaseStream, p);
             }
@@ -164,9 +165,38 @@ namespace Sully {
         }
 
         protected void _read_from_save(BinaryReader reader, int version) {
-            List<String> names;
+            List<String> cur_party_names;
+            List<PartyMember> characters;
+            int cur_int;
+
             
+
+            // LOAD HEADER
+            // -----------
+
+            if (reader.ReadInt32() != SAVE_SIGNATURE) throw new FormatException("Not a Sully Chronicles save file.");
+            cur_int = reader.ReadInt32();
+            if (cur_int != CURRENT_VERSION) throw new FormatException("Wrong save file format. This is a version " +
+                                                       cur_int + " save file, but a version " + CURRENT_VERSION +
+                                                       " file is required."); // TODO: add version converters 
+            cur_int = reader.ReadInt32(); // offset to end of screencap
+            reader.BaseStream.Seek(cur_int, SeekOrigin.Current);
             
+            game.saved_time = new TimeSpan(reader.ReadInt64());
+            
+            cur_int = reader.ReadInt32(); // number of current party members
+            cur_party_names = new List<String>();
+            for (int i = 0; i < cur_int; i++) cur_party_names.Add(reader.ReadString());
+
+            reader.ReadString(); // location name -- currently unused
+
+            // LOAD PARTY DATA
+            // ---------------
+            BinaryFormatter formatter = new BinaryFormatter();
+            characters = new List<PartyMember>();
+            cur_int = reader.ReadInt32(); // # of characters total
+            for (int i=0; i<cur_int; i++) characters.Add((PartyMember)(formatter.Deserialize(reader.BaseStream)));
+
         }
        
     }
