@@ -124,9 +124,8 @@ namespace Sully {
             }
 
             // INVENTORY DATA
-            // --------------
-            List<ItemSlot>[] sets = { game.inventory.consumables.items, game.inventory.equipment.items, game.inventory.key.items };
-            foreach (List<ItemSlot> list in sets) {
+            // --------------            
+            foreach (List<ItemSlot> list in game.inventory.item_sets) {
                 writer.Write(list.Count);
                 foreach (ItemSlot slot in list) {
                     writer.Write(slot.item.name);
@@ -201,9 +200,8 @@ namespace Sully {
             PartyData.LoadFromCollection(characters);
 
             // LOAD INVENTORY DATA
-            // -------------------
-            List<ItemSlot>[] sets = { game.inventory.consumables.items, game.inventory.equipment.items, game.inventory.key.items };
-            foreach (List<ItemSlot> list in sets) {
+            // -------------------            
+            foreach (List<ItemSlot> list in game.inventory.item_sets) {
                 cur_int = reader.ReadInt32();
                 foreach (ItemSlot item in list) item.quant = 0;
                 for (int i = 0; i < cur_int; i++) {

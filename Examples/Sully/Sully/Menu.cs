@@ -315,7 +315,7 @@ namespace Sully {
                 int lineSize = 14;
                 int displayNumber = 10;
 
-                ItemSet curInv = _.sg.inventory.consumables;
+                List<ItemSlot> curInv = _.sg.inventory.consumables;
                 switch( itemSubmenu ) {
                     case 0:
                         curInv = _.sg.inventory.consumables;
@@ -328,16 +328,16 @@ namespace Sully {
                         break;
                 }
 
-                if( curInv.items.Count == 0 ) {
+                if( curInv.Count == 0 ) {
                     itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 180, itemBox.cursor, 13, 1, 0, 0 );
                     itemBox.PrintText( "No items.", _x + 32, _y );
 
                 } else {
 
-                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.items.Count, menu_start, 4 );
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.Count, menu_start, 4 );
                     _y += 4;
 
-                    for( int i = menu_start; i < curInv.items.Count && menu_start + displayNumber > i; i++ ) {
+                    for( int i = menu_start; i < curInv.Count && menu_start + displayNumber > i; i++ ) {
 /*
 
                         if( master_items[supply_inventory[i].item_ref].use_flag & USE_MENU ) use = 0;
@@ -351,17 +351,17 @@ namespace Sully {
                         if( menu_start + 10 <= i ) i = _supply_count + 1;
 */
                         if( i != itemBox.cursor ) {
-                            _.DrawIcon( curInv.items[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != itemBox.cursor );
+                            _.DrawIcon( curInv[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != itemBox.cursor );
                         }
 
-                        itemBox.PrintText( curInv.items[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), curInv.items[i].item.use_menu ? Color.White : Color.DarkGray );
-                        itemBox.PrintTextRight( "" + curInv.items[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
+                        itemBox.PrintText( curInv[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), curInv[i].item.use_menu ? Color.White : Color.DarkGray );
+                        itemBox.PrintTextRight( "" + curInv[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
                     }
 
                     int j = itemBox.cursor;
-                    _.DrawIcon( curInv.items[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
+                    _.DrawIcon( curInv[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
 
-                    itemBox.PrintText( curInv.items[j].item.description, _x, _y + 154 );
+                    itemBox.PrintText( curInv[j].item.description, _x, _y + 154 );
                 }
             };
 
@@ -465,13 +465,13 @@ namespace Sully {
                 int menuMax = 0;
                 switch( itemSubmenu ) {
                     case 0:
-                        menuMax = _.sg.inventory.consumables.items.Count;
+                        menuMax = _.sg.inventory.consumables.Count;
                         break;
                     case 1:
-                        menuMax = _.sg.inventory.equipment.items.Count;
+                        menuMax = _.sg.inventory.equipment.Count;
                         break;
                     case 2:
-                        menuMax = _.sg.inventory.key.items.Count;
+                        menuMax = _.sg.inventory.key.Count;
                         break;
                 }
 
