@@ -61,9 +61,9 @@ namespace XNAVERGE {
 
             // the assembly/namespace to search for script classes defaults to the one 
             // from which this constructor was called.
-            Type sourcetype = stack.GetFrame(1).GetMethod().DeclaringType; 
-            main_assembly = sourcetype.Assembly;
-            main_namespace = sourcetype.Namespace;
+            Type thisType = this.GetType();
+            main_assembly = thisType.Assembly;
+            main_namespace = thisType.Namespace;
             game_input_handler = () => { return true; }; // unless overriden, always pass control to the map handler
 
             VERGEGame.game = this;
