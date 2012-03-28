@@ -115,20 +115,20 @@ namespace Sully {
                 }
             }
 
-            public void DrawItemList( int _x, int _y, int lineSize, int menu_start, int displayNumber, ItemSet curInv, Boolean isSupplyMenu ) {
-                for( int i = menu_start; i < curInv.items.Count && menu_start + displayNumber > i; i++ ) {
+            public void DrawItemList( int _x, int _y, int lineSize, int menu_start, int displayNumber, List<ItemSlot> itemSlotList, Boolean isSupplyMenu ) {
+                for( int i = menu_start; i < itemSlotList.Count && menu_start + displayNumber > i; i++ ) {
 
                     if( i != this.cursor ) {
-                        _.DrawIcon( curInv.items[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != this.cursor );
+                        _.DrawIcon( itemSlotList[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != this.cursor );
                     }
 
-                    this.PrintText( curInv.items[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), curInv.items[i].item.use_menu || !isSupplyMenu ? Color.White : Color.DarkGray );
-                    
-                    this.PrintTextRight( "" + curInv.items[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
+                    this.PrintText( itemSlotList[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), itemSlotList[i].item.use_menu || !isSupplyMenu ? Color.White : Color.DarkGray );
+
+                    this.PrintTextRight( "" + itemSlotList[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
                 }
 
                 int j = this.cursor;
-                _.DrawIcon( curInv.items[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
+                _.DrawIcon( itemSlotList[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
             }
 
             // This really shouldn't be in the submenu.  Meeeh, porting is fun.
@@ -153,7 +153,7 @@ namespace Sully {
         }
 
 
-        ItemSet subEquipment = null;
+        Inventory subEquipment = null;
 
         public int itemSubmenu = 0;
         public int equipSlotSubmenu = -1;
@@ -189,17 +189,17 @@ namespace Sully {
 
         public static string getFormattedTime( TimeSpan ts ) {
 
-            string t = _.sg.stopWatch.Elapsed.Hours + ":";
+            string t = ts.Hours + ":";
 
-            if( _.sg.stopWatch.Elapsed.Minutes < 10 ) {
+            if( ts.Minutes < 10 ) {
                 t += "0";
             }
-            t += _.sg.stopWatch.Elapsed.Minutes + ":";
+            t += ts.Minutes + ":";
 
-            if( _.sg.stopWatch.Elapsed.Seconds < 10 ) {
+            if( ts.Seconds < 10 ) {
                 t += "0";
             }
-            t += _.sg.stopWatch.Elapsed.Seconds;
+            t += ts.Seconds;
 
             return t;
         }
@@ -342,7 +342,7 @@ namespace Sully {
                 
                 int displayNumber = 10;
 
-                ItemSet curInv = _.sg.inventory.consumables;
+                List<ItemSlot> curInv = _.sg.inventory.consumables;
                 switch( itemSubmenu ) {
                     case 0:
                         curInv = _.sg.inventory.consumables;
@@ -355,19 +355,19 @@ namespace Sully {
                         break;
                 }
 
-                if( curInv.items.Count == 0 ) {
+                if( curInv.Count == 0 ) {
                     itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 180, itemBox.cursor, 13, 1, 0, 0 );
                     itemBox.PrintText( "No items.", _x + 32, _y );
 
                 } else {
 
-                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.items.Count, menu_start, 4 );
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.Count, menu_start, 4 );
                     _y += 4;
 
                     itemBox.DrawItemList( _x, _y, lineSize, menu_start, displayNumber, curInv, true );
 
                     int j = itemBox.cursor;
-                    itemBox.PrintText( curInv.items[j].item.description, _x, _y + 154 );
+                    itemBox.PrintText( curInv[j].item.description, _x, _y + 154 );
                 }
             };
 
@@ -482,11 +482,11 @@ namespace Sully {
                         menu_start = equipBox.cursor - 1;
                     }
 
-                    equipBox.MenuDrawSubWindow( _x, _y + 93, _x + 200, _y + 151, equipBox.cursor, lineSize, subEquipment.items.Count, menu_start, 4 );
+                    equipBox.MenuDrawSubWindow( _x, _y + 93, _x + 200, _y + 151, equipBox.cursor, lineSize, subEquipment.equipment.Count, menu_start, 4 );
 
-                    equipBox.DrawItemList( _x, _y + 93, lineSize, menu_start, 4, subEquipment, false );
+                    equipBox.DrawItemList( _x, _y + 93, lineSize, menu_start, 4, subEquipment.equipment, false );
 
-                    equipBox.PrintText( subEquipment.items[equipBox.cursor].item.description, _x, _y + 160 );
+                    equipBox.PrintText( subEquipment.equipment[equipBox.cursor].item.description, _x, _y + 160 );
                 }
             };
 
@@ -535,13 +535,13 @@ namespace Sully {
                 int menuMax = 0;
                 switch( itemSubmenu ) {
                     case 0:
-                        menuMax = _.sg.inventory.consumables.items.Count;
+                        menuMax = _.sg.inventory.consumables.Count;
                         break;
                     case 1:
-                        menuMax = _.sg.inventory.equipment.items.Count;
+                        menuMax = _.sg.inventory.equipment.Count;
                         break;
                     case 2:
-                        menuMax = _.sg.inventory.key.items.Count;
+                        menuMax = _.sg.inventory.key.Count;
                         break;
                 }
 
@@ -616,21 +616,21 @@ namespace Sully {
                     } else {
                         if( dir.up.DelayPress() ) {
                             equipBox.cursor--;
-                            if( equipBox.cursor < 0 ) equipBox.cursor = subEquipment.items.Count - 1;
+                            if( equipBox.cursor < 0 ) equipBox.cursor = subEquipment.equipment.Count - 1;
                         } else if( dir.down.DelayPress() ) {
                             equipBox.cursor++;
-                            if( equipBox.cursor >= subEquipment.items.Count ) equipBox.cursor = 0;
+                            if( equipBox.cursor >= subEquipment.equipment.Count ) equipBox.cursor = 0;
                         }
 
-                        pretendEquipItem = subEquipment.items[equipBox.cursor].item;
+                        pretendEquipItem = subEquipment.equipment[equipBox.cursor].item;
 
                         if( action.confirm.pressed ) {
 
                             PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
-                            pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Dequip( _.sg.inventory.equipment );
+                            pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Dequip( _.sg.inventory );
 
-                            if( subEquipment.items[equipBox.cursor].item != Item.none ) {
-                                pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Equip( subEquipment.items[equipBox.cursor].item, _.sg.inventory.equipment );
+                            if( subEquipment.equipment[equipBox.cursor].item != Item.none ) {
+                                pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Equip( subEquipment.equipment[equipBox.cursor].item, _.sg.inventory );
                             }
 
                             equipBox.cursor = equipSlotSubmenu;

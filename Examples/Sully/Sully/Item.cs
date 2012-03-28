@@ -6,53 +6,46 @@ using System.Text;
 
 namespace Sully {
 
-    public class Inventory {
-        public ItemSet consumables, equipment, key;
+    public class Inventory {       
+        public List<ItemSlot> consumables { get { return item_sets[(int)ItemType.Consumable]; } }
+        public List<ItemSlot> equipment { get { return item_sets[(int)ItemType.Equipment]; } }
+        public List<ItemSlot> key { get { return item_sets[(int)ItemType.Key]; } }
+
+        public List<ItemSlot>[] item_sets;
+        public Dictionary<Item, ItemSlot> slotIndex;
 
         public Inventory() {
-            consumables = new ItemSet();
-            equipment = new ItemSet();
-            key = new ItemSet();
+            item_sets = new List<ItemSlot>[Enum.GetValues(typeof(ItemType)).Length];
+            for (int i=0; i<item_sets.Length; i++) item_sets[i] = new List<ItemSlot>();
+            slotIndex = new Dictionary<Item, ItemSlot>();
         }
 
-        public Boolean HasItem( Item i ) {
-            return HasItem( i.name );
+        // Removes everything from inventory permanently
+        public void ClearInventory() {
+            foreach (List<ItemSlot> set in item_sets) set.Clear();
+            slotIndex.Clear();
         }
 
-        public Boolean HasItem( String s ) {
-            foreach( ItemSlot slot in consumables.items ) {
-                if( slot.item.name == s ) return true;
-            }
-
-            foreach( ItemSlot slot in equipment.items ) {
-                if( slot.item.name == s ) return true;
-            }
-
-            foreach( ItemSlot slot in key.items ) {
-                if( slot.item.name == s ) return true;
-            }
-
-            return false;
+        public Boolean HasItem(String name) { return HasItem(Item.masterItemList[name.ToLower()]); }
+        public Boolean HasItem(Item i) { return slotIndex.ContainsKey(i); }
+        
+        public void AddItem(String name, int quant) { AddItem(Item.masterItemList[name.ToLower()], quant); }
+        public void AddItem( Item i, int quant) {            
+            if (quant <= 0) throw new ArgumentOutOfRangeException("You can only add a positive number of items. To remove items, use TakeItem.");
+            _adjustItemQuantity(i,quant);
         }
 
-
-        public void AddItem( Item i, int quant ) {
-            if( i.is_supply ) {
-                consumables.AddItem( i, quant );
-            } else if( i.is_key ) {
-                key.AddItem( i, quant );
-            } else if( i.is_equipment ) {
-                equipment.AddItem( i, quant );
-            } else {
-                throw new System.InvalidOperationException( "Invalid item type." );
-            }
+        public void TakeItem(String name, int quant) { TakeItem(Item.masterItemList[name.ToLower()], quant); }
+        public void TakeItem(Item i, int quant) {
+            if (quant <= 0) throw new ArgumentOutOfRangeException("You can only take away a positive number of items. To add items, use AddItem.");
+            _adjustItemQuantity(i, -quant);
         }
 
-        public ItemSet GetWearableEquipmentSet( String klass, EquipSlotType slot ) {
+        public Inventory GetWearableEquipmentSet( String klass, EquipSlotType slot ) {
 
-            ItemSet ret = new ItemSet();
+            Inventory ret = new Inventory();
 
-            foreach( ItemSlot sl in equipment.items ) {
+            foreach( ItemSlot sl in this.equipment ) {
                 if( sl.item.equip_slot == slot && sl.item.equip_classes.Contains( klass ) ) {
                     ret.AddItem( sl.item, sl.quant );
                 }
@@ -64,30 +57,22 @@ namespace Sully {
 
             return ret;
         }
-    }
-
-    public class ItemSet {
-        public List<ItemSlot> items;
-
-        public ItemSet() {
-            items = new List<ItemSlot>();
+  
+        protected void _adjustItemQuantity(Item i, int quant) {
+            ItemSlot slot;
+            if (slotIndex.ContainsKey(i)) {
+                slot = slotIndex[i];
+                slot.quant += quant;
+            }
+            else {
+                slotIndex[i] = slot = new ItemSlot(i, quant);
+                item_sets[(int)i.type].Add(slot);
+            }
+            if (slot.quant < 0) slot.quant = 0;
+            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT ;
         }
 
-        public void AddItem( Item item, int quant ) {
-            if( quant <= 0 ) {
-                throw new System.InvalidOperationException( "You can only add positive numbers of items to your inventory." );
-            }
-
-            foreach( ItemSlot slot in items ) {
-                if( slot.item.name == item.name ) {
-                    slot.quant += quant;
-                    return;
-                }
-            }
-
-            items.Add( new ItemSlot( item, quant ) );
-        }
-
+        /*
         public void RemoveItem( Item item, int quant ) {
             if( quant <= 0 ) {
                 throw new System.InvalidOperationException( "You can only remove positive numbers of items to your inventory." );
@@ -109,9 +94,11 @@ namespace Sully {
                 }
             }
         }
+        */ 
     }
 
     public class ItemSlot {
+        public const int MAX_QUANT = 99;
         public Item item;
         public int quant;
 
@@ -121,13 +108,13 @@ namespace Sully {
         }
     }
 
-    
+    public enum ItemType { Consumable, Equipment, Key }
 
     public class Item {
         public static readonly Item none = new Item( "(None)", "Unequips current item." );
 
         public string name, description;
-        public bool is_supply, is_key, is_equipment;
+        public ItemType type;
         public int icon, price;
         public bool use_battle, use_menu;
         public string func_targetting, func_effect;
@@ -201,9 +188,9 @@ namespace Sully {
                 equip_classes = null;
             }
 
-            is_equipment = ( equip_classes != null );
-            is_key = (price == 0);
-            is_supply = (!is_key && !is_equipment); 
+            if (equip_classes != null) type = ItemType.Equipment;
+            else if (price == 0) type = ItemType.Key;
+            else type = ItemType.Consumable;
         }
 
         public static void initItems() {
@@ -226,29 +213,31 @@ namespace Sully {
         Item equipped;
         EquipSlotType slotType;
 
-
-
         public EquipmentSlot( EquipSlotType est ) {
             equipped = null;
             slotType = est;
         }
 
-        public void Equip(Item i, ItemSet container) {
+        public void Equip(Item i, Inventory inv) {
             if( equipped != null ) {
                 throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );
             }
 
-            container.RemoveItem( i, 1 );
+            if( i.type != ItemType.Equipment ) {
+                throw new Exception( "Tried to equip a non-equipment." );
+            }
+
+            inv.TakeItem( i, 1 );
 
             equipped = i;
         }
 
-        public Item Dequip( ItemSet container ) {
+        public Item Dequip( Inventory inv ) {
             if( equipped == null ) {
                 return null;
             }
 
-            container.AddItem( equipped, 1 );
+            inv.AddItem( equipped, 1 );
 
             Item i = equipped;
             equipped = null;
@@ -273,5 +262,4 @@ namespace Sully {
             return 0;
         }
     }
-
 }

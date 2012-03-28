@@ -27,7 +27,7 @@ namespace Sully {
                         pm[i].ent = _.sg.map.spawn_entity(_ms_x, _ms_y, pm[i].normal_chr );
                         _.sg.followers.add( pm[i].ent );
                     }
-
+                
                 }
 
                 _ms_x = -1;
