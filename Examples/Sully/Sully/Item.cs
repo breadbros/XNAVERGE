@@ -27,9 +27,7 @@ namespace Sully {
         }
 
         public Boolean HasItem(String name) { return HasItem(Item.masterItemList[name.ToLower()]); }
-        public Boolean HasItem( Item i ) {
-            return HasItem( i.name );
-        }
+        public Boolean HasItem(Item i) { return slotIndex.ContainsKey(i); }
         
         public void AddItem(String name, int quant) { AddItem(Item.masterItemList[name.ToLower()], quant); }
         public void AddItem( Item i, int quant) {            
