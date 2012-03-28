@@ -20,6 +20,7 @@ namespace Sully {
         // * Changing PartyMember.MAX_LEVEL
         // * Changing _.NUM_FLAGS
         // * Changing a PartyMember's name (only breaks saves with that character)
+        // * Changing the names, ordering, or number of character equipment slots.
         // For now we needn't increase the version for changes of this type, but once we release and have
         // saves in the wild, we'll need to.
         public int CURRENT_VERSION = 1;
@@ -90,7 +91,8 @@ namespace Sully {
         // Always returns true.
         protected bool _write_to_save(BinaryWriter writer, int version) {
             PartyMember[] cur_party;
-            
+
+            int temp;
             long old_pos, new_pos;
             
             // SAVE HEADER
@@ -121,12 +123,29 @@ namespace Sully {
             writer.Write(PartyData.partymemberData.Values.Count);
             foreach (PartyMember p in PartyData.partymemberData.Values) {
                 formatter.Serialize(writer.BaseStream, p);
+                old_pos = writer.BaseStream.Position;
+                writer.Write(0); // reserve this space for an int
+                temp = 0;
+                foreach (KeyValuePair<string, EquipmentSlot> kvp in p.equipment) {
+                    if (kvp.Value.getItem() != null) { // only save slots with stuff in them
+                        temp++;
+                        writer.Write(kvp.Key);
+                        writer.Write(kvp.Value.getItem().name);
+                    }
+                }
+                // Now go back to indicate how many slots were saved.
+                new_pos = writer.BaseStream.Position;
+                writer.BaseStream.Seek(old_pos, SeekOrigin.Begin);
+                writer.Write(temp);
+                writer.BaseStream.Seek(new_pos, SeekOrigin.Begin);
             }
 
             // INVENTORY DATA
-            // --------------            
-            foreach (List<ItemSlot> list in game.inventory.item_sets) {
-                writer.Write(list.Count);
+            // --------------         
+            temp = 0;
+            foreach (List<ItemSlot> list in game.inventory.item_sets) temp += list.Count;
+            writer.Write(temp);
+            foreach (List<ItemSlot> list in game.inventory.item_sets) {                
                 foreach (ItemSlot slot in list) {
                     writer.Write(slot.item.name);
                     writer.Write(slot.quant);
@@ -152,62 +171,77 @@ namespace Sully {
         }
 
         public void load(int save_num) {
-            String save_path;
+            String save_path, mapname = null;
+            Point player_coords = default(Point);
             save_path = get_save_filepath(save_num);
             if (!File.Exists(save_path)) throw new FileNotFoundException(save_path + " was not found.");
 
             using (FileStream fs = new FileStream(save_path, FileMode.Open)) {
                 using (BinaryReader reader = new BinaryReader(fs)) {
-                    _read_from_save(reader, CURRENT_VERSION);
+                    _read_from_save(reader, CURRENT_VERSION, ref mapname, ref player_coords);
                 }
             }
         }
 
-        protected void _read_from_save(BinaryReader reader, int version) {
+        protected void _read_from_save(BinaryReader reader, int version, ref string mapname, ref Point player_coords) {
             List<String> cur_party_names;
             List<PartyMember> characters;
-            int cur_int;
-
-            
+            int temp, temp2;            
 
             // LOAD HEADER
             // -----------
 
             if (reader.ReadInt32() != SAVE_SIGNATURE) throw new FormatException("Not a Sully Chronicles save file.");
-            cur_int = reader.ReadInt32();
-            if (cur_int != CURRENT_VERSION) throw new FormatException("Wrong save file format. This is a version " +
-                                                       cur_int + " save file, but a version " + CURRENT_VERSION +
+            temp = reader.ReadInt32();
+            if (temp != CURRENT_VERSION) throw new FormatException("Wrong save file format. This is a version " +
+                                                       temp + " save file, but a version " + CURRENT_VERSION +
                                                        " file is required."); // TODO: add version converters 
-            cur_int = reader.ReadInt32(); // offset to end of screencap
-            reader.BaseStream.Seek(cur_int, SeekOrigin.Current);
+            temp = reader.ReadInt32(); // offset to end of screencap
+            reader.BaseStream.Seek(temp, SeekOrigin.Current);
             
             game.saved_time = new TimeSpan(reader.ReadInt64());
             
-            cur_int = reader.ReadInt32(); // number of current party members
+            temp = reader.ReadInt32(); // number of current party members
             cur_party_names = new List<String>();
-            for (int i = 0; i < cur_int; i++) cur_party_names.Add(reader.ReadString());
+            for (int i = 0; i < temp; i++) cur_party_names.Add(reader.ReadString());
 
             reader.ReadString(); // location name -- currently unused
 
             // LOAD PARTY DATA
             // ---------------
+            game.inventory.ClearInventory();
             BinaryFormatter formatter = new BinaryFormatter();
             characters = new List<PartyMember>();
-            cur_int = reader.ReadInt32(); // # of characters total
-            for (int i=0; i<cur_int; i++) characters.Add((PartyMember)(formatter.Deserialize(reader.BaseStream)));
+            temp = reader.ReadInt32(); // # of characters total
+            for (int i = 0; i < temp; i++) {
+                characters.Add((PartyMember)(formatter.Deserialize(reader.BaseStream)));
+                characters[i].initEquipmentSlots();
+                temp2 = reader.ReadInt32(); // number of slots with things in them
+                for (int j = 0; j < temp2; j++) {
+                    characters[i].equipment[reader.ReadString()].Equip(reader.ReadString(), game.inventory);
+                }
+            }
 
             game.party.ClearParty(true);
             PartyData.LoadFromCollection(characters);
 
             // LOAD INVENTORY DATA
             // -------------------            
-            foreach (List<ItemSlot> list in game.inventory.item_sets) {
-                cur_int = reader.ReadInt32();
-                foreach (ItemSlot item in list) item.quant = 0;
-                for (int i = 0; i < cur_int; i++) {
-                    
-                }
+            temp = reader.ReadInt32();
+            for (int i = 0; i < temp; i++) {
+                game.inventory.AddItem(reader.ReadString(), reader.ReadInt32());
             }
+
+            // LOAD SCENARIO DATA
+            // ------------------
+            temp = _.flags.Length;
+            for (int i = 0; i < temp; i++) _.flags[i] = reader.ReadInt32();
+
+            // LOAD MAP DATA 
+            // -------------
+            mapname = reader.ReadString();
+            player_coords.X = reader.ReadInt32();
+            player_coords.Y = reader.ReadInt32();
 
         }
        

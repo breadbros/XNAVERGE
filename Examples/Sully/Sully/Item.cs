@@ -51,7 +51,7 @@ namespace Sully {
                 }
             }
 
-            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) {
+            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) { // can't unequip from RH or Body slots
                 ret.AddItem( Item.none, 1 );
             }
 
@@ -68,8 +68,12 @@ namespace Sully {
                 slotIndex[i] = slot = new ItemSlot(i, quant);
                 item_sets[(int)i.type].Add(slot);
             }
-            if (slot.quant < 0) slot.quant = 0;
-            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT ;
+            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT;
+            if (slot.quant <= 0) {
+                slotIndex.Remove(i);
+                item_sets[(int)i.type].Remove(slot);
+            }
+            
         }
 
         /*
@@ -209,17 +213,35 @@ namespace Sully {
         }
     }
 
+    public enum EquipSlotType { Accessory, RightHand, LeftHand, Body, NONE };
+
     public class EquipmentSlot {
         Item equipped;
         EquipSlotType slotType;
+        public static readonly string[] names = {"r. hand", "l. hand", "body", "acc. 1", "acc. 2"};
+
+        public static EquipSlotType typeFromName(string name) {
+            switch (Array.IndexOf<string>(names, name)) {
+                case 0: return EquipSlotType.RightHand;
+                case 1: return EquipSlotType.LeftHand;
+                case 2: return EquipSlotType.Body;
+                case 3: return EquipSlotType.Accessory;
+                case 4: return EquipSlotType.Accessory;
+                default: return EquipSlotType.NONE;
+            }
+        }
 
         public EquipmentSlot( EquipSlotType est ) {
             equipped = null;
             slotType = est;
         }
 
-        public void Equip(Item i, Inventory inv) {
-            if( equipped != null ) {
+        // Equips an item. If force = true, the item will destroy anything currently equipped in that slot!
+        public void Equip(string name, Inventory inv) { Equip(Item.masterItemList[name], inv, false); }
+        public void Equip(Item i, Inventory inv) { Equip(i, inv, false); }
+        public void Equip(string name, Inventory inv, bool force) { Equip(Item.masterItemList[name], inv, force); }
+        public void Equip(Item i, Inventory inv, bool force) {
+            if(!force && equipped != null ) {
                 throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );
             }
 
@@ -232,12 +254,14 @@ namespace Sully {
             equipped = i;
         }
 
-        public Item Dequip( Inventory inv ) {
+        // Removes an item. If discard = true, the item will be destroyed rather than sent to inventory!
+        public Item Dequip(Inventory inv) { return Dequip(inv, false); }
+        public Item Dequip( Inventory inv, bool discard ) {
             if( equipped == null ) {
                 return null;
             }
 
-            inv.AddItem( equipped, 1 );
+            if (!discard) inv.AddItem( equipped, 1 );
 
             Item i = equipped;
             equipped = null;
