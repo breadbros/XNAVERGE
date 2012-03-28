@@ -236,8 +236,12 @@ namespace Sully {
             slotType = est;
         }
 
-        public void Equip(Item i, Inventory inv) {
-            if( equipped != null ) {
+        // Equips an item. If force = true, the item will destroy anything currently equipped in that slot!
+        public void Equip(string name, Inventory inv) { Equip(Item.masterItemList[name], inv, false); }
+        public void Equip(Item i, Inventory inv) { Equip(i, inv, false); }
+        public void Equip(string name, Inventory inv, bool force) { Equip(Item.masterItemList[name], inv, force); }
+        public void Equip(Item i, Inventory inv, bool force) {
+            if(!force && equipped != null ) {
                 throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );
             }
 
@@ -250,12 +254,14 @@ namespace Sully {
             equipped = i;
         }
 
-        public Item Dequip( Inventory inv ) {
+        // Removes an item. If discard = true, the item will be destroyed rather than sent to inventory!
+        public Item Dequip(Inventory inv) { return Dequip(inv, false); }
+        public Item Dequip( Inventory inv, bool discard ) {
             if( equipped == null ) {
                 return null;
             }
 
-            inv.AddItem( equipped, 1 );
+            if (!discard) inv.AddItem( equipped, 1 );
 
             Item i = equipped;
             equipped = null;

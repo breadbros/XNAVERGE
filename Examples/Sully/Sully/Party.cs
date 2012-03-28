@@ -73,7 +73,7 @@ namespace Sully {
         public int cur_mp { get { return _cur_mp; } }
         public int cur_hp { get { return _cur_hp; } }
 
-        private void _initEquipmentSlots() {
+        public void initEquipmentSlots() {
             equipment_slots = new Dictionary<string, EquipmentSlot>();
             foreach (string slotname in EquipmentSlot.names) {
                 equipment_slots[slotname] = new EquipmentSlot(EquipmentSlot.typeFromName(slotname));
@@ -83,14 +83,14 @@ namespace Sully {
         public PartyMember( Entity e ) {
             basestats = new Dictionary<Stat, int>();
             ent = e;
-            _initEquipmentSlots();
+            initEquipmentSlots();
         }
 
         public PartyMember() {
             basestats = new Dictionary<Stat, int>();
             basestats.Add( Stat.ATK, 0 );
             basestats.Add( Stat.DEF, 0 );
-            _initEquipmentSlots();
+            initEquipmentSlots();
         }
 
         public int getStat( Stat s ) {
