@@ -53,6 +53,8 @@ namespace Sully {
         }
     }
 
+    public enum EquipSlotType { Accessory, RightHand, LeftHand, Body, NONE };
+
     public class PartyMember {
 
         Dictionary<Stat, int> basestats;
@@ -74,11 +76,11 @@ namespace Sully {
         private void _initEquipmentSlots() {
             equipment_slots = new Dictionary<string, EquipmentSlot>();
 
-            equipment_slots["r. hand"] = new EquipmentSlot();
-            equipment_slots["l. hand"] = new EquipmentSlot();
-            equipment_slots["body"] = new EquipmentSlot();
-            equipment_slots["acc. 1"] = new EquipmentSlot();
-            equipment_slots["acc. 2"] = new EquipmentSlot();
+            equipment_slots["r. hand"] = new EquipmentSlot( EquipSlotType.RightHand );
+            equipment_slots["l. hand"] = new EquipmentSlot( EquipSlotType.LeftHand );
+            equipment_slots["body"] = new EquipmentSlot( EquipSlotType.Body );
+            equipment_slots["acc. 1"] = new EquipmentSlot( EquipSlotType.Accessory );
+            equipment_slots["acc. 2"] = new EquipmentSlot( EquipSlotType.Accessory );
         }
 
         public PartyMember( Entity e ) {

@@ -115,6 +115,22 @@ namespace Sully {
                 }
             }
 
+            public void DrawItemList( int _x, int _y, int lineSize, int menu_start, int displayNumber, ItemSet curInv, Boolean isSupplyMenu ) {
+                for( int i = menu_start; i < curInv.items.Count && menu_start + displayNumber > i; i++ ) {
+
+                    if( i != this.cursor ) {
+                        _.DrawIcon( curInv.items[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != this.cursor );
+                    }
+
+                    this.PrintText( curInv.items[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), curInv.items[i].item.use_menu || !isSupplyMenu ? Color.White : Color.DarkGray );
+                    
+                    this.PrintTextRight( "" + curInv.items[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
+                }
+
+                int j = this.cursor;
+                _.DrawIcon( curInv.items[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
+            }
+
             // This really shouldn't be in the submenu.  Meeeh, porting is fun.
             public void MenuPrintStat( int x, int y, Stat stat, int value ) {
                 // Current HP/MP aren't stats in the same sense as the maximums, so they're not drawn by
@@ -136,9 +152,15 @@ namespace Sully {
             }
         }
 
+
+        ItemSet subEquipment = null;
+
         public int itemSubmenu = 0;
         public int equipSlotSubmenu = -1;
         public int partyCursor = -1;
+
+        // font specific stuff.  Dumb to be here.
+        int lineSize = 14;
 
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
         public MenuBox itemBox, skillBox, equipBox, statusBox, optionBox, saveBox;
@@ -313,8 +335,7 @@ namespace Sully {
 
                 int _x = x;
                 int _y = y + 20;
-
-                int lineSize = 14;
+                
                 int displayNumber = 10;
 
                 ItemSet curInv = _.sg.inventory.consumables;
@@ -339,30 +360,9 @@ namespace Sully {
                     itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.items.Count, menu_start, 4 );
                     _y += 4;
 
-                    for( int i = menu_start; i < curInv.items.Count && menu_start + displayNumber > i; i++ ) {
-/*
-
-                        if( master_items[supply_inventory[i].item_ref].use_flag & USE_MENU ) use = 0;
-                        else use = 1;
-                        PrintString( 55, 56 + ( 13 * ( i - menu_start ) ), screen, menu_font[use], master_items[supply_inventory[i].item_ref].name );
-                        PrintRight( 205, 56 + ( 13 * ( i - menu_start ) ), screen, menu_font[use], str( supply_inventory[i].quant ) );
-                        use = icon_get( master_items[supply_inventory[i].item_ref].icon );
-                        if( i == menu_item ) TBlit( 35, 54 + ( 13 * ( i - menu_start ) ), use, screen );
-                        else TScaleBlit( 35, 58 + ( 13 * ( i - menu_start ) ), 8, 8, use, screen );
-                        FreeImage( use );
-                        if( menu_start + 10 <= i ) i = _supply_count + 1;
-*/
-                        if( i != itemBox.cursor ) {
-                            _.DrawIcon( curInv.items[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != itemBox.cursor );
-                        }
-
-                        itemBox.PrintText( curInv.items[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), curInv.items[i].item.use_menu ? Color.White : Color.DarkGray );
-                        itemBox.PrintTextRight( "" + curInv.items[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
-                    }
+                    itemBox.DrawItemList( _x, _y, lineSize, menu_start, displayNumber, curInv, true );
 
                     int j = itemBox.cursor;
-                    _.DrawIcon( curInv.items[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
-
                     itemBox.PrintText( curInv.items[j].item.description, _x, _y + 154 );
                 }
             };
@@ -424,6 +424,7 @@ namespace Sully {
             };
 
             RenderDelegate drawEquip = ( int x, int y ) => {
+
                 PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
 
                 int _x = x + 4;
@@ -455,7 +456,18 @@ namespace Sully {
                         equipBox.PrintText( "No item equipped.", _x, _y + 160, Color.DarkGray );
                     }
                 } else {
-                    equipBox.PrintText( "ZOMFG", _x, _y + 160, Color.DodgerBlue );
+                    int menu_start = 0;
+                    if( menu_start + 3 < equipBox.cursor ) {
+                        menu_start = equipBox.cursor - 3;
+                    } else if( menu_start > equipBox.cursor && equipBox.cursor >= 0 ) {
+                        menu_start = equipBox.cursor - 1;
+                    }
+
+                    equipBox.MenuDrawSubWindow( _x, _y + 93, _x + 200, _y + 151, equipBox.cursor, lineSize, subEquipment.items.Count, menu_start, 4 );
+
+                    equipBox.DrawItemList( _x, _y + 93, lineSize, menu_start, 4, subEquipment, false );
+
+                    equipBox.PrintText( subEquipment.items[equipBox.cursor].item.description, _x, _y + 160 );
                 }
             };
 
@@ -561,17 +573,32 @@ namespace Sully {
 
                     if( action.confirm.pressed ) {
                         equipSlotSubmenu = equipBox.cursor;
+                        equipBox.cursor = 0;
+
+                        PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+
+                        subEquipment = _.sg.inventory.GetWearableEquipmentSet(
+                            pm.klass,
+                            pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].getSlotType() 
+                        );
                     }
 
                 } else {
 
                     if( action.cancel.pressed ) {
+                        equipBox.cursor = equipSlotSubmenu; 
                         equipSlotSubmenu = -1;
+                        subEquipment = null;
+                    } else {
+                        if( dir.up.DelayPress() ) {
+                            equipBox.cursor--;
+                            if( equipBox.cursor < 0 ) equipBox.cursor = subEquipment.items.Count - 1;
+                        } else if( dir.down.DelayPress() ) {
+                            equipBox.cursor++;
+                            if( equipBox.cursor >= subEquipment.items.Count ) equipBox.cursor = 0;
+                        }
                     }
                 }
-
-
-
             };
 
             ControlDelegate updateStatus = ( DirectionalButtons dir, VERGEActions action ) => {

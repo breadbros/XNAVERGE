@@ -221,7 +221,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+15;"
     },
     {
@@ -238,7 +238,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+22;"
     },
     {
@@ -255,7 +255,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+32;"
     },
     {
@@ -271,7 +271,7 @@
             "Knight",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+24;STK,+1;"
     },
     {
@@ -288,7 +288,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+45;"
     },
     {
@@ -305,7 +305,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+52;CTR,+5;"
     },
     {
@@ -320,7 +320,7 @@
         "equip_by": [
             "Knight"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+65;"
     },
     {
@@ -336,7 +336,7 @@
             "Knight",
             "Spearguy"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+40;STR,+5;HIT,+30;FER,+100;"
     },
     {
@@ -353,7 +353,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+26;FER,+25;"
     },
     {
@@ -370,7 +370,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+40;FER,+25;"
     },
     {
@@ -386,7 +386,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+30;HIT,+10;"
     },
     {
@@ -402,7 +402,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+42;HIT,+15;"
     },
     {
@@ -417,7 +417,7 @@
         "equip_by": [
             "Spearguy"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+56;HIT,+30;"
     },
     {
@@ -432,7 +432,7 @@
         "equip_by": [
             "Spearguy"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+62;HIT,+15;"
     },
     {
@@ -456,7 +456,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;MAG,+4;"
     },
     {
@@ -476,7 +476,7 @@
             "Thief",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+6;MAG,+9;CTR,-999;FER,-999;"
     },
     {
@@ -494,7 +494,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+12;MAG,+6;"
     },
     {
@@ -518,7 +518,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+16;MAG,+4;"
     },
     {
@@ -536,7 +536,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+15;MAG,+8;"
     },
     {
@@ -554,7 +554,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+23;MAG,+10;"
     },
     {
@@ -570,7 +570,7 @@
             "Wizard",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+25;MAG,+25;MP,+10;"
     },
     {
@@ -585,7 +585,7 @@
         "equip_by": [
             "Cleric"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+40;MAG,+20;FER,+20;HP,+15;"
     },
     {
@@ -601,7 +601,7 @@
             "Wizard",
             "Priest"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;MAG,+15;CTR,-999;FER,-999;"
     },
     {
@@ -619,7 +619,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+40;MAG,+4;MGR,+12;END,+12;"
     },
     {
@@ -634,7 +634,7 @@
         "equip_by": [
             "Wizard"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+30;HIT,+15;MAG,+12;CTR,+100;"
     },
     {
@@ -649,7 +649,7 @@
         "equip_by": [
             "Priest"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+35;MAG,+25;MGR,+20;END,+5;"
     },
     {
@@ -665,7 +665,7 @@
             "Priest",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+28;HIT,+10;FER,+10;"
     },
     {
@@ -681,7 +681,7 @@
             "Priest",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+36;HIT,+15;FER,+10;"
     },
     {
@@ -696,7 +696,7 @@
         "equip_by": [
             "Priest"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+48;HIT,+20;FER,+10;"
     },
     {
@@ -712,7 +712,7 @@
             "Engineer",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+24;HIT,-5;"
     },
     {
@@ -730,7 +730,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+30;"
     },
     {
@@ -747,7 +747,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+42;FER,+5;"
     },
     {
@@ -764,7 +764,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+55;FER,+25;CTR,-5;HIT,-8;REA,-1;"
     },
     {
@@ -779,7 +779,7 @@
         "equip_by": [
             "Engineer"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+40;STR,+15;MAG,+8;HIT,+8;"
     },
     {
@@ -795,7 +795,7 @@
             "Engineer",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+15;STK,+1;CTR,+15;FER,+20;"
     },
     {
@@ -811,7 +811,7 @@
             "Engineer",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+26;STK,+1;CTR,+15;FER,+20;"
     },
     {
@@ -827,7 +827,7 @@
             "Engineer",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+30;STK,+2;CTR,+15;FER,+20;"
     },
     {
@@ -851,7 +851,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;"
     },
     {
@@ -875,7 +875,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+13;"
     },
     {
@@ -894,7 +894,7 @@
             "Thief",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+18;HIT,+5;FER,+5;"
     },
     {
@@ -911,7 +911,7 @@
             "Thief",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+30;FER,+10;"
     },
     {
@@ -928,7 +928,7 @@
             "Thief",
             "Avatar"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+15;HIT,+10;STK,+1;"
     },
     {
@@ -943,7 +943,7 @@
         "equip_by": [
             "Thief"
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+42;HIT,+20;MAG,+6;"
     },
     {
@@ -967,7 +967,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;HIT,+10;STK,+2;CTR,+50;FER,-999;"
     },
     {
@@ -991,7 +991,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Right Hand",
+        "equip_slot": "RightHand",
         "equip_modcode": "HIT,+15;STK,-999;CTR,-999;FER,-999;"
     },
     {
@@ -1009,7 +1009,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+5;DOD,+5;"
     },
     {
@@ -1025,7 +1025,7 @@
             "Engineer",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+7;DOD,+7;"
     },
     {
@@ -1042,7 +1042,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+10;DOD,+10;"
     },
     {
@@ -1059,7 +1059,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+15;DOD,+10;"
     },
     {
@@ -1075,7 +1075,7 @@
             "Wizard",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "MAG,+4;MGR,+4;"
     },
     {
@@ -1091,12 +1091,12 @@
             "Wizard",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "MAG,+10;MGR,+10;"
     },
     {
         "name": "Main_Gauche",
-        "description": "Don't use it in your right hand - that would be gauche.|ATK+5, CTR+5, DOD+5",
+        "description": "Don't use it in your RightHand - that would be gauche.|ATK+5, CTR+5, DOD+5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1108,7 +1108,7 @@
             "Thief",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "ATK,+5;CTR,+5;DOD,+5;"
     },
     {
@@ -1125,7 +1125,7 @@
             "Thief",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "ATK,+10;CTR,+10;DOD,+10;"
     },
     {
@@ -1149,7 +1149,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+4;"
     },
     {
@@ -1173,7 +1173,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+10;"
     },
     {
@@ -1190,7 +1190,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "MGR,+3;"
     },
     {
@@ -1214,7 +1214,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "ATK,+6;"
     },
     {
@@ -1238,7 +1238,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "MAG,+6;"
     },
     {
@@ -1257,7 +1257,7 @@
             "Thief",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "STK,+1;HIT,-7;"
     },
     {
@@ -1275,7 +1275,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "MP,+10;"
     },
     {
@@ -1299,7 +1299,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Left Hand",
+        "equip_slot": "LeftHand",
         "equip_modcode": "REA,+1;"
     },
     {
@@ -1822,7 +1822,7 @@
         "equip_by": [
             "Engineer"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "HIT,+3;"
     },
     {
@@ -1837,7 +1837,7 @@
         "equip_by": [
             "Engineer"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "ATK,+5;"
     },
     {
@@ -1852,7 +1852,7 @@
         "equip_by": [
             "Engineer"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "REA,+1;"
     },
     {
@@ -1867,7 +1867,7 @@
         "equip_by": [
             "Engineer"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "HP,+5;"
     },
     {
@@ -1882,7 +1882,7 @@
         "equip_by": [
             "Engineer"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "MGR,+3;DEF,+3;END,+3;"
     },
     {
@@ -1897,7 +1897,7 @@
         "equip_by": [
             "Engineer"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "MGR,+6;"
     },
     {
@@ -1921,7 +1921,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DOD,+3;"
     },
     {
@@ -1939,7 +1939,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DEF,+1;MGR,+2;MAG,+3;"
     },
     {
@@ -1957,7 +1957,7 @@
             "Cleric",
             "Avatar"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DEF,+3;MGR,+5;MAG,+7;"
     },
     {
@@ -1981,7 +1981,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "MAG,+2;DOD,+3;"
     },
     {
@@ -2005,7 +2005,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DEF,+5;MGR,+5;DOD,+5;"
     },
     {
@@ -2022,7 +2022,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DEF,+5;"
     },
     {
@@ -2039,7 +2039,7 @@
             "Spearguy",
             "Avatar"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DEF,+10;"
     },
     {
@@ -2056,7 +2056,7 @@
             "Engineer",
             "Avatar"
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DEF,+3;MGR,+3;MAG,+4;"
     },
     {
@@ -2080,7 +2080,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "DOD,+20;REA,+1;"
     },
     {
@@ -2104,7 +2104,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "STR,+3;FER,+30;CTR,+5;"
     },
     {
@@ -2128,7 +2128,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "HP,+12;"
     },
     {
@@ -2165,7 +2165,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "MGR,+10;"
     },
     {
@@ -2189,7 +2189,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "CTR,+250;"
     },
     {
@@ -2213,7 +2213,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "REA,+2;"
     },
     {
@@ -2237,7 +2237,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "REA,+2;HIT,+10;ATK,+20;STR,+20;CTR,+250;FER,+250;"
     },
     {
@@ -2261,7 +2261,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "STK,+1;"
     },
     {
@@ -2337,7 +2337,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "HIT,+20;"
     },
     {
@@ -2361,7 +2361,7 @@
             "Avatar",
             ""
         ],
-        "equip_slot": "Acc. 1",
+        "equip_slot": "Accessory",
         "equip_modcode": "ATK,+6;STR,+6;"
     }
 ]

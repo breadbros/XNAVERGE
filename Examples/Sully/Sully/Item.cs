@@ -47,6 +47,19 @@ namespace Sully {
                 throw new System.InvalidOperationException( "Invalid item type." );
             }
         }
+
+        public ItemSet GetWearableEquipmentSet( String klass, EquipSlotType slot ) {
+
+            ItemSet ret = new ItemSet();
+
+            foreach( ItemSlot sl in equipment.items ) {
+                if( sl.item.equip_slot == slot && sl.item.equip_classes.Contains( klass ) ) {
+                    ret.AddItem( sl.item, sl.quant );
+                }
+            }
+
+            return ret;
+        }
     }
 
     public class ItemSet {
@@ -90,7 +103,10 @@ namespace Sully {
         public bool use_battle, use_menu;
         public string func_targetting, func_effect;
         public string[] equip_classes;
-        public string equip_slot, equip_modcode;
+        public string equip_modcode;
+
+        public EquipSlotType equip_slot; 
+
         public Dictionary<Stat, int> equip_stats;
 
         public static Dictionary<string, Item> masterItemList;
@@ -135,7 +151,11 @@ namespace Sully {
             func_targetting = (string)d["func_targetting"];
             func_effect = (string)d["func_effect"];
 
-            equip_slot = (string)d["equip_slot"];
+            try {
+                equip_slot = (EquipSlotType)Enum.Parse( typeof( EquipSlotType ), (string)d["equip_slot"], true );
+            } catch( ArgumentException ) {
+                equip_slot = EquipSlotType.NONE;
+            }
             equip_modcode = (string)d["equip_modcode"];
             equip_stats = _statsHelper( equip_modcode );
 
@@ -170,9 +190,13 @@ namespace Sully {
 
     public class EquipmentSlot {
         Item equipped;
+        EquipSlotType slotType;
 
-        public EquipmentSlot() {
+
+
+        public EquipmentSlot( EquipSlotType est ) {
             equipped = null;
+            slotType = est;
         }
 
         public void Equip(Item i) {
@@ -195,6 +219,10 @@ namespace Sully {
 
         public Item getItem() {
             return equipped;
+        }
+
+        public EquipSlotType getSlotType() {
+            return slotType;
         }
 
         public int getStatMod( Stat s ) {
