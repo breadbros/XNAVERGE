@@ -90,7 +90,8 @@ namespace Sully {
         // Always returns true.
         protected bool _write_to_save(BinaryWriter writer, int version) {
             PartyMember[] cur_party;
-            
+
+            int temp;
             long old_pos, new_pos;
             
             // SAVE HEADER
@@ -121,6 +122,21 @@ namespace Sully {
             writer.Write(PartyData.partymemberData.Values.Count);
             foreach (PartyMember p in PartyData.partymemberData.Values) {
                 formatter.Serialize(writer.BaseStream, p);
+                old_pos = writer.BaseStream.Position;
+                writer.Write(0); // reserve this space for an int
+                temp = 0;
+                foreach (KeyValuePair<string, EquipmentSlot> kvp in p.equipment) {
+                    if (kvp.Value.getItem() != null) { // only save slots with stuff in them
+                        temp++;
+                        writer.Write(kvp.Key);
+                        writer.Write(kvp.Value.getItem().name);
+                    }
+                }
+                // Now go back to indicate how many slots were saved.
+                new_pos = writer.BaseStream.Position;
+                writer.BaseStream.Seek(old_pos, SeekOrigin.Begin);
+                writer.Write(temp);
+                writer.BaseStream.Seek(new_pos, SeekOrigin.Begin);
             }
 
             // INVENTORY DATA

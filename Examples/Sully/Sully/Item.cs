@@ -213,9 +213,23 @@ namespace Sully {
         }
     }
 
+    public enum EquipSlotType { Accessory, RightHand, LeftHand, Body, NONE };
+
     public class EquipmentSlot {
         Item equipped;
         EquipSlotType slotType;
+        public static readonly string[] names = {"r. hand", "l. hand", "body", "acc. 1", "acc. 2"};
+
+        public static EquipSlotType typeFromName(string name) {
+            switch (Array.IndexOf<string>(names, name)) {
+                case 0: return EquipSlotType.RightHand;
+                case 1: return EquipSlotType.LeftHand;
+                case 2: return EquipSlotType.Body;
+                case 3: return EquipSlotType.Accessory;
+                case 4: return EquipSlotType.Accessory;
+                default: return EquipSlotType.NONE;
+            }
+        }
 
         public EquipmentSlot( EquipSlotType est ) {
             equipped = null;

@@ -51,9 +51,7 @@ namespace Sully {
                     throw new Exception( "Unknown stat '" + s + "'" );
             }
         }
-    }
-
-    public enum EquipSlotType { Accessory, RightHand, LeftHand, Body, NONE };
+    }    
 
     [Serializable]
     public class PartyMember {
@@ -61,7 +59,7 @@ namespace Sully {
 
         Dictionary<Stat, int> basestats;
 
-        private Dictionary<string, EquipmentSlot> equipment_slots;
+        [NonSerialized] private Dictionary<string, EquipmentSlot> equipment_slots;
         public Dictionary<string, EquipmentSlot> equipment { get { return equipment_slots; } }
 
         public static readonly string[] equipment_slot_order = new string[] { "r. hand", "l. hand", "body", "acc. 1", "acc. 2" };
@@ -77,12 +75,9 @@ namespace Sully {
 
         private void _initEquipmentSlots() {
             equipment_slots = new Dictionary<string, EquipmentSlot>();
-
-            equipment_slots["r. hand"] = new EquipmentSlot( EquipSlotType.RightHand );
-            equipment_slots["l. hand"] = new EquipmentSlot( EquipSlotType.LeftHand );
-            equipment_slots["body"] = new EquipmentSlot( EquipSlotType.Body );
-            equipment_slots["acc. 1"] = new EquipmentSlot( EquipSlotType.Accessory );
-            equipment_slots["acc. 2"] = new EquipmentSlot( EquipSlotType.Accessory );
+            foreach (string slotname in EquipmentSlot.names) {
+                equipment_slots[slotname] = new EquipmentSlot(EquipmentSlot.typeFromName(slotname));
+            }
         }
 
         public PartyMember( Entity e ) {
