@@ -227,7 +227,7 @@ namespace Sully {
                 if (String.Equals(name, p.name, StringComparison.CurrentCultureIgnoreCase)) {
                     found = true;
                     party.Remove(p);
-                    if (delete_entity) {
+                    if (delete_entity && p.ent != null) {
                         VERGEGame.game.map.delete_entity(p.ent);
                         p.ent = null;
                     }
@@ -237,8 +237,16 @@ namespace Sully {
             return found;
         }
 
-        // Remove everyone from the party, such as before loading a save.
-        public void ClearParty() {
+        // Remove everyone from the party, such as before loading a save. If delete_entities is true, any
+        // entities associated with the PartyMembers will be removed also.
+        public void ClearParty(bool delete_entities) {
+            foreach (PartyMember p in party) {
+                party.Remove(p);
+                if (delete_entities && p.ent != null) {
+                    VERGEGame.game.map.delete_entity(p.ent);
+                    p.ent = null;
+                }
+            }
         }
 
         public PartyMember[] getMembers() {
@@ -257,7 +265,7 @@ namespace Sully {
     }
 
     
-    class PartyData {
+    static class PartyData {
 
         public static Dictionary<string, LevelUpData[]> partyLevelUpData;
         public static Dictionary<string, PartyMember> partymemberData;
@@ -326,6 +334,19 @@ namespace Sully {
                 }
 
                 partyLevelUpData.Add( pm.name.ToLower(), data.ToArray() );
+            }
+        }
+
+        // Assuming the party data has already been initialized once, this will wipe partymemberData
+        // and reload it with the information from the collection passed. Level Up Data is not 
+        // changed, so this is mainly for reloading gamestate from a save file. 
+        // Also, note that if you're using this in something other than the slash-and-burn loadgame
+        // context, you'll need to fiddle with the Party manually to remove links to the old
+        // party members. 
+        public static void LoadFromCollection(ICollection<PartyMember> collection) {
+            partymemberData.Clear(); // TODO: Ensure nothing else links to these
+            foreach (PartyMember pm in collection) {
+                partymemberData.Add(pm.name.ToLower(), pm);
             }
         }
     }

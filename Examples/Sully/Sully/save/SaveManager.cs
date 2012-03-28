@@ -115,16 +115,16 @@ namespace Sully {
             foreach (PartyMember p in cur_party) writer.Write(p.name); // Order of characters in current party
             writer.Write("location name"); // not supported yet
 
-            // PARTY DATA (in same order as the list of names)
-            // -----------------------------------------------            
+            // PARTY DATA
+            // ----------
             BinaryFormatter formatter = new BinaryFormatter();
             writer.Write(PartyData.partymemberData.Values.Count);
             foreach (PartyMember p in PartyData.partymemberData.Values) {
                 formatter.Serialize(writer.BaseStream, p);
             }
 
-            // INVENTORY DATA (in same order as the list of names)
-            // -----------------------------------------------
+            // INVENTORY DATA
+            // --------------
             List<ItemSlot>[] sets = { game.inventory.consumables.items, game.inventory.equipment.items, game.inventory.key.items };
             foreach (List<ItemSlot> list in sets) {
                 writer.Write(list.Count);
@@ -196,6 +196,20 @@ namespace Sully {
             characters = new List<PartyMember>();
             cur_int = reader.ReadInt32(); // # of characters total
             for (int i=0; i<cur_int; i++) characters.Add((PartyMember)(formatter.Deserialize(reader.BaseStream)));
+
+            game.party.ClearParty(true);
+            PartyData.LoadFromCollection(characters);
+
+            // LOAD INVENTORY DATA
+            // -------------------
+            List<ItemSlot>[] sets = { game.inventory.consumables.items, game.inventory.equipment.items, game.inventory.key.items };
+            foreach (List<ItemSlot> list in sets) {
+                cur_int = reader.ReadInt32();
+                foreach (ItemSlot item in list) item.quant = 0;
+                for (int i = 0; i < cur_int; i++) {
+                    
+                }
+            }
 
         }
        
