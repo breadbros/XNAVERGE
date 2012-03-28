@@ -104,7 +104,7 @@ namespace Sully {
                 mod += es.getStatMod( s );
             }
 
-            return this.basestats[s] + mod;
+            return Math.Max(this.basestats[s] + mod, 1);
         }
 
         public string getXpUntilNextLevel() {
