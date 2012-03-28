@@ -57,9 +57,10 @@ namespace Sully {
             T_LANCE = 14,
             T_PAXTON = 15;
 
+        public const int NUM_FLAGS = 1500;
         public static void init( SullyGame sg ) {
             _.sg = sg;
-            _.flags = new int[1500];
+            _.flags = new int[NUM_FLAGS];
             _.pixel = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color ); 
             _.pixel.SetData( new[] { new Color( new Vector4( 255, 255, 255, 255 )) } );
         }

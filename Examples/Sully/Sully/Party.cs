@@ -30,15 +30,16 @@ namespace Sully {
         HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
     };
 
-
+    [Serializable]
     public class PartyMember {
+        public const int MAX_LEVEL = 50;
 
         Dictionary<Stat, int> basestats;
 
         Dictionary<string, EquipmentSlot> equipment_slots;
         public static readonly string[] equipment_slot_order = new string[] { "head", "body", "l. hand", "r. hand", "acc. 1", "acc. 2" };
 
-        public Entity ent;
+        [NonSerialized] public Entity ent;
         public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
 
         private int _level, _cur_xp, _cur_mp, _cur_hp;
@@ -76,7 +77,7 @@ namespace Sully {
         }
 
         public string getXpUntilNextLevel() {
-            if( level >= 50 ) return "---";
+            if( level >= PartyMember.MAX_LEVEL ) return "---";
 
             LevelUpData lud = PartyData.partyLevelUpData[name.ToLower()][this.level];
 
@@ -193,8 +194,8 @@ namespace Sully {
                 throw new Exception( "'"+safename+"' is already in your party.  NO CLONES ALLOWED." );
             }
 
-            if( level <= 0 || level > 50 ) {
-                throw new Exception( "Invalid level '" + level + "' for sully.  This game only supports [1,50]." );
+            if( level <= 0 || level > PartyMember.MAX_LEVEL ) {
+                throw new Exception( "Invalid level '" + level + "' for sully.  This game only supports [1," + PartyMember.MAX_LEVEL + "]." );
             }
 
             if( pm.level > level ) {
@@ -202,7 +203,7 @@ namespace Sully {
             }
 
             if( pm.ent == null ) {
-                pm.ent = new Entity( pm.normal_chr, "" ); // what's the purpose of entity name?
+                pm.ent = new Entity( pm.normal_chr, "" ); 
             }
 
             if( pm.level < level ) {
@@ -216,6 +217,36 @@ namespace Sully {
             }
 
             party.Add( pm );
+        }
+
+        // This removes a character from the party. If delete_entity is true, it will also get rid of the entity.
+        // Returns true if the character was actually in the party, false if not.
+        public bool RemovePartyMember(string name, bool delete_entity) {            
+            bool found = false;
+            foreach (PartyMember p in party) {
+                if (String.Equals(name, p.name, StringComparison.CurrentCultureIgnoreCase)) {
+                    found = true;
+                    party.Remove(p);
+                    if (delete_entity && p.ent != null) {
+                        VERGEGame.game.map.delete_entity(p.ent);
+                        p.ent = null;
+                    }
+                    break;
+                }
+            }
+            return found;
+        }
+
+        // Remove everyone from the party, such as before loading a save. If delete_entities is true, any
+        // entities associated with the PartyMembers will be removed also.
+        public void ClearParty(bool delete_entities) {
+            foreach (PartyMember p in party) {
+                party.Remove(p);
+                if (delete_entities && p.ent != null) {
+                    VERGEGame.game.map.delete_entity(p.ent);
+                    p.ent = null;
+                }
+            }
         }
 
         public PartyMember[] getMembers() {
@@ -234,7 +265,7 @@ namespace Sully {
     }
 
     
-    class PartyData {
+    static class PartyData {
 
         public static Dictionary<string, LevelUpData[]> partyLevelUpData;
         public static Dictionary<string, PartyMember> partymemberData;
@@ -298,11 +329,24 @@ namespace Sully {
                     }
                 }
 
-                if( data.Count != 50 ) {
-                    throw new Exception( "There must be 50 entries in your levelup datafile, holmes." );
+                if( data.Count != PartyMember.MAX_LEVEL ) {
+                    throw new Exception( "There must be " + PartyMember.MAX_LEVEL + " entries in your levelup datafile, holmes." );
                 }
 
                 partyLevelUpData.Add( pm.name.ToLower(), data.ToArray() );
+            }
+        }
+
+        // Assuming the party data has already been initialized once, this will wipe partymemberData
+        // and reload it with the information from the collection passed. Level Up Data is not 
+        // changed, so this is mainly for reloading gamestate from a save file. 
+        // Also, note that if you're using this in something other than the slash-and-burn loadgame
+        // context, you'll need to fiddle with the Party manually to remove links to the old
+        // party members. 
+        public static void LoadFromCollection(ICollection<PartyMember> collection) {
+            partymemberData.Clear(); // TODO: Ensure nothing else links to these
+            foreach (PartyMember pm in collection) {
+                partymemberData.Add(pm.name.ToLower(), pm);
             }
         }
     }

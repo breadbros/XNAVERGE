@@ -15,6 +15,7 @@ namespace XNAVERGE {
         public static Random rand = new Random();               
         public ContentManager MapContent; // this is used rather than the standard "Content" contentmanager to handle map-specific data        
 
+        public Environment.SpecialFolder user_storage_root = Environment.SpecialFolder.ApplicationData; 
         // The assembly/namespace to search for map scripts. By default, this is assumed to be the assembly and namespace of the method
         // that calls the VERGEGame constructor. If you want something different you'll have to set it before VERGEGame.Initialize().
         public Assembly main_assembly; 

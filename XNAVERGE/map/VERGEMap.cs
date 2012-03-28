@@ -27,7 +27,7 @@ namespace XNAVERGE {
         public virtual int pixel_height { get { return height * tileset.tilesize; } } // height (in pixels) of master layer (not updated automatically!)
         public virtual int num_layers { get { return _num_layers; } }
 
-        public String name, initscript, default_music;
+        public String name, asset, initscript, default_music;
         public RenderStack renderstack;
         public Tileset tileset;
         public TileLayer[] tiles; // these are ordered according to their order in the MAP file, not their rendering order.
@@ -45,8 +45,9 @@ namespace XNAVERGE {
         
         public MapScriptBank scripts;
 
-        public VERGEMap(String mapname, int ver, int numlayers, int numzones, int numents) {
+        public VERGEMap(String mapname, String assetname, int ver, int numlayers, int numzones, int numents) {
             name = mapname;
+            asset = assetname;
             version = ver;
             _num_layers = numlayers;
             _num_zones = numzones;

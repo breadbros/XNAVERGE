@@ -24,12 +24,16 @@ namespace Sully {
         public Menu mainMenu;
         public Color[] boxcolors;
         public Color menuColor;
+        public SaveManager saves;
 
-        McGrenderStack mcg;
+        public McGrenderStack mcg;
 
-        public 
+        // this is the time elapsed when the current game was loaded. The total time elapsed is this plus
+        // the session timer's elapsed time. 
+        public TimeSpan saved_time;
+        public TimeSpan total_time { get { return saved_time + stopWatch.Elapsed; } } // exact total playtime as of now
 
-        int money = 0;
+        public int money = 0;
         public int getMoney() {
             return money;
         }
@@ -90,6 +94,8 @@ namespace Sully {
 
 //            inventory.AddItem( i, 3 );
 
+            saves = new SaveManager(this);
+
             base.Initialize();
         }
 
@@ -144,6 +150,7 @@ namespace Sully {
             //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug
 
             this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
+            //saves.save(12);
         }
 
         /// <summary>

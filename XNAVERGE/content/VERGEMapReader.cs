@@ -22,7 +22,7 @@ namespace XNAVERGE.Content {
             System.Diagnostics.Debug.WriteLine("DEBUG: Loading map from " + input.AssetName + ".xnb.");
 
             string mapname = input.ReadString();
-            VERGEMap map = new VERGEMap(mapname, input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
+            VERGEMap map = new VERGEMap(mapname, input.AssetName, input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
             map.initscript = input.ReadString(); // currently ignored in lieu of a general initscript for all maps. wise/unwise? consider.
 
             if( !set_script_bank( map, input.AssetName ) ) {
