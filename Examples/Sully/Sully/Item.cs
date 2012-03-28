@@ -58,6 +58,10 @@ namespace Sully {
                 }
             }
 
+            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) {
+                ret.AddItem( Item.none, 1 );
+            }
+
             return ret;
         }
     }
@@ -117,8 +121,11 @@ namespace Sully {
         }
     }
 
+    
 
     public class Item {
+        public static readonly Item none = new Item( "(None)", "Unequips current item." );
+
         public string name, description;
         public bool is_supply, is_key, is_equipment;
         public int icon, price;
@@ -126,7 +133,6 @@ namespace Sully {
         public string func_targetting, func_effect;
         public string[] equip_classes;
         public string equip_modcode;
-
         public EquipSlotType equip_slot; 
 
         public Dictionary<Stat, int> equip_stats;
@@ -159,6 +165,12 @@ namespace Sully {
             }
 
             return d;
+        }
+
+        public Item( string name, string description ) {
+            this.name = name;
+            this.equip_slot = EquipSlotType.NONE;
+            this.description = description;
         }
 
         public Item( Dictionary<string, Object> d ) {

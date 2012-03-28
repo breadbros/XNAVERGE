@@ -2,7 +2,7 @@
     {
         "name": "Starlight",
         "description": "Restores 15 MP.",
-        "icon": 0,
+        "icon": 50,
         "price": 300,
         "use_battle": 1,
         "use_menu": 2,

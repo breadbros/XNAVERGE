@@ -602,7 +602,10 @@ namespace Sully {
 
                             PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
                             pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Dequip( _.sg.inventory.equipment );
-                            pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Equip( subEquipment.items[equipBox.cursor].item, _.sg.inventory.equipment );
+
+                            if( subEquipment.items[equipBox.cursor].item != Item.none ) {
+                                pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Equip( subEquipment.items[equipBox.cursor].item, _.sg.inventory.equipment );
+                            }
 
                             equipBox.cursor = equipSlotSubmenu;
                             equipSlotSubmenu = -1;
