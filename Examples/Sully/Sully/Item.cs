@@ -51,7 +51,7 @@ namespace Sully {
                 }
             }
 
-            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) {
+            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) { // can't unequip from RH or Body slots
                 ret.AddItem( Item.none, 1 );
             }
 
@@ -68,8 +68,12 @@ namespace Sully {
                 slotIndex[i] = slot = new ItemSlot(i, quant);
                 item_sets[(int)i.type].Add(slot);
             }
-            if (slot.quant < 0) slot.quant = 0;
-            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT ;
+            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT;
+            if (slot.quant <= 0) {
+                slotIndex.Remove(i);
+                item_sets[(int)i.type].Remove(slot);
+            }
+            
         }
 
         /*
