@@ -429,23 +429,27 @@ namespace Sully {
 
                 _drawStatusTop( _x, _y );
 
-
                 for( int i = 0; i < PartyMember.equipment_slot_order.Length; i++ ) {
 
-                    statusBox.PrintText( PartyMember.equipment_slot_order[i].ToUpper(), _x+8, _y + 94 + (i*12) );
+                    equipBox.PrintText( PartyMember.equipment_slot_order[i].ToUpper(), _x + 8, _y + 94 + ( i * 12 ) );
 
                     Item item = pm.equipment[PartyMember.equipment_slot_order[i]].getItem();
                     if( item != null ) {
-                        statusBox.PrintText( item.name, _x + 72, _y + 94 + ( i * 12 ) );
+                        equipBox.PrintText( item.name, _x + 72, _y + 94 + ( i * 12 ) );
                     } else {
-                        statusBox.PrintText( "(none)", _x + 72, _y + 94 + ( i * 12 ), Color.DarkGray );
+                        equipBox.PrintText( "(none)", _x + 72, _y + 94 + ( i * 12 ), Color.DarkGray );
                     }
                 }
 
+                if( equipBox.cursor < 0 ) equipBox.cursor = 0;
+                equipBox.PrintText( ">", _x, _y + 94 + ( equipBox.cursor * 12 ) );
 
-                
-
-                
+                Item curItem = pm.equipment[PartyMember.equipment_slot_order[equipBox.cursor]].getItem();
+                if( curItem != null ) {
+                    equipBox.PrintText( curItem.description, _x, _y + 160 );
+                } else {
+                    equipBox.PrintText( "No item equipped.", _x, _y + 160 );
+                }
             };
 
             RenderDelegate drawStatus = ( int x, int y ) => {
@@ -532,6 +536,18 @@ namespace Sully {
             ControlDelegate updateEquip = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( action.cancel.pressed ) {
                     LeaveMainMenu();
+                }
+
+                if( equipBox.cursor < 0 ) {
+                    equipBox.cursor = 0;
+                }
+
+                if( dir.up.DelayPress() ) {
+                    equipBox.cursor--;
+                    if( equipBox.cursor < 0 ) equipBox.cursor = PartyMember.equipment_slot_order.Length - 1;
+                } else if( dir.down.DelayPress() ) {
+                    equipBox.cursor++;
+                    if( equipBox.cursor >= PartyMember.equipment_slot_order.Length ) equipBox.cursor = 0;
                 }
             };
 
