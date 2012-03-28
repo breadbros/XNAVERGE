@@ -83,6 +83,28 @@ namespace Sully {
 
             items.Add( new ItemSlot( item, quant ) );
         }
+
+        public void RemoveItem( Item item, int quant ) {
+            if( quant <= 0 ) {
+                throw new System.InvalidOperationException( "You can only remove positive numbers of items to your inventory." );
+            }
+
+            foreach( ItemSlot slot in items ) {
+                if( slot.item.name == item.name ) {
+
+                    if( quant <= slot.quant ) {
+                        slot.quant -= quant;
+                    } else {
+                        throw new System.InvalidOperationException( "You can not remove more items than you had (had " + slot.quant + ", tried to remove "+quant+")." );
+                    }
+
+                    if( slot.quant == 0 ) {
+                        items.Remove( slot );
+                    }
+                    return;
+                }
+            }
+        }
     }
 
     public class ItemSlot {
@@ -199,18 +221,22 @@ namespace Sully {
             slotType = est;
         }
 
-        public void Equip(Item i) {
+        public void Equip(Item i, ItemSet container) {
             if( equipped != null ) {
                 throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );
             }
 
+            container.RemoveItem( i, 1 );
+
             equipped = i;
         }
 
-        public Item Dequip() {
+        public Item Dequip( ItemSet container ) {
             if( equipped == null ) {
-                throw new Exception( "Tried to Dequip when nothing was equipped." );
+                return null;
             }
+
+            container.AddItem( equipped, 1 );
 
             Item i = equipped;
             equipped = null;
