@@ -30,14 +30,39 @@ namespace Sully {
         HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
     };
 
+    public partial class _ {
+        public static Stat getStat( string s ) {
+            switch( s ) {
+                case "HP": return Stat.HP;
+                case "MP": return Stat.MP;
+                case "STR": return Stat.STR;
+                case "END": return Stat.END;
+                case "MAG": return Stat.MAG;
+                case "MGR": return Stat.MGR;
+                case "HIT": return Stat.HIT;
+                case "DOD": return Stat.DOD;
+                case "STK": return Stat.STK;
+                case "FER": return Stat.FER;
+                case "REA": return Stat.REA;
+                case "CTR": return Stat.CTR;
+                case "ATK": return Stat.ATK;
+                case "DEF": return Stat.DEF;
+                default: 
+                    throw new Exception( "Unknown stat '" + s + "'" );
+            }
+        }
+    }    
+
     [Serializable]
     public class PartyMember {
         public const int MAX_LEVEL = 50;
 
         Dictionary<Stat, int> basestats;
 
-        Dictionary<string, EquipmentSlot> equipment_slots;
-        public static readonly string[] equipment_slot_order = new string[] { "head", "body", "l. hand", "r. hand", "acc. 1", "acc. 2" };
+        [NonSerialized] private Dictionary<string, EquipmentSlot> equipment_slots;
+        public Dictionary<string, EquipmentSlot> equipment { get { return equipment_slots; } }
+
+        public static readonly string[] equipment_slot_order = new string[] { "r. hand", "l. hand", "body", "acc. 1", "acc. 2" };
 
         [NonSerialized] public Entity ent;
         public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
@@ -48,32 +73,54 @@ namespace Sully {
         public int cur_mp { get { return _cur_mp; } }
         public int cur_hp { get { return _cur_hp; } }
 
-        private void _initEquipmentSlots() {
+        public void initEquipmentSlots() {
             equipment_slots = new Dictionary<string, EquipmentSlot>();
-
-            equipment_slots["head"] = new EquipmentSlot();
-            equipment_slots["body"] = new EquipmentSlot();
-            equipment_slots["l. hand"] = new EquipmentSlot();
-            equipment_slots["r. hand"] = new EquipmentSlot();
-            equipment_slots["acc. 1"] = new EquipmentSlot();
-            equipment_slots["acc. 2"] = new EquipmentSlot();
+            foreach (string slotname in EquipmentSlot.names) {
+                equipment_slots[slotname] = new EquipmentSlot(EquipmentSlot.typeFromName(slotname));
+            }
         }
 
         public PartyMember( Entity e ) {
             basestats = new Dictionary<Stat, int>();
             ent = e;
-            _initEquipmentSlots();
+            initEquipmentSlots();
         }
 
         public PartyMember() {
             basestats = new Dictionary<Stat, int>();
             basestats.Add( Stat.ATK, 0 );
             basestats.Add( Stat.DEF, 0 );
-            _initEquipmentSlots();
+            initEquipmentSlots();
         }
 
         public int getStat( Stat s ) {
-            return this.basestats[s];
+            int mod = 0;
+
+            foreach( string key in equipment_slots.Keys ) {
+                EquipmentSlot es = equipment_slots[key];
+                mod += es.getStatMod( s );
+            }
+
+            return Math.Max(this.basestats[s] + mod, 1);
+        }
+
+        public int getPretendStat( Stat s, string slotKeyName, Item newItem ) {
+            int mod = 0;
+
+            foreach( string key in equipment_slots.Keys ) {
+
+                if( key != slotKeyName ) {
+                    EquipmentSlot e = equipment_slots[key];
+                    mod += e.getStatMod( s );
+                }
+            }
+
+            int value = 0;
+            newItem.equip_stats.TryGetValue( s, out value );
+
+            mod += value;
+
+            return Math.Max( this.basestats[s] + mod, 1 );
         }
 
         public string getXpUntilNextLevel() {

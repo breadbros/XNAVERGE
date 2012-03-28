@@ -367,7 +367,7 @@ namespace XNAVERGE {
             game.MapContent.Unload();
             try {
                 game.map = VERGEGame.game.MapContent.Load<VERGEMap>( new_map );
-            } catch( Exception e ) {
+            } catch( Exception ) {
                 game.map = VERGEGame.game.MapContent.Load<VERGEMap>( "maps/" + new_map );
             }
             tileset_override = null;

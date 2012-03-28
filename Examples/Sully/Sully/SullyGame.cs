@@ -89,8 +89,9 @@ namespace Sully {
             Item.initItems();
             Random random = new Random();
             foreach( String key in Item.masterItemList.Keys ) {
-                inventory.AddItem( Item.masterItemList[key], random.Next( 1, 99 ) );
+                inventory.AddItem( Item.masterItemList[key], random.Next( 1, 98 ) );
             }
+
 
 //            inventory.AddItem( i, 3 );
 
@@ -138,6 +139,18 @@ namespace Sully {
 
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );
+
+            Item i = Item.get( "Mace" );
+            inventory.AddItem( i, 1 );
+            party.getMembers()[0].equipment["r. hand"].Equip( i, inventory );
+
+            i = Item.get( "Buckler" );
+            inventory.AddItem( i, 1 );
+            party.getMembers()[0].equipment["l. hand"].Equip( i, inventory );
+
+            i = Item.get( "Jaunty_Cap" );
+            inventory.AddItem( i, 1 );
+            party.getMembers()[0].equipment["acc. 2"].Equip( i, inventory );
 
             /// spawn the player
 

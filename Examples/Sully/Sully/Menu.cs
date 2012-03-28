@@ -115,8 +115,24 @@ namespace Sully {
                 }
             }
 
+            public void DrawItemList( int _x, int _y, int lineSize, int menu_start, int displayNumber, List<ItemSlot> itemSlotList, Boolean isSupplyMenu ) {
+                for( int i = menu_start; i < itemSlotList.Count && menu_start + displayNumber > i; i++ ) {
+
+                    if( i != this.cursor ) {
+                        _.DrawIcon( itemSlotList[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != this.cursor );
+                    }
+
+                    this.PrintText( itemSlotList[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), itemSlotList[i].item.use_menu || !isSupplyMenu ? Color.White : Color.DarkGray );
+
+                    this.PrintTextRight( "" + itemSlotList[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
+                }
+
+                int j = this.cursor;
+                _.DrawIcon( itemSlotList[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
+            }
+
             // This really shouldn't be in the submenu.  Meeeh, porting is fun.
-            public void MenuPrintStat( int x, int y, Stat stat, int value ) {
+            public void MenuPrintStat( int x, int y, Stat stat, int value, Color c ) {
                 // Current HP/MP aren't stats in the same sense as the maximums, so they're not drawn by
                 // this function. They get drawn by a separate function, MenuBlitCast in menu_system.vc.
                 // It's kind of weird, but that's how Zip coded it.
@@ -131,13 +147,24 @@ namespace Sully {
                 // Other stats get printed in order in a two-line block. 
                 int xpos = ((int)stat) / 2; // This ensures that the stats are printed across two lines.
                 int ypos = ((int)stat) % 2; // This ensures that even-numbered stats go on the top row while odd-numbered stats go on the bottom   
-                PrintText( stat.ToString(), x + ( 32 * xpos ) - 32, y + 35 + ( 24 * ypos ) ); // print name
-                PrintText( ""+value, x + ( 32 * xpos ) - 32, y + 45 + ( 24 * ypos ) );  // print value
+                PrintText( stat.ToString(), x + ( 32 * xpos ) - 32, y + 35 + ( 24 * ypos ), c ); // print name
+                PrintText( ""+value, x + ( 32 * xpos ) - 32, y + 45 + ( 24 * ypos ), c );  // print value
             }
         }
 
+
+        Inventory subEquipment = null;
+
         public int itemSubmenu = 0;
+        public int equipSlotSubmenu = -1;
         public int partyCursor = -1;
+
+        // equip specific stuff
+        public Item pretendEquipItem = null;
+        public string pretendEquipSlotName = "";
+
+        // font specific stuff.  Dumb to be here.
+        int lineSize = 14;
 
         public MenuBox mainBox, commandBox, smallBox; // statusBox;
         public MenuBox itemBox, skillBox, equipBox, statusBox, optionBox, saveBox;
@@ -182,6 +209,7 @@ namespace Sully {
             highlightedMenu = commandBox;
             mainBox.child = partyBox;
             this.partyCursor = -1;
+            this.equipSlotSubmenu = -1;
         }
 
         public Menu() {
@@ -311,8 +339,7 @@ namespace Sully {
 
                 int _x = x;
                 int _y = y + 20;
-
-                int lineSize = 14;
+                
                 int displayNumber = 10;
 
                 List<ItemSlot> curInv = _.sg.inventory.consumables;
@@ -337,40 +364,15 @@ namespace Sully {
                     itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.Count, menu_start, 4 );
                     _y += 4;
 
-                    for( int i = menu_start; i < curInv.Count && menu_start + displayNumber > i; i++ ) {
-/*
-
-                        if( master_items[supply_inventory[i].item_ref].use_flag & USE_MENU ) use = 0;
-                        else use = 1;
-                        PrintString( 55, 56 + ( 13 * ( i - menu_start ) ), screen, menu_font[use], master_items[supply_inventory[i].item_ref].name );
-                        PrintRight( 205, 56 + ( 13 * ( i - menu_start ) ), screen, menu_font[use], str( supply_inventory[i].quant ) );
-                        use = icon_get( master_items[supply_inventory[i].item_ref].icon );
-                        if( i == menu_item ) TBlit( 35, 54 + ( 13 * ( i - menu_start ) ), use, screen );
-                        else TScaleBlit( 35, 58 + ( 13 * ( i - menu_start ) ), 8, 8, use, screen );
-                        FreeImage( use );
-                        if( menu_start + 10 <= i ) i = _supply_count + 1;
-*/
-                        if( i != itemBox.cursor ) {
-                            _.DrawIcon( curInv[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != itemBox.cursor );
-                        }
-
-                        itemBox.PrintText( curInv[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), curInv[i].item.use_menu ? Color.White : Color.DarkGray );
-                        itemBox.PrintTextRight( "" + curInv[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
-                    }
+                    itemBox.DrawItemList( _x, _y, lineSize, menu_start, displayNumber, curInv, true );
 
                     int j = itemBox.cursor;
-                    _.DrawIcon( curInv[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
-
                     itemBox.PrintText( curInv[j].item.description, _x, _y + 154 );
                 }
             };
 
             RenderDelegate drawSkill = ( int x, int y ) => { 
                 itemBox.PrintText( "Skill...", x, y );
-            };
-
-            RenderDelegate drawEquip = ( int x, int y ) => { 
-                itemBox.PrintText( "Equip...", x, y );
             };
 
             RenderDelegate drawOption = ( int x, int y ) => { 
@@ -408,6 +410,86 @@ namespace Sully {
                 }
             };
 
+            RenderDelegate _drawStatusTop = ( int _x, int _y ) => {
+                PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+                pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
+                statusBox.PrintText( pm.name, _x + 24, _y );
+                statusBox.PrintText( pm.klass, _x + 32, _y + 12 );
+
+                statusBox.PrintText( "Level:", _x + 112, _y ); statusBox.PrintTextRight( "" + pm.level, _x + 190, _y );
+                statusBox.PrintText( "HP:", _x + 112, _y + 12 ); statusBox.PrintTextRight( "" + pm.cur_hp + "/" + pm.getStat( Stat.HP ), _x + 190, _y + 12 );
+                statusBox.PrintText( "MP:", _x + 112, _y + 24 ); statusBox.PrintTextRight( "" + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 190, _y + 24 );
+
+                //
+                if( pretendEquipItem == null ) {
+                    foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
+                        statusBox.MenuPrintStat( _x + 8, _y + 4, s, pm.getStat( s ), Color.White );
+                    }
+                } else {
+
+                    foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
+                        int ps = pm.getPretendStat( s, pretendEquipSlotName, this.pretendEquipItem );
+                        int rs = pm.getStat( s );
+
+                        if( ps > rs ) {
+                            statusBox.MenuPrintStat( _x + 8, _y + 4, s, ps, Color.LimeGreen );
+                        } else if( ps < rs ) {
+                            statusBox.MenuPrintStat( _x + 8, _y + 4, s, ps, Color.Red );
+                        } else {
+                            statusBox.MenuPrintStat( _x + 8, _y + 4, s, ps, Color.White );
+                        }
+                    }
+                }
+            };
+
+            RenderDelegate drawEquip = ( int x, int y ) => {
+
+                PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+
+                int _x = x + 4;
+                int _y = y + 4;
+
+                _drawStatusTop( _x, _y );
+                
+                if( equipSlotSubmenu < 0 ) {
+
+                    for( int i = 0; i < PartyMember.equipment_slot_order.Length; i++ ) {
+
+                        equipBox.PrintText( PartyMember.equipment_slot_order[i].ToUpper(), _x + 8, _y + 94 + ( i * 12 ) );
+
+                        Item item = pm.equipment[PartyMember.equipment_slot_order[i]].getItem();
+                        if( item != null ) {
+                            equipBox.PrintText( item.name, _x + 72, _y + 94 + ( i * 12 ) );
+                        } else {
+                            equipBox.PrintText( "(none)", _x + 72, _y + 94 + ( i * 12 ), Color.DarkGray );
+                        }
+                    }
+
+                    if( equipBox.cursor < 0 ) equipBox.cursor = 0;
+                    equipBox.PrintText( ">", _x, _y + 94 + ( equipBox.cursor * 12 ) );
+
+                    Item curItem = pm.equipment[PartyMember.equipment_slot_order[equipBox.cursor]].getItem();
+                    if( curItem != null ) {
+                        equipBox.PrintText( curItem.description, _x, _y + 160 );
+                    } else {
+                        equipBox.PrintText( "No item equipped.", _x, _y + 160, Color.DarkGray );
+                    }
+                } else {
+                    int menu_start = 0;
+                    if( menu_start + 3 < equipBox.cursor ) {
+                        menu_start = equipBox.cursor - 3;
+                    } else if( menu_start > equipBox.cursor && equipBox.cursor >= 0 ) {
+                        menu_start = equipBox.cursor - 1;
+                    }
+
+                    equipBox.MenuDrawSubWindow( _x, _y + 93, _x + 200, _y + 151, equipBox.cursor, lineSize, subEquipment.equipment.Count, menu_start, 4 );
+
+                    equipBox.DrawItemList( _x, _y + 93, lineSize, menu_start, 4, subEquipment.equipment, false );
+
+                    equipBox.PrintText( subEquipment.equipment[equipBox.cursor].item.description, _x, _y + 160 );
+                }
+            };
+
             RenderDelegate drawStatus = ( int x, int y ) => {
 
                 if( this.partyCursor >= 0 && this.partyCursor == statusBox.cursor ) {
@@ -417,19 +499,7 @@ namespace Sully {
                     int _x = x + 4;
                     int _y = y + 4;
 
-                    pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
-                    statusBox.PrintText( pm.name, _x + 24, _y  );
-                    statusBox.PrintText( pm.klass, _x + 32, _y + 12 );
-
-                    statusBox.PrintText( "Level:", _x + 112, _y );      statusBox.PrintTextRight( ""+pm.level, _x + 190, _y );
-                    statusBox.PrintText( "HP:", _x + 112, _y + 12 );    statusBox.PrintTextRight( "" + pm.cur_hp + "/" + pm.getStat(Stat.HP), _x + 190, _y+12 );
-                    statusBox.PrintText( "MP:", _x + 112, _y + 24 );    statusBox.PrintTextRight( "" + pm.cur_mp + "/" + pm.getStat( Stat.MP ), _x + 190, _y + 24 );
-
-                    //
-
-                    foreach( Stat s in Enum.GetValues(typeof(Stat)) ) {
-                        statusBox.MenuPrintStat(_x+8, _y+12, s, pm.getStat(s));
-                    }
+                    _drawStatusTop( _x, _y );
 
                     statusBox.PrintText( "EXP " + pm.cur_xp, _x + 8, _y + 100 );
                     statusBox.PrintText( "NEXT " + pm.getXpUntilNextLevel(), _x + 104, _y + 100 );
@@ -502,8 +572,74 @@ namespace Sully {
             };
 
             ControlDelegate updateEquip = ( DirectionalButtons dir, VERGEActions action ) => {
-                if( action.cancel.pressed ) {
-                    LeaveMainMenu();
+
+                if( equipSlotSubmenu < 0 ) {
+                    if( action.cancel.pressed ) {
+                        LeaveMainMenu();
+                    }
+
+                    if( equipBox.cursor < 0 ) {
+                        equipBox.cursor = 0;
+                    }
+
+                    if( dir.up.DelayPress() ) {
+                        equipBox.cursor--;
+                        if( equipBox.cursor < 0 ) equipBox.cursor = PartyMember.equipment_slot_order.Length - 1;
+                    } else if( dir.down.DelayPress() ) {
+                        equipBox.cursor++;
+                        if( equipBox.cursor >= PartyMember.equipment_slot_order.Length ) equipBox.cursor = 0;
+                    }
+
+                    if( action.confirm.pressed ) {
+                        equipSlotSubmenu = equipBox.cursor;
+                        equipBox.cursor = 0;
+
+                        PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+
+                        pretendEquipSlotName = PartyMember.equipment_slot_order[equipSlotSubmenu];
+
+                        subEquipment = _.sg.inventory.GetWearableEquipmentSet(
+                            pm.klass,
+                            pm.equipment[pretendEquipSlotName].getSlotType() 
+                        );
+                    }
+
+                } else {
+
+                    if( action.cancel.pressed ) {
+                        equipBox.cursor = equipSlotSubmenu; 
+                        equipSlotSubmenu = -1;
+                        subEquipment = null;
+                        pretendEquipSlotName = "";
+                        pretendEquipItem = null;
+
+                    } else {
+                        if( dir.up.DelayPress() ) {
+                            equipBox.cursor--;
+                            if( equipBox.cursor < 0 ) equipBox.cursor = subEquipment.equipment.Count - 1;
+                        } else if( dir.down.DelayPress() ) {
+                            equipBox.cursor++;
+                            if( equipBox.cursor >= subEquipment.equipment.Count ) equipBox.cursor = 0;
+                        }
+
+                        pretendEquipItem = subEquipment.equipment[equipBox.cursor].item;
+
+                        if( action.confirm.pressed ) {
+
+                            PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
+                            pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Dequip( _.sg.inventory );
+
+                            if( subEquipment.equipment[equipBox.cursor].item != Item.none ) {
+                                pm.equipment[PartyMember.equipment_slot_order[equipSlotSubmenu]].Equip( subEquipment.equipment[equipBox.cursor].item, _.sg.inventory );
+                            }
+
+                            equipBox.cursor = equipSlotSubmenu;
+                            equipSlotSubmenu = -1;
+                            subEquipment = null;
+                            pretendEquipSlotName = "";
+                            pretendEquipItem = null;
+                        }
+                    }
                 }
             };
 

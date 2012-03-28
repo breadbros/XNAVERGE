@@ -41,7 +41,23 @@ namespace Sully {
             _adjustItemQuantity(i, -quant);
         }
 
+        public Inventory GetWearableEquipmentSet( String klass, EquipSlotType slot ) {
 
+            Inventory ret = new Inventory();
+
+            foreach( ItemSlot sl in this.equipment ) {
+                if( sl.item.equip_slot == slot && sl.item.equip_classes.Contains( klass ) ) {
+                    ret.AddItem( sl.item, sl.quant );
+                }
+            }
+
+            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) { // can't unequip from RH or Body slots
+                ret.AddItem( Item.none, 1 );
+            }
+
+            return ret;
+        }
+  
         protected void _adjustItemQuantity(Item i, int quant) {
             ItemSlot slot;
             if (slotIndex.ContainsKey(i)) {
@@ -52,10 +68,37 @@ namespace Sully {
                 slotIndex[i] = slot = new ItemSlot(i, quant);
                 item_sets[(int)i.type].Add(slot);
             }
-            if (slot.quant < 0) slot.quant = 0;
-            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT ;
+            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT;
+            if (slot.quant <= 0) {
+                slotIndex.Remove(i);
+                item_sets[(int)i.type].Remove(slot);
+            }
+            
         }
-        
+
+        /*
+        public void RemoveItem( Item item, int quant ) {
+            if( quant <= 0 ) {
+                throw new System.InvalidOperationException( "You can only remove positive numbers of items to your inventory." );
+            }
+
+            foreach( ItemSlot slot in items ) {
+                if( slot.item.name == item.name ) {
+
+                    if( quant <= slot.quant ) {
+                        slot.quant -= quant;
+                    } else {
+                        throw new System.InvalidOperationException( "You can not remove more items than you had (had " + slot.quant + ", tried to remove "+quant+")." );
+                    }
+
+                    if( slot.quant == 0 ) {
+                        items.Remove( slot );
+                    }
+                    return;
+                }
+            }
+        }
+        */ 
     }
 
     public class ItemSlot {
@@ -72,15 +115,54 @@ namespace Sully {
     public enum ItemType { Consumable, Equipment, Key }
 
     public class Item {
+        public static readonly Item none = new Item( "(None)", "Unequips current item." );
+
         public string name, description;
         public ItemType type;
         public int icon, price;
         public bool use_battle, use_menu;
         public string func_targetting, func_effect;
         public string[] equip_classes;
-        public string equip_slot, equip_modcode;
+        public string equip_modcode;
+        public EquipSlotType equip_slot; 
+
+        public Dictionary<Stat, int> equip_stats;
 
         public static Dictionary<string, Item> masterItemList;
+
+        public static Item get( string key ) {
+            return masterItemList[key.ToLower()];
+        }
+
+        private Dictionary<Stat, int> _statsHelper( string modcode ) {
+
+            if( modcode.Length == 0 ) {
+                return null;
+            }
+
+            Dictionary<Stat, int> d = new Dictionary<Stat, int>();
+
+            string[] pairs = modcode.Split( ';' );
+            foreach( string line in pairs ) {
+                string[] s = line.Split( ',' );
+                if( s.Length == 2 ) {
+                    d.Add( _.getStat( s[0] ), int.Parse( s[1] ) );
+                } else if( s.Length == 1 && s[0].Equals( "" ) ) {
+
+                } else {
+                    throw new Exception( "Invalid parse. '" + modcode + "'" );
+                }
+                
+            }
+
+            return d;
+        }
+
+        public Item( string name, string description ) {
+            this.name = name;
+            this.equip_slot = EquipSlotType.NONE;
+            this.description = description;
+        }
 
         public Item( Dictionary<string, Object> d ) {
 
@@ -94,8 +176,13 @@ namespace Sully {
             func_targetting = (string)d["func_targetting"];
             func_effect = (string)d["func_effect"];
 
-            equip_slot = (string)d["equip_slot"];
+            try {
+                equip_slot = (EquipSlotType)Enum.Parse( typeof( EquipSlotType ), (string)d["equip_slot"], true );
+            } catch( ArgumentException ) {
+                equip_slot = EquipSlotType.NONE;
+            }
             equip_modcode = (string)d["equip_modcode"];
+            equip_stats = _statsHelper( equip_modcode );
 
             ArrayList al = d["equip_by"] as ArrayList;
 
@@ -126,13 +213,77 @@ namespace Sully {
         }
     }
 
-    [Serializable]
-    class EquipmentSlot {
-        //        Equipment equipped;
+    public enum EquipSlotType { Accessory, RightHand, LeftHand, Body, NONE };
 
-        public EquipmentSlot() {
+    public class EquipmentSlot {
+        Item equipped;
+        EquipSlotType slotType;
+        public static readonly string[] names = {"r. hand", "l. hand", "body", "acc. 1", "acc. 2"};
 
+        public static EquipSlotType typeFromName(string name) {
+            switch (Array.IndexOf<string>(names, name)) {
+                case 0: return EquipSlotType.RightHand;
+                case 1: return EquipSlotType.LeftHand;
+                case 2: return EquipSlotType.Body;
+                case 3: return EquipSlotType.Accessory;
+                case 4: return EquipSlotType.Accessory;
+                default: return EquipSlotType.NONE;
+            }
+        }
+
+        public EquipmentSlot( EquipSlotType est ) {
+            equipped = null;
+            slotType = est;
+        }
+
+        // Equips an item. If force = true, the item will destroy anything currently equipped in that slot!
+        public void Equip(string name, Inventory inv) { Equip(Item.masterItemList[name], inv, false); }
+        public void Equip(Item i, Inventory inv) { Equip(i, inv, false); }
+        public void Equip(string name, Inventory inv, bool force) { Equip(Item.masterItemList[name], inv, force); }
+        public void Equip(Item i, Inventory inv, bool force) {
+            if(!force && equipped != null ) {
+                throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );
+            }
+
+            if( i.type != ItemType.Equipment ) {
+                throw new Exception( "Tried to equip a non-equipment." );
+            }
+
+            inv.TakeItem( i, 1 );
+
+            equipped = i;
+        }
+
+        // Removes an item. If discard = true, the item will be destroyed rather than sent to inventory!
+        public Item Dequip(Inventory inv) { return Dequip(inv, false); }
+        public Item Dequip( Inventory inv, bool discard ) {
+            if( equipped == null ) {
+                return null;
+            }
+
+            if (!discard) inv.AddItem( equipped, 1 );
+
+            Item i = equipped;
+            equipped = null;
+            return i;
+        }
+
+        public Item getItem() {
+            return equipped;
+        }
+
+        public EquipSlotType getSlotType() {
+            return slotType;
+        }
+
+        public int getStatMod( Stat s ) {
+            if( equipped == null ) return 0;
+
+            int value;
+            if( equipped.equip_stats.TryGetValue( s, out value ) )
+                return value;
+
+            return 0;
         }
     }
-
 }
