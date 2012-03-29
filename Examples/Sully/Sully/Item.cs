@@ -208,7 +208,7 @@ namespace Sully {
             foreach( Dictionary<string, Object> d in items  ) {
                 Item i = new Item(d);
                 
-                masterItemList.Add( ((string)d["name"]).ToLower(), i );
+                masterItemList.Add( i.name.ToLower(), i );
             }
         }
     }
@@ -237,9 +237,9 @@ namespace Sully {
         }
 
         // Equips an item. If force = true, the item will destroy anything currently equipped in that slot!
-        public void Equip(string name, Inventory inv) { Equip(Item.masterItemList[name], inv, false); }
+        public void Equip(string name, Inventory inv) { Equip(Item.masterItemList[name.ToLower()], inv, false); }
         public void Equip(Item i, Inventory inv) { Equip(i, inv, false); }
-        public void Equip(string name, Inventory inv, bool force) { Equip(Item.masterItemList[name], inv, force); }
+        public void Equip(string name, Inventory inv, bool force) { Equip(Item.masterItemList[name.ToLower()], inv, force); }
         public void Equip(Item i, Inventory inv, bool force) {
             if(!force && equipped != null ) {
                 throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );

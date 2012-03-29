@@ -249,7 +249,7 @@ namespace Sully {
                 throw new Exception( "You can't go backwards in level for '" + name + "'!  You asked for level " + level + ", and they had " + pm.level );
             }
 
-            if( pm.ent == null ) {
+            if( pm.ent == null && _.sg.map != null) {
                 pm.ent = new Entity( pm.normal_chr, "" ); 
             }
 
@@ -269,31 +269,34 @@ namespace Sully {
         // This removes a character from the party. If delete_entity is true, it will also get rid of the entity.
         // Returns true if the character was actually in the party, false if not.
         public bool RemovePartyMember(string name, bool delete_entity) {            
-            bool found = false;
+            PartyMember target = null;
             foreach (PartyMember p in party) {
                 if (String.Equals(name, p.name, StringComparison.CurrentCultureIgnoreCase)) {
-                    found = true;
-                    party.Remove(p);
-                    if (delete_entity && p.ent != null) {
-                        VERGEGame.game.map.delete_entity(p.ent);
-                        p.ent = null;
-                    }
+                    target = p;
                     break;
                 }
             }
-            return found;
+            if (target != null) {
+                party.Remove(target);
+                if (delete_entity && target.ent != null) {
+                    VERGEGame.game.map.delete_entity(target.ent);
+                    target.ent = null;
+                }
+                return true;
+            }
+            return false;
         }
 
         // Remove everyone from the party, such as before loading a save. If delete_entities is true, any
         // entities associated with the PartyMembers will be removed also.
         public void ClearParty(bool delete_entities) {
-            foreach (PartyMember p in party) {
-                party.Remove(p);
+            foreach (PartyMember p in party) {                
                 if (delete_entities && p.ent != null) {
                     VERGEGame.game.map.delete_entity(p.ent);
                     p.ent = null;
                 }
             }
+            party.Clear();
         }
 
         public PartyMember[] getMembers() {

@@ -139,6 +139,7 @@ namespace Sully {
 
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );
+            party.AddPartyMember("Lance", 1);
 
             Item i = Item.get( "Mace" );
             inventory.AddItem( i, 1 );
@@ -148,22 +149,23 @@ namespace Sully {
             inventory.AddItem( i, 1 );
             party.getMembers()[0].equipment["l. hand"].Equip( i, inventory );
 
-            i = Item.get( "Jaunty_Cap" );
+            i = Item.get( "Jaunty Cap" );
             inventory.AddItem( i, 1 );
             party.getMembers()[0].equipment["acc. 2"].Equip( i, inventory );
 
             /// spawn the player
 
             // load up the map
-            VERGEMap.switch_map( "paradise_isle2" );
+            _.MapSwitch( "paradise_isle2", 13, 19);
             //VERGEMap.switch_map( "underwater" );
             //player = map.spawn_entity( 29, 12, "darin" );
 
-            player = map.spawn_entity( 13, 19, "darin" );     // paradise isle real
+            
             //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug
 
             this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
-            //saves.save(12);
+            saves.save(12);
+            saves.read_headers();
         }
 
         /// <summary>
