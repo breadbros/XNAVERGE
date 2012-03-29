@@ -59,6 +59,12 @@ namespace Sully {
                 }
             }
 
+            public void PrintManyText( string[] ar, int rx, int ry ) {
+                for( int i = 0; i < ar.Length; i++ ) {
+                    PrintText( ar[i], rx, ry + (i*10), Color.White );
+                }
+            }
+
             public void PrintText( string s, int rx, int ry ) {
                 PrintText( s, rx, ry, Color.White );
             }
@@ -356,18 +362,19 @@ namespace Sully {
                 }
 
                 if( curInv.Count == 0 ) {
-                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 180, itemBox.cursor, 13, 1, 0, 0 );
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 144, itemBox.cursor, 13, 1, 0, 0 );
                     itemBox.PrintText( "No items.", _x + 32, _y );
 
                 } else {
 
-                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.Count, menu_start, 4 );
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 144, itemBox.cursor, lineSize, curInv.Count, menu_start, 4 );
                     _y += 4;
 
                     itemBox.DrawItemList( _x, _y, lineSize, menu_start, displayNumber, curInv, true );
 
                     int j = itemBox.cursor;
-                    itemBox.PrintText( curInv[j].item.description, _x, _y + 154 );
+
+                    itemBox.PrintManyText( _.autotext(curInv[j].item.description, 196), _x, _y + 142 );
                 }
             };
 
@@ -469,8 +476,8 @@ namespace Sully {
                     equipBox.PrintText( ">", _x, _y + 94 + ( equipBox.cursor * 12 ) );
 
                     Item curItem = pm.equipment[PartyMember.equipment_slot_order[equipBox.cursor]].getItem();
-                    if( curItem != null ) {
-                        equipBox.PrintText( curItem.description, _x, _y + 160 );
+                    if( curItem != null ) {                        
+                        equipBox.PrintManyText( _.autotext( curItem.description, 196 ), _x, _y + 153 );
                     } else {
                         equipBox.PrintText( "No item equipped.", _x, _y + 160, Color.DarkGray );
                     }
@@ -486,7 +493,7 @@ namespace Sully {
 
                     equipBox.DrawItemList( _x, _y + 93, lineSize, menu_start, 4, subEquipment.equipment, false );
 
-                    equipBox.PrintText( subEquipment.equipment[equipBox.cursor].item.description, _x, _y + 160 );
+                    equipBox.PrintManyText( _.autotext( subEquipment.equipment[equipBox.cursor].item.description, 196 ), _x, _y + 153 );                    
                 }
             };
 
@@ -504,10 +511,7 @@ namespace Sully {
                     statusBox.PrintText( "EXP " + pm.cur_xp, _x + 8, _y + 100 );
                     statusBox.PrintText( "NEXT " + pm.getXpUntilNextLevel(), _x + 104, _y + 100 );
 
-                    int autotext;
-                    statusBox.PrintText( "DESCRIPTION - FIX WITH AUTOTEXT LATER", _x, _y + 170 );
-                    statusBox.PrintText( pm.description, _x, _y + 182 );
-
+                    equipBox.PrintManyText( _.autotext( pm.description, 190 ), _x, _y + 170 );
 
                 } else {
                     drawParty( x, y );
