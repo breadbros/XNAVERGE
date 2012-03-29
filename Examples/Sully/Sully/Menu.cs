@@ -219,10 +219,10 @@ namespace Sully {
             boxcolors[2] = new Color( 144, 144, 144 );
 
             activeBgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
-            activeBgColor.SetData( new[] { new Color( new Vector4( 140, 0, 140, 63 ) ) } );
+            activeBgColor.SetData(new[] { new Color(new Vector4(140 / 255f, 0, 140 / 255f, 63 / 255f)) });
 
             inactiveBgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
-            inactiveBgColor.SetData( new[] { new Color( new Vector4( 0, 0, 0, 63 ) ) } );
+            inactiveBgColor.SetData(new[] { new Color(new Vector4(0, 0, 0, 63 / 255f)) });
 
             ControlDelegate cd1 = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( commandBox.child != null ) {
