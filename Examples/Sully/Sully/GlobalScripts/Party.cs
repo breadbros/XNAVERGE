@@ -11,7 +11,9 @@ namespace Sully {
         public static Action _PlayerMove_Action;
 
         public static int _ms_x = -1, _ms_y = -1;
-        public static void MapSwitch( string map, int x, int y ) {
+
+        public static void MapSwitch(string map, int x, int y) { MapSwitch(map, x, y, false); }
+        public static void MapSwitch( string map, int x, int y, bool pixel_coordinates ) {
             _ms_x = x;
             _ms_y = y;
 
@@ -21,10 +23,11 @@ namespace Sully {
                     PartyMember[] pm = _.sg.party.getMembers();
 
                     pm[0].ent = _.sg.player = _.sg.map.spawn_entity(_ms_x, _ms_y, pm[0].normal_chr );
+                    if (pixel_coordinates) sg.player.move_to(_ms_x, _ms_y);
                     _.sg.followers.clear();
                 
                     for( int i = 1; i<pm.Length; i++ ) {
-                        pm[i].ent = _.sg.map.spawn_entity(_ms_x, _ms_y, pm[i].normal_chr );
+                        pm[i].ent = _.sg.map.spawn_entity(0, 0, pm[i].normal_chr );
                         _.sg.followers.add( pm[i].ent );
                     }
                 
@@ -66,9 +69,13 @@ namespace Sully {
             sg.player.move_to_tile( x, y );
         }
 
-        public static void ChangeMap( string mapAssetname, int x, int y, int fademode ) {
+        public static void ChangeMap(string mapAssetname, int x, int y, int fademode) { ChangeMap(mapAssetname, x, y, fademode, false); }
+        public static void ChangeMap( string mapAssetname, int x, int y, int fademode, bool pixel_coordinates ) {
             VERGEMap.switch_map( mapAssetname );
-            sg.player.move_to_tile( x, y );
+            if (sg.player != null) {
+                if (pixel_coordinates) sg.player.move_to(x, y);
+                else sg.player.move_to_tile(x, y);
+            }
         }
     }
 }

@@ -27,8 +27,9 @@ namespace Sully {
 
         // saves are numbered from 0 to 99. You can change this, but note that file naming assumes
         // a limit of 1000 (save number 999).
-        public static int MAX_SAVES = 999;
+        public static int MAX_SAVES = 1000;
         public readonly Point THUMBNAIL_SIZE = new Point(64, 48); // if you change this you'll need to move to a new version
+        public List<SaveHeader> headers;
 
         public String save_location {
             get { return Path.Combine(Environment.GetFolderPath(game.user_storage_root), "Sully Chronicles"); }
@@ -37,7 +38,9 @@ namespace Sully {
         private SullyGame game;
 
         public SaveManager(SullyGame game) {
-            this.game = game;            
+            this.game = game;
+            headers = new List<SaveHeader>();
+            read_headers();
         }
 
         public String get_save_filepath(int save_num) {
@@ -49,6 +52,36 @@ namespace Sully {
             return Path.Combine(save_location, "$$BACKUP.sav");
         }
 
+        // Reads headers from the save files into SaveHeader structs and puts them in the headers list.
+        // The headers are loaded in order, but missing files are skipped when building the lists.
+        public void read_headers() {           
+            for (int i = 0; i < MAX_SAVES; i++) read_header(i);                                            
+        }
+
+        protected void read_header(int save_num) {            
+            SaveHeader header;           
+            int temp;
+            string filename = get_save_filepath(save_num); ;
+
+            if (File.Exists(filename)) {
+                using (FileStream fs = new FileStream(filename, FileMode.Open)) {
+                    using (BinaryReader reader = new BinaryReader(fs)) {
+
+                        header = new SaveHeader(this, save_num);
+                        header.save_idx = save_num;
+
+                        if (reader.ReadInt32() != SAVE_SIGNATURE) throw new FormatException("Not a Sully Chronicles save file: " + filename);
+                        temp = reader.ReadInt32(); // version (ignore for now)
+                        header.screencap = read_thumbnail_screencap(reader);
+                        header.playtime = new TimeSpan(reader.ReadInt64());
+                        temp = reader.ReadInt32();
+                        for (int j = 0; j < temp; j++) header.party.Add(reader.ReadString());
+                        header.location = reader.ReadString(); // location name (currently unimplemented);                        
+                    }
+                }
+            }
+        }
+
         // Takes a tiny screencap of the current map renderstack (ignoring mcgrender layers) 
         // and sticks it into the given stream. 
         protected void write_thumbnail_screencap(Stream stream) {
@@ -58,6 +91,14 @@ namespace Sully {
                 game.GraphicsDevice.SetRenderTarget(null);
                 screencap.SaveAsPng(stream, THUMBNAIL_SIZE.X, THUMBNAIL_SIZE.Y);                
             }            
+        }
+
+        protected Texture2D read_thumbnail_screencap(BinaryReader reader) {
+            Texture2D image;
+            using (MemoryStream ms = new MemoryStream(reader.ReadBytes(reader.ReadInt32()))) {
+                image = Texture2D.FromStream(_.sg.GraphicsDevice, ms);
+            }
+            return image;
         }
 
         // Creates the game subdirectory if it's not already there
@@ -83,8 +124,11 @@ namespace Sully {
                     // add more diagnostics here if it becomes a problem
                 }
             }
-            if (!completed) { 
+            if (!completed) {
                 if (File.Exists(backup_path)) File.Copy(backup_path, save_path, true);
+            }
+            else {
+                read_header(save_num);
             }
         }        
 
@@ -180,7 +224,8 @@ namespace Sully {
                 using (BinaryReader reader = new BinaryReader(fs)) {
                     _read_from_save(reader, CURRENT_VERSION, ref mapname, ref player_coords);
                 }
-            }
+            }            
+            _.MapSwitch(mapname, player_coords.X, player_coords.Y, true);
         }
 
         protected void _read_from_save(BinaryReader reader, int version, ref string mapname, ref Point player_coords) {
@@ -224,6 +269,9 @@ namespace Sully {
 
             game.party.ClearParty(true);
             PartyData.LoadFromCollection(characters);
+            foreach (string character in cur_party_names) {
+                game.party.AddPartyMember(character, PartyData.partymemberData[character.ToLower()].level);
+            }
 
             // LOAD INVENTORY DATA
             // -------------------            
