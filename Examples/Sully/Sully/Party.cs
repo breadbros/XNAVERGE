@@ -54,7 +54,9 @@ namespace Sully {
         public static readonly string[] equipment_slot_order = new string[] { "r. hand", "l. hand", "body", "acc. 1", "acc. 2" };
 
         [NonSerialized] public Entity ent;
-        public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
+        public string name, normal_chr, overworld_chr, battle_spr, statfile, description;
+
+        public Klass klass;
 
         private int _level, _cur_xp, _cur_mp, _cur_hp;
         public int level  { get { return _level; }  }
@@ -330,7 +332,7 @@ namespace Sully {
                         if( words.Length == 6 ) {
                             PartyMember pm = new PartyMember();
                             pm.name = words[0];
-                            pm.klass = words[1];
+                            pm.klass = Klass.getKlass( words[1] );
                             pm.normal_chr = words[2];
                             pm.overworld_chr = words[3];
                             pm.battle_spr = words[4];
@@ -402,7 +404,7 @@ namespace Sully {
 
             
             foreach( string key in dict.Keys ) {
-
+                
                 Klass k = new Klass( 
                     key, 
                     dict[key] as Dictionary<string, object>
@@ -413,24 +415,27 @@ namespace Sully {
         }
 
         public static Klass getKlass( string s ) {
-            Klass k = null;
-            masterKlassList.TryGetValue( s.ToLower(), out k );
+            Klass k = masterKlassList[s.ToLower()];
 
             if( k == null ) {
                 throw new Exception( "Attempted to get an invalid klass named '"+s+"'.  Jerk." );
             }
 
-            return null;
+            return k;
         }
 
-        string name, description;
-        string[] skills;
+        public string name { get {  return _name; } }  
+        public string description { get {  return _description; } }
+        public string[] skills { get { return _skills; } }
+
+        private string _name, _description;
+        private string[] _skills;
 
         public Klass( string name, Dictionary<string, object> dict )  {
-            this.name = name;
-            this.description = dict["description"] as string;
+            this._name = name;
+            this._description = dict["description"] as string;
             ArrayList ar = dict["skills"] as ArrayList;
-            this.skills = (string[])ar.ToArray( typeof(string) );
+            this._skills = (string[])ar.ToArray( typeof(string) );
         }
     }
 }

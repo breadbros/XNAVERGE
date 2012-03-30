@@ -52,8 +52,10 @@ namespace Sully {
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new SullyGlobalScripts(this);
 
+            Klass.initClasses();
             PartyData.InitializePartyData();
-
+            Item.initItems();
+            
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );
@@ -85,17 +87,12 @@ namespace Sully {
             menuColor = new Color( 128,0,128 );
 
             inventory = new Inventory();
+            saves = new SaveManager(this);
 
-            Item.initItems();
             Random random = new Random();
             foreach( String key in Item.masterItemList.Keys ) {
                 inventory.AddItem( Item.masterItemList[key], random.Next( 1, 98 ) );
             }
-
-
-//            inventory.AddItem( i, 3 );
-
-            saves = new SaveManager(this);
 
             base.Initialize();
         }
@@ -119,7 +116,6 @@ namespace Sully {
 
             //initFont();
 
-            Klass.initClasses();
 
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );

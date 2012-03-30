@@ -41,7 +41,7 @@ namespace Sully {
             _adjustItemQuantity(i, -quant);
         }
 
-        public Inventory GetWearableEquipmentSet( String klass, EquipSlotType slot ) {
+        public Inventory GetWearableEquipmentSet( Klass klass, EquipSlotType slot ) {
 
             Inventory ret = new Inventory();
 
@@ -118,7 +118,7 @@ namespace Sully {
         public int icon, price;
         public bool use_battle, use_menu;
         public string func_targetting, func_effect;
-        public string[] equip_classes;
+        public Klass[] equip_classes;
         public string equip_modcode;
         public EquipSlotType equip_slot; 
 
@@ -183,7 +183,14 @@ namespace Sully {
             ArrayList al = d["equip_by"] as ArrayList;
 
             if( al.Count > 0 ) {
-                equip_classes = (string[])al.ToArray( typeof( string ) );
+                ArrayList ar = new ArrayList();
+                
+                foreach( string s in al ) {
+                    if( s == "" ) continue;
+
+                    ar.Add( Klass.getKlass(s) );
+                }
+                equip_classes = (Klass[])ar.ToArray( typeof( Klass ) );
             } else {
                 equip_classes = null;
             }

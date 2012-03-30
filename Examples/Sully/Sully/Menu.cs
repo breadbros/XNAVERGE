@@ -416,7 +416,7 @@ namespace Sully {
 
                     pm.ent.DrawAt( new Rectangle( x, _y, 16, 32 ), 0 );
                     partyBox.PrintText( pm.name, _x + 32, _y, lightColor );
-                    partyBox.PrintText( pm.klass, _x + 90, _y, darkColor );
+                    partyBox.PrintText( pm.klass.name, _x + 90, _y, darkColor );
                     partyBox.PrintTextRight( "LV.    ", x + 200, _y, darkColor );
                     partyBox.PrintTextRight( "" + pm.level, x + 200, _y, darkColor );
 
@@ -431,7 +431,7 @@ namespace Sully {
                 PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
                 pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
                 statusBox.PrintText( pm.name, _x + 24, _y );
-                statusBox.PrintText( pm.klass, _x + 32, _y + 12 );
+                statusBox.PrintText( pm.klass.name, _x + 32, _y + 12 );
 
                 statusBox.PrintText( "Level:", _x + 112, _y ); statusBox.PrintTextRight( "" + pm.level, _x + 190, _y );
                 statusBox.PrintText( "HP:", _x + 112, _y + 12 ); statusBox.PrintTextRight( "" + pm.cur_hp + "/" + pm.getStat( Stat.HP ), _x + 190, _y + 12 );
