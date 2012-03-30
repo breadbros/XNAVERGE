@@ -332,7 +332,7 @@ namespace Sully {
                         if( words.Length == 6 ) {
                             PartyMember pm = new PartyMember();
                             pm.name = words[0];
-                            pm.klass = Klass.getKlass( words[1] );
+                            pm.klass = Klass.get( words[1] );
                             pm.normal_chr = words[2];
                             pm.overworld_chr = words[3];
                             pm.battle_spr = words[4];
@@ -414,7 +414,7 @@ namespace Sully {
             }
         }
 
-        public static Klass getKlass( string s ) {
+        public static Klass get( string s ) {
             Klass k = masterKlassList[s.ToLower()];
 
             if( k == null ) {

@@ -188,7 +188,7 @@ namespace Sully {
                 foreach( string s in al ) {
                     if( s == "" ) continue;
 
-                    ar.Add( Klass.getKlass(s) );
+                    ar.Add( Klass.get(s) );
                 }
                 equip_classes = (Klass[])ar.ToArray( typeof( Klass ) );
             } else {
