@@ -21,7 +21,7 @@ namespace XNAVERGE.Content {
     public class TilesetReader : ContentTypeReader<TRead> {
         protected override TRead Read(ContentReader input, TRead nobody_seems_to_know_what_this_argument_is_for) {
             int ver, tilesize, numtiles, numobs, numanim, cur_int;
-            uint[] pixels;
+            byte[] pixels;
             Texture2D image;
             Tileset tileset;
 
@@ -33,10 +33,8 @@ namespace XNAVERGE.Content {
 
             cur_int = input.ReadInt32(); // texture dimensions (it's square, so one side will do)            
             image = new Texture2D(VERGEGame.game.GraphicsDevice, cur_int, cur_int);
-            pixels = new uint[cur_int*cur_int];
-            for (int i = 0; i < pixels.Length; i++)
-                pixels[i] = input.ReadUInt32();
-            image.SetData<uint>(pixels);           
+            pixels = input.ReadBytes(cur_int * cur_int * 4);
+            image.SetData(pixels);
 
             tileset = new Tileset(tilesize, numtiles, image, numobs, input.ReadBytes(tilesize * tilesize * numobs), numanim);
             tileset.version = ver;

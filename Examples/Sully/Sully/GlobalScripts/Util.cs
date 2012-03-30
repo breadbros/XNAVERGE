@@ -63,6 +63,8 @@ namespace Sully {
             _.flags = new int[NUM_FLAGS];
             _.pixel = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
             _.pixel.SetData(new[] { new Color(new Vector4(255 / 255f, 255 / 255f, 255 / 255f, 255 / 255f)) });
+
+            initBox(sg);
         }
 
         public static void TextBox( int port, string s1, string s2, string s3 ) {
