@@ -19,15 +19,13 @@ namespace XNAVERGE.Content {
     public class SpriteReader : ContentTypeReader<TRead> {
         protected override TRead Read(ContentReader input, TRead nobody_seems_to_know_what_this_argument_is_for) {
             int dim, num_anim;
-            uint[] pixels;
+            byte[] pixels;
             SpriteBasis spr = new SpriteBasis(input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
             spr.default_hitbox = new Rectangle(input.ReadInt32(), input.ReadInt32(), input.ReadInt32(), input.ReadInt32());
             dim = input.ReadInt32();
             Texture2D image = new Texture2D(VERGEGame.game.GraphicsDevice, dim, dim);
-            pixels = new uint[dim * dim];
-            for (int i = 0; i < pixels.Length; i++)
-                pixels[i] = input.ReadUInt32();
-            image.SetData<uint>(pixels);
+            pixels = input.ReadBytes(dim * dim * 4);
+            image.SetData(pixels);
             spr.image = image;
 
             // Pregenerate bounding boxes for each frame
