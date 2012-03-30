@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Sully {
     
-    class SkillType {
+    public class SkillType {
         public static Dictionary<string, SkillType> masterSkillTypes;
         public static void initSkillTypes() {
             masterSkillTypes = new Dictionary<string, SkillType>();
@@ -45,7 +45,8 @@ namespace Sully {
         }
     }
 
-    class Skill {
+    public class Skill {
+
     }
 }
 

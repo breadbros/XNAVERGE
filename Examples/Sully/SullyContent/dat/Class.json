@@ -41,7 +41,8 @@
     "Cleric": {
         "description": "Heals you up and calls upon the spirits to hurt the baddies!",
         "skills": [
-            "White_Magic, Summon"
+            "White_Magic", 
+			"Summon"
         ]
     },
     "Thief": {

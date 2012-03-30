@@ -426,16 +426,21 @@ namespace Sully {
 
         public string name { get {  return _name; } }  
         public string description { get {  return _description; } }
-        public string[] skills { get { return _skills; } }
+        public SkillType[] skills { get { return _skills; } }
 
         private string _name, _description;
-        private string[] _skills;
+        private SkillType[] _skills;
 
         public Klass( string name, Dictionary<string, object> dict )  {
             this._name = name;
             this._description = dict["description"] as string;
-            ArrayList ar = dict["skills"] as ArrayList;
-            this._skills = (string[])ar.ToArray( typeof(string) );
+            
+            ArrayList ar = new ArrayList();
+            foreach( string skilltypename in dict["skills"] as ArrayList ) {
+                ar.Add( SkillType.get( skilltypename ) );
+            }
+
+            this._skills = (SkillType[])ar.ToArray( typeof(SkillType) );
         }
     }
 }
