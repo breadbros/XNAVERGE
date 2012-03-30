@@ -119,7 +119,7 @@ namespace Sully {
 
             //initFont();
 
-            
+            Klass.initClasses();
 
             this.party = new Party( Content );
             party.AddPartyMember( "Darin", 3 );

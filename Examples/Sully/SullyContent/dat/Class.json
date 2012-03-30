@@ -1,46 +1,62 @@
 {
-	Knight: {
-		description: "A guy who hits things.  Usually with swords.",
-		skills: ["Swordsmanship", "White_Magic"]
-	},
-
-	Wizard: {
-		description: "A girly-man in a dress who plays with fire.",
-		skills: ["Black_Magic"]
-	},
-
-	Priest: {
-		description: "A healy-type job.",
-		skills: ["White_Magic"]
-	},
-
-	Funkmaster: {
-		description: "Master of all things groovy, baby.",
-		skills: ["Jive", "Fuchsia_Magic", "Black_Magic"]
-	},
-
-	Engineer: {
-		description: "Wenches with Wrenches!  (Also dudes with tools.)",
-		skills: ["Gadgetry"]
-	},
-
-	Spearguy: {
-		description: "No clue what Galfrey is, really.  Dragoon?  Centurion?  Security Guard?",
-		skills: ["Shake_Spear"]
-	},
-
-	Cleric: {
-		description: "Heals you up and calls upon the spirits to hurt the baddies!",
-		skills: ["White_Magic, Summon"]
-	},
-
-	Thief: {
-		description: "Takes your stuff and looks good doing it.",
-		skills: ["Trickery", "Fortune", "Black_Magic"]
-	},
-
-	Avatar: {
-		description: "A powerful being shrouded in mystery.",
-		skills: ["White_Magic", "Black_Magic"]
-	}
+    "Knight": {
+        "description": "A guy who hits things.  Usually with swords.",
+        "skills": [
+            "Swordsmanship",
+            "White_Magic"
+        ]
+    },
+    "Wizard": {
+        "description": "A girly-man in a dress who plays with fire.",
+        "skills": [
+            "Black_Magic"
+        ]
+    },
+    "Priest": {
+        "description": "A healy-type job.",
+        "skills": [
+            "White_Magic"
+        ]
+    },
+    "Funkmaster": {
+        "description": "Master of all things groovy, baby.",
+        "skills": [
+            "Jive",
+            "Fuchsia_Magic",
+            "Black_Magic"
+        ]
+    },
+    "Engineer": {
+        "description": "Wenches with Wrenches!  (Also dudes with tools.)",
+        "skills": [
+            "Gadgetry"
+        ]
+    },
+    "Spearguy": {
+        "description": "A famous class of spear-shakers, immortalized by a lethal warrior known only as 'The Bard'...",
+        "skills": [
+            "Shake_Spear"
+        ]
+    },
+    "Cleric": {
+        "description": "Heals you up and calls upon the spirits to hurt the baddies!",
+        "skills": [
+            "White_Magic, Summon"
+        ]
+    },
+    "Thief": {
+        "description": "Takes your stuff and looks good doing it.",
+        "skills": [
+            "Trickery",
+            "Fortune",
+            "Black_Magic"
+        ]
+    },
+    "Avatar": {
+        "description": "A powerful being shrouded in mystery.",
+        "skills": [
+            "White_Magic",
+            "Black_Magic"
+        ]
+    }
 }

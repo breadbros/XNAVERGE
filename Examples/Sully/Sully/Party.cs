@@ -1,30 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+
 
 using Microsoft.Xna.Framework.Content;
 
 using XNAVERGE;
 
 namespace Sully {
-    
-/* noodling without internet; this is all syntactically wrong.
   
-    interface Sellable : Item {
-        public int cost;
-        Action onSell;
-    }
-
-    interface Usable : Item {
-        Action onUse;
-    }
-
-    interface Equipment : Item {
-        Action onEquip, onDequip;
-    }
-*/
 
     public enum Stat {
         HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
@@ -400,6 +387,50 @@ namespace Sully {
             foreach (PartyMember pm in collection) {
                 partymemberData.Add(pm.name.ToLower(), pm);
             }
+        }
+    }
+
+    public class Klass {
+        public static Dictionary<string, Klass> masterKlassList;
+
+        public static void initClasses() {
+            masterKlassList = new Dictionary<string, Klass>();
+
+            string output = System.IO.File.ReadAllText( "content/dat/Class.json" );
+
+            Dictionary<string, object> dict = fastJSON.JSON.Instance.Parse( output ) as Dictionary<string, object>;
+
+            
+            foreach( string key in dict.Keys ) {
+
+                Klass k = new Klass( 
+                    key, 
+                    dict[key] as Dictionary<string, object>
+                );
+
+                masterKlassList.Add( key.ToLower(), k );
+            }
+        }
+
+        public static Klass getKlass( string s ) {
+            Klass k = null;
+            masterKlassList.TryGetValue( s.ToLower(), out k );
+
+            if( k == null ) {
+                throw new Exception( "Attempted to get an invalid klass named '"+s+"'.  Jerk." );
+            }
+
+            return null;
+        }
+
+        string name, description;
+        string[] skills;
+
+        public Klass( string name, Dictionary<string, object> dict )  {
+            this.name = name;
+            this.description = dict["description"] as string;
+            ArrayList ar = dict["skills"] as ArrayList;
+            this.skills = (string[])ar.ToArray( typeof(string) );
         }
     }
 }
