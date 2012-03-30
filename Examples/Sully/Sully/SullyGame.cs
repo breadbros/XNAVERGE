@@ -52,6 +52,7 @@ namespace Sully {
             main_assembly = System.Reflection.Assembly.GetExecutingAssembly(); // tell the library where to find map scripts
             global = new SullyGlobalScripts(this);
 
+            SkillType.initSkillTypes();
             Klass.initClasses();
             PartyData.InitializePartyData();
             Item.initItems();

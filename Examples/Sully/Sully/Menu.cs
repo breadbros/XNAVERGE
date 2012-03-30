@@ -384,7 +384,7 @@ namespace Sully {
 
                     int j = itemBox.cursor;
 
-                    itemBox.PrintManyText( _.autotext(curInv[j].item.description, 196), _x, _y + 142 );
+                    itemBox.PrintManyText( _.autotext(curInv[j].item.description, 190), _x, _y + 142 );
                 }
             };
 
@@ -487,7 +487,7 @@ namespace Sully {
 
                     Item curItem = pm.equipment[PartyMember.equipment_slot_order[equipBox.cursor]].getItem();
                     if( curItem != null ) {                        
-                        equipBox.PrintManyText( _.autotext( curItem.description, 196 ), _x, _y + 153 );
+                        equipBox.PrintManyText( _.autotext( curItem.description, 190 ), _x, _y + 153 );
                     } else {
                         equipBox.PrintText( "No item equipped.", _x, _y + 160, Color.DarkGray );
                     }
@@ -503,7 +503,7 @@ namespace Sully {
 
                     equipBox.DrawItemList( _x, _y + 93, lineSize, menu_start, 4, subEquipment.equipment, false );
 
-                    equipBox.PrintManyText( _.autotext( subEquipment.equipment[equipBox.cursor].item.description, 196 ), _x, _y + 153 );                    
+                    equipBox.PrintManyText( _.autotext( subEquipment.equipment[equipBox.cursor].item.description, 190 ), _x, _y + 153 );                    
                 }
             };
 
