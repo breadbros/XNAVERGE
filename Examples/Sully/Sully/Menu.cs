@@ -9,155 +9,165 @@ using Microsoft.Xna.Framework.Graphics;
 using XNAVERGE;
 
 namespace Sully {
-    
-    public class Menu {
 
-        public class MenuBox {
-             
-            public Texture2D image;
-            public int last_x, last_y;
-            public int x, y;
-            public Rectangle bounds, color_bounds;
-            public McgNode rendernode;
+    public class MenuBox {
 
-            public int cursor;
-            public bool has_party_select = false;
+        public Texture2D image;
+        public int last_x, last_y;
+        public int x, y;
+        public Rectangle bounds, color_bounds;
+        public McgNode rendernode;
 
-            public ControlDelegate OnControlUpdate;
-            public RenderDelegate OnDraw;
-            public MenuBox child = null;
+        public int cursor;
+        public bool has_party_select = false;
 
-            public MenuBox( ControlDelegate onControlUpdate, RenderDelegate onDraw ) {
-                OnControlUpdate = onControlUpdate;
-                OnDraw = onDraw;
-            }
+        public ControlDelegate OnControlUpdate;
+        public RenderDelegate OnDraw;
+        public MenuBox child = null;
 
-            public MenuBox( Texture2D _img, int final_x, int final_y, int start_x, int start_y, ControlDelegate onControlUpdate, RenderDelegate onDraw ) {
-                image = _img;
-                OnControlUpdate = onControlUpdate;
-                OnDraw = onDraw;
-                x = final_x;
-                y = final_y;
+        public MenuBox( ControlDelegate onControlUpdate, RenderDelegate onDraw ) {
+            OnControlUpdate = onControlUpdate;
+            OnDraw = onDraw;
+        }
+
+        public MenuBox( Texture2D _img, int final_x, int final_y, int start_x, int start_y, ControlDelegate onControlUpdate, RenderDelegate onDraw ) {
+            image = _img;
+            OnControlUpdate = onControlUpdate;
+            OnDraw = onDraw;
+            x = final_x;
+            y = final_y;
+            bounds = new Rectangle( x, y, image.Width, image.Height );
+            color_bounds = new Rectangle( x, y, image.Width, image.Height );
+            color_bounds.Inflate( -2, -2 );
+
+            McgLayer l = _.sg.renderstack.GetLayer( "menu" );
+            rendernode = l.AddNode(
+                new McgNode( onDraw, l, start_x, start_y, final_x, final_y, MainMenu.delay )
+            );
+        }
+
+        public void UpdateBounds( int x, int y ) {
+            if( x != last_x || y != last_y ) {
+                last_x = x;
+                last_y = y;
+
                 bounds = new Rectangle( x, y, image.Width, image.Height );
                 color_bounds = new Rectangle( x, y, image.Width, image.Height );
                 color_bounds.Inflate( -2, -2 );
-
-                McgLayer l = _.sg.renderstack.GetLayer( "menu" );
-                rendernode = l.AddNode(
-                    new McgNode( onDraw, l, start_x, start_y, final_x, final_y, Menu.delay )
-                );
-            }
-
-            public void UpdateBounds( int x, int y ) {
-                if( x != last_x || y != last_y ) {
-                    last_x = x;
-                    last_y = y;
-
-                    bounds = new Rectangle( x, y, image.Width, image.Height );
-                    color_bounds = new Rectangle( x, y, image.Width, image.Height );
-                    color_bounds.Inflate( -2, -2 );
-                }
-            }
-
-            public void PrintManyText( string[] ar, int rx, int ry ) {
-                for( int i = 0; i < ar.Length; i++ ) {
-                    PrintText( ar[i], rx, ry + (i*10), Color.White );
-                }
-            }
-
-            public void PrintText( string s, int rx, int ry ) {
-                PrintText( s, rx, ry, Color.White );
-            }
-
-            public void PrintTextRight( string s, int rx, int ry ) {
-                PrintTextRight( s, rx, ry, Color.White );
-            }
-
-            public void PrintText( string s, int rx, int ry, Color c ) {
-
-                int x = color_bounds.Location.X + rx;
-                int y = color_bounds.Location.Y + ry;
-
-                SullyGame game = (SullyGame)VERGEGame.game;
-                game.print_string( s, x, y + 1, Color.Black, false );
-                game.print_string( s, x + 1, y + 1, Color.Black, false );
-                game.print_string( s, x + 1, y, Color.Black, false );
-                game.print_string( s, x, y, c, false );
-            }
-
-            public void PrintTextRight( string s, int rx, int ry, Color c ) {
-                int x = color_bounds.Location.X + rx;
-                int y = color_bounds.Location.Y + ry;
-
-                SullyGame game = (SullyGame)VERGEGame.game;
-                game.print_right( s, x, y + 1, Color.Black, false );
-                game.print_right( s, x + 1, y + 1, Color.Black, false );
-                game.print_right( s, x + 1, y, Color.Black, false );
-                game.print_right( s, x, y, c, false );
-            }
-
-
-            // Draws a sub window with vertical scroll bar and cursor, but draws none of the contents
-            // This function is a god amoungst men
-            public void MenuDrawSubWindow( int x1, int y1, int x2, int y2, int current_cursor_pos, int entry_y_height, int total_entry_count, int entry_start, int y_fuzz_factor )
-                // Pass: Dimensions of box by top left and bottom right coords, current selected entry (pass negative for none),
-                //          height of one entry, total number of entries, entry at top of window, and size modifier
-                // No error checking, and can display strangely if odd values are passed
-            {
-                _.setDrawTarget(_.sg.spritebatch);
-
-                int ydiff = y2 - y1 - 8;
-                int entry_fit = ( y2 - y1 ) / entry_y_height;
-                if( total_entry_count < entry_fit ) entry_fit = total_entry_count;
-
-                _.DrawRect( x1, y1, x2, y2, _.sg.boxcolors[2] );
-                _.DrawRect( x2 - 10, y1 + 2, x2 - 2, y2 - 2, _.sg.boxcolors[2] );
-
-                _.DrawRectFill( x2 - 8, y1 + 4 + ( ( ydiff * entry_start ) / total_entry_count ),
-                 x2 - 4, y1 + 4 + ( ( ydiff * ( entry_fit + entry_start ) ) / total_entry_count ), _.sg.boxcolors[2] );
-                if( current_cursor_pos >= 0 ) {
-                    _.DrawRect( x1 + 4, y1 + 4 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 10, y1 + entry_y_height - y_fuzz_factor + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
-                    _.DrawRectFill( x1 + 6, y1 + 6 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 8, y1 + entry_y_height - y_fuzz_factor - 2 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
-                }
-            }
-
-            public void DrawItemList( int _x, int _y, int lineSize, int menu_start, int displayNumber, List<ItemSlot> itemSlotList, Boolean isSupplyMenu ) {
-                for( int i = menu_start; i < itemSlotList.Count && menu_start + displayNumber > i; i++ ) {
-
-                    if( i != this.cursor ) {
-                        _.DrawIcon( itemSlotList[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != this.cursor );
-                    }
-
-                    this.PrintText( itemSlotList[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), itemSlotList[i].item.use_menu || !isSupplyMenu ? Color.White : Color.DarkGray );
-
-                    this.PrintTextRight( "" + itemSlotList[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
-                }
-
-                int j = this.cursor;
-                _.DrawIcon( itemSlotList[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
-            }
-
-            // This really shouldn't be in the submenu.  Meeeh, porting is fun.
-            public void MenuPrintStat( int x, int y, Stat stat, int value, Color c ) {
-                // Current HP/MP aren't stats in the same sense as the maximums, so they're not drawn by
-                // this function. They get drawn by a separate function, MenuBlitCast in menu_system.vc.
-                // It's kind of weird, but that's how Zip coded it.
-                if( stat == Stat.HP ) { // HP gets drawn in its own place  
-                    //PrintTextRight( x + 115 + TextWidth( menu_font[0], "MP:000/000" ), y + 10, screen, menu_font[0], str( value ) );
-                    return;
-                }
-                if( stat == Stat.MP ) { // MP gets drawn in its own place  
-                    //PrintTextRight( x + 115 + TextWidth( menu_font[0], "MP:000/000" ), y + 20, screen, menu_font[0], str( value ) );
-                    return;
-                }
-                // Other stats get printed in order in a two-line block. 
-                int xpos = ((int)stat) / 2; // This ensures that the stats are printed across two lines.
-                int ypos = ((int)stat) % 2; // This ensures that even-numbered stats go on the top row while odd-numbered stats go on the bottom   
-                PrintText( stat.ToString(), x + ( 32 * xpos ) - 32, y + 35 + ( 24 * ypos ), c ); // print name
-                PrintText( ""+value, x + ( 32 * xpos ) - 32, y + 45 + ( 24 * ypos ), c );  // print value
             }
         }
 
+        public void PrintManyText( string[] ar, int rx, int ry ) {
+            for( int i = 0; i < ar.Length; i++ ) {
+                PrintText( ar[i], rx, ry + ( i * 10 ), Color.White );
+            }
+        }
+
+        public void PrintText( string s, int rx, int ry ) {
+            PrintText( s, rx, ry, Color.White );
+        }
+
+        public void PrintTextRight( string s, int rx, int ry ) {
+            PrintTextRight( s, rx, ry, Color.White );
+        }
+
+        public void PrintText( string s, int rx, int ry, Color c ) {
+
+            int x = color_bounds.Location.X + rx;
+            int y = color_bounds.Location.Y + ry;
+
+            SullyGame game = (SullyGame)VERGEGame.game;
+            game.print_string( s, x, y + 1, Color.Black, false );
+            game.print_string( s, x + 1, y + 1, Color.Black, false );
+            game.print_string( s, x + 1, y, Color.Black, false );
+            game.print_string( s, x, y, c, false );
+        }
+
+        public void PrintTextRight( string s, int rx, int ry, Color c ) {
+            int x = color_bounds.Location.X + rx;
+            int y = color_bounds.Location.Y + ry;
+
+            SullyGame game = (SullyGame)VERGEGame.game;
+            game.print_right( s, x, y + 1, Color.Black, false );
+            game.print_right( s, x + 1, y + 1, Color.Black, false );
+            game.print_right( s, x + 1, y, Color.Black, false );
+            game.print_right( s, x, y, c, false );
+        }
+
+
+        // Draws a sub window with vertical scroll bar and cursor, but draws none of the contents
+        // This function is a god amoungst men
+        public void MenuDrawSubWindow( int x1, int y1, int x2, int y2, int current_cursor_pos, int entry_y_height, int total_entry_count, int entry_start, int y_fuzz_factor )
+            // Pass: Dimensions of box by top left and bottom right coords, current selected entry (pass negative for none),
+            //          height of one entry, total number of entries, entry at top of window, and size modifier
+            // No error checking, and can display strangely if odd values are passed
+        {
+            _.setDrawTarget( _.sg.spritebatch );
+
+            int ydiff = y2 - y1 - 8;
+            int entry_fit = ( y2 - y1 ) / entry_y_height;
+            if( total_entry_count < entry_fit ) entry_fit = total_entry_count;
+
+            _.DrawRect( x1, y1, x2, y2, _.sg.boxcolors[2] );
+            _.DrawRect( x2 - 10, y1 + 2, x2 - 2, y2 - 2, _.sg.boxcolors[2] );
+
+            _.DrawRectFill( x2 - 8, y1 + 4 + ( ( ydiff * entry_start ) / total_entry_count ),
+             x2 - 4, y1 + 4 + ( ( ydiff * ( entry_fit + entry_start ) ) / total_entry_count ), _.sg.boxcolors[2] );
+            if( current_cursor_pos >= 0 ) {
+                _.DrawRect( x1 + 4, y1 + 4 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 10, y1 + entry_y_height - y_fuzz_factor + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
+                _.DrawRectFill( x1 + 6, y1 + 6 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 8, y1 + entry_y_height - y_fuzz_factor - 2 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
+            }
+        }
+
+        public void DrawItemList( int _x, int _y, int lineSize, int menu_start, int displayNumber, List<ItemSlot> itemSlotList, Boolean isSupplyMenu ) {
+            for( int i = menu_start; i < itemSlotList.Count && menu_start + displayNumber > i; i++ ) {
+
+                if( i != this.cursor ) {
+                    _.DrawIcon( itemSlotList[i].item.icon, _x + 14, _y + 4 + ( lineSize * ( i - menu_start ) ), i != this.cursor );
+                }
+
+                this.PrintText( itemSlotList[i].item.name, _x + 32, _y + ( lineSize * ( i - menu_start ) ), itemSlotList[i].item.use_menu || !isSupplyMenu ? Color.White : Color.DarkGray );
+
+                this.PrintTextRight( "" + itemSlotList[i].quant, _x + 180, _y + ( lineSize * ( i - menu_start ) ) );
+            }
+
+            int j = this.cursor;
+            _.DrawIcon( itemSlotList[j].item.icon, _x + 14, _y + ( lineSize * ( j - menu_start ) ), false );
+        }
+
+        // This really shouldn't be in the submenu.  Meeeh, porting is fun.
+        public void MenuPrintStat( int x, int y, Stat stat, int value, Color c ) {
+            // Current HP/MP aren't stats in the same sense as the maximums, so they're not drawn by
+            // this function. They get drawn by a separate function, MenuBlitCast in menu_system.vc.
+            // It's kind of weird, but that's how Zip coded it.
+            if( stat == Stat.HP ) { // HP gets drawn in its own place  
+                //PrintTextRight( x + 115 + TextWidth( menu_font[0], "MP:000/000" ), y + 10, screen, menu_font[0], str( value ) );
+                return;
+            }
+            if( stat == Stat.MP ) { // MP gets drawn in its own place  
+                //PrintTextRight( x + 115 + TextWidth( menu_font[0], "MP:000/000" ), y + 20, screen, menu_font[0], str( value ) );
+                return;
+            }
+            // Other stats get printed in order in a two-line block. 
+            int xpos = ( (int)stat ) / 2; // This ensures that the stats are printed across two lines.
+            int ypos = ( (int)stat ) % 2; // This ensures that even-numbered stats go on the top row while odd-numbered stats go on the bottom   
+            PrintText( stat.ToString(), x + ( 32 * xpos ) - 32, y + 35 + ( 24 * ypos ), c ); // print name
+            PrintText( "" + value, x + ( 32 * xpos ) - 32, y + 45 + ( 24 * ypos ), c );  // print value
+        }
+    }
+
+    public class BattleMenu {
+        PartyMember pm;
+
+        Dictionary<string, MenuBox> menuHeap;        
+
+        public BattleMenu( PartyMember member ) {
+            pm = member;
+            menuHeap = new Dictionary<string, MenuBox>();
+        }
+    }
+
+    public class MainMenu {
 
         Inventory subEquipment = null;
 
@@ -218,7 +228,7 @@ namespace Sully {
             this.equipSlotSubmenu = -1;
         }
 
-        public Menu() {
+        public MainMenu() {
             Color[] boxcolors = new Color[3];
             boxcolors[0] = new Color( 0, 0, 0 );
             boxcolors[1] = new Color( 112, 112, 112 );
@@ -311,7 +321,7 @@ namespace Sully {
 
                 smallBox.PrintText( "Clams:", 6, y1 ); y1 += 10;
                 smallBox.PrintTextRight( m, 61, y1 ); y1 += 20;
-                smallBox.PrintText( Menu.getFormattedTime(_.sg.stopWatch.Elapsed), 6, y1 );
+                smallBox.PrintText( MainMenu.getFormattedTime(_.sg.stopWatch.Elapsed), 6, y1 );
             };
 
             mainBox = new MenuBox( _.MakeBox( 220, 220, boxcolors ), 10, 10, -220, 10, cd1, drawMainbox ); 

@@ -21,7 +21,7 @@ namespace Sully {
         public Party party;
         public Inventory inventory;
         public Textbox textbox;
-        public Menu mainMenu;
+        public MainMenu mainMenu;
         public Color[] boxcolors;
         public Color menuColor;
         public SaveManager saves;
@@ -186,7 +186,7 @@ namespace Sully {
         private void init_textbox() {
             Texture2D speechPortraits = Content.Load<Texture2D>( "speech" );
             textbox = new Textbox( screen.width, screen.height, speechPortraits, this );
-            mainMenu = new Menu();
+            mainMenu = new MainMenu();
         }
     }
 }
