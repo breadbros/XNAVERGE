@@ -54,7 +54,7 @@ namespace XNAVERGE {
             renderstack.setSystime( stopWatch.ElapsedMilliseconds );
             
             renderstack.setSpritebatch( spritebatch );
-            //renderstack.Draw();
+            renderstack.Draw();
 
             // Copy native buffer to backbuffer, scaled to true window size
             GraphicsDevice.SetRenderTarget(null);

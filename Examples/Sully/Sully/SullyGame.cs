@@ -162,31 +162,8 @@ namespace Sully {
             //player = map.spawn_entity( 29, 12, "darin" );
 
             
-            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug
+            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug            
 
-            this.hook_render = script<RenderLayerDelegate>( "draw_darin" );
-
-            SpriteBasis sb = new SpriteBasis(40, 40, 32, 8);
-            sb.default_hitbox = new Rectangle(0, 0, sb.frame_width, sb.frame_height);
-            sb.image = Content.Load<Texture2D>("bdarin");
-
-            for (int cur_frame = 0; cur_frame < sb.num_frames; cur_frame++) {
-                sb.frame_box[cur_frame] = new Rectangle(1 + (cur_frame % sb.frames_per_row) * (1 + sb.frame_width), 1 + (cur_frame / sb.frames_per_row) * (1 + sb.frame_height), sb.frame_width, sb.frame_height);
-            }
-
-            SpriteAnimation d_idle = new SpriteAnimation("idle", sb.num_frames, "F0 W45 F1 W13 F2 W45 F1 W13", AnimationStyle.Looping);
-            sb.animations.Add("idle", d_idle);
-            SpriteAnimation d_attack = new SpriteAnimation("attack", sb.num_frames, "F0 W50 F8 W5 F9 W5 F10 W10 F11 W5 F12 W5 F13 W5 F14 W5 F15 W5", AnimationStyle.Transition);
-            d_attack.transition_to = d_idle;
-            sb.animations.Add("attack", d_attack);
-            dspr = new Sprite(sb, "idle", 17*16,20*16, true);
-            game_input_handler = darin_slashy;
-
-        }
-
-        public bool darin_slashy() {
-            if (action.confirm.pressed) dspr.set_animation("attack");
-            return true;
         }
 
         /// <summary>
@@ -216,8 +193,7 @@ namespace Sully {
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime) {
-            dspr.advance_frame();
+        protected override void Draw(GameTime gameTime) {            
             base.Draw(gameTime);
         }
 
