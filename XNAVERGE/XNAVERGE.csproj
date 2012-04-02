@@ -116,17 +116,12 @@
     <Compile Include="sprite\SpriteAnimation.cs" />
     <Compile Include="sprite\SpriteBasis.cs" />
     <Compile Include="map\Tileset.cs" />
+    <Compile Include="sprite\Sprite_Loader.cs" />
     <Compile Include="sprite\VergeFont.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="core\VERGEGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="map\VERGEMap.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpZlib\SharpZipLib.csproj">
-      <Project>{D658EC86-5396-4A69-AAF8-A9D9D5C51DCE}</Project>
-      <Name>SharpZipLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

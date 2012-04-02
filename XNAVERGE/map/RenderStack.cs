@@ -8,12 +8,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAVERGE {
     public class RenderStack {
-        private VERGEMap map;
         public RenderLayer[] list;
 
         public RenderStack(VERGEMap vmap, String rstring) : this(vmap, rstring, ',') {} // MAP file renderstrings are always comma-delimited
+        public RenderStack(VERGEMap vmap, String rstring, Char delim) {
+            var tokens = rstring.Trim().ToUpper().Split(delim);
+            list = (
+                from token in tokens
+                select MapToken(vmap, token.Trim())
+            ).ToArray();                
+        }
 
-        private static RenderLayer MapToken (VERGEMap vergeMap, string token) {
+        private static RenderLayer MapToken(VERGEMap vergeMap, string token) {
             switch (token) {
                 case "R": // rendering script layer (defaults to hook_render and fixed parallax)
                     return new ScriptRenderLayer();
@@ -26,14 +32,6 @@ namespace XNAVERGE {
                     else
                         throw new MalformedRenderstringException("Invalid token '" + token + "' in renderstring");
             }
-        }
-
-        public RenderStack(VERGEMap vmap, String rstring, Char delim) {
-            var tokens = rstring.Trim().ToUpper().Split(delim);
-            list = (
-                from token in tokens
-                select MapToken(vmap, token.Trim())
-            ).ToArray();                
         }
 
         // sets all layers in the stack to visible

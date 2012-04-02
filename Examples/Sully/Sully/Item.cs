@@ -7,6 +7,8 @@ using System.Text;
 namespace Sully {
 
     public class Inventory {       
+        public const int NUM_ITEM_SETS = 3; // Consumables, Inventory, Key. Needed since Xbox doesn't support Enum.GetValues.
+
         public List<ItemSlot> consumables { get { return item_sets[(int)ItemType.Consumable]; } }
         public List<ItemSlot> equipment { get { return item_sets[(int)ItemType.Equipment]; } }
         public List<ItemSlot> key { get { return item_sets[(int)ItemType.Key]; } }
@@ -15,7 +17,7 @@ namespace Sully {
         public Dictionary<Item, ItemSlot> slotIndex;
 
         public Inventory() {
-            item_sets = new List<ItemSlot>[Enum.GetValues(typeof(ItemType)).Length];
+            item_sets = new List<ItemSlot>[NUM_ITEM_SETS];
             for (int i=0; i<item_sets.Length; i++) item_sets[i] = new List<ItemSlot>();
             slotIndex = new Dictionary<Item, ItemSlot>();
         }
@@ -201,7 +203,7 @@ namespace Sully {
 
             masterItemList = new Dictionary<string, Item>();
 
-            string output = System.IO.File.ReadAllText( "content/dat/Items.json" );
+            string output = System.IO.File.ReadAllText( @"content\dat\Items.json" );            
            
             ArrayList items = fastJSON.JSON.Instance.Parse(output) as ArrayList;
 

@@ -11,6 +11,7 @@ namespace XNAVERGE {
     // This class contains all sprite data that stays constant across different instances of the same sprite.
     // The constructor, which loads a new sprite from a .CHR file, is in SpriteBasis_Loader.vc.
     public partial class SpriteBasis {
+        public string name; // a unique name used as a key (generally a file or asset name)
         public Texture2D image;
         public int num_frames { get { return _num_frames; } }
         public int frame_width { get { return _frame_width; } }

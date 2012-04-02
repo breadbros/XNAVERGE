@@ -409,6 +409,7 @@ namespace Sully {
             };
 
             RenderDelegate _drawStatusTop = ( int _x, int _y ) => {
+                Stat s;
                 PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
                 pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
                 statusBox.PrintText( pm.name, _x + 24, _y );
@@ -420,12 +421,14 @@ namespace Sully {
 
                 //
                 if( pretendEquipItem == null ) {
-                    foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
-                        statusBox.MenuPrintStat( _x + 8, _y + 4, s, pm.getStat( s ), Color.White );
+                    for (int i = 0; i < PartyMember.NUM_STATS; i++ ) {
+                        s = (Stat)i;
+                        statusBox.MenuPrintStat(_x + 8, _y + 4, s, pm.getStat(s), Color.White);
                     }
                 } else {
 
-                    foreach( Stat s in Enum.GetValues( typeof( Stat ) ) ) {
+                    for (int i = 0; i < PartyMember.NUM_STATS; i++) {
+                        s = (Stat)i;
                         int ps = pm.getPretendStat( s, pretendEquipSlotName, this.pretendEquipItem );
                         int rs = pm.getStat( s );
 

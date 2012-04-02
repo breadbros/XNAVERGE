@@ -81,14 +81,8 @@ namespace XNAVERGE {
 
         public Entity( String asset_name ) : this( asset_name, asset_name ) { }
 
-        public Entity( String asset_name, String ent_name ) : this( _loadSpriteByFilename( asset_name ), ent_name ) { }
-        public static SpriteBasis _loadSpriteByFilename( string asset_name ) {
-            try {
-                return VERGEGame.game.MapContent.Load<SpriteBasis>( asset_name );
-            } catch( Microsoft.Xna.Framework.Content.ContentLoadException ) {
-                return VERGEGame.game.MapContent.Load<SpriteBasis>( "chrs/" + asset_name );
-            }
-        }
+        public Entity(String asset_name, String ent_name) : this(Sprite._load_basis_by_asset_name(asset_name), ent_name) { }
+
 
         // Attempt to load an entity by inferring its asset name from its chr filename.
         // First checks if the filename matches an asset exactly, then if the filename
