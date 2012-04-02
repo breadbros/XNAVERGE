@@ -24,6 +24,16 @@ namespace XNAVERGE {
             return num / denom;
         }
 
+        // This duplicates the functionality of File.ReadAllText, which is not available in the Compact Framework.
+        // Does not verify the file's existence or encoding.
+        public static String read_file_text(String filepath) {
+            String output = null;
+            using (StreamReader reader = File.OpenText(filepath)) {
+                output = reader.ReadToEnd();
+            }
+            return output;
+        }
+
         // Returns the velocity needed to travel the given distance in the given number of ticks
         // along the given direction, assuming zero acceleration.
         // TODO: Make this less stupid? Maybe someday. Who can say what the future holds

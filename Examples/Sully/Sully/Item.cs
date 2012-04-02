@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using XNAVERGE;
+
 namespace Sully {
 
     public class Inventory {       
@@ -203,7 +205,7 @@ namespace Sully {
 
             masterItemList = new Dictionary<string, Item>();
 
-            string output = System.IO.File.ReadAllText( @"content\dat\Items.json" );            
+            string output = Utility.read_file_text( @"content\dat\Items.json" );            
            
             ArrayList items = fastJSON.JSON.Instance.Parse(output) as ArrayList;
 

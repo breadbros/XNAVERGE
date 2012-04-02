@@ -336,7 +336,7 @@ namespace Sully {
             partyLevelUpData = new Dictionary<string, LevelUpData[]>();
 
             {
-                string output = System.IO.File.ReadAllText( @"content\dat\cast.txt" );
+                string output = Utility.read_file_text( @"content\dat\cast.txt" );
 
                 string[] lines = output.Split( '\n' );
 
@@ -370,7 +370,7 @@ namespace Sully {
 
             foreach( string key in partymemberData.Keys ) {
                 PartyMember pm = partymemberData[key];
-                string output = System.IO.File.ReadAllText( "content/dat/statfiles/" + pm.statfile );
+                string output = Utility.read_file_text( "content/dat/statfiles/" + pm.statfile );
 
                 string[] lines = output.Split( '\n' );
 
