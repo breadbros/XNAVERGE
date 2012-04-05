@@ -39,7 +39,7 @@ namespace Sully {
         public SaveManager(SullyGame game) {
             this.game = game;
             headers = new List<SaveHeader>();
-            read_headers();
+            //read_headers();
         }
 
         public String get_save_filepath(int save_num) {
@@ -127,7 +127,7 @@ namespace Sully {
                 if (File.Exists(backup_path)) File.Copy(backup_path, save_path, true);
             }
             else {
-                read_header(save_num);
+                //read_header(save_num);
             }
         }        
 
