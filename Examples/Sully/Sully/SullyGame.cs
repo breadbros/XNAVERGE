@@ -104,6 +104,7 @@ namespace Sully {
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
+        public Sprite dspr;
         protected override void LoadContent() {
 
 /*
@@ -161,11 +162,9 @@ namespace Sully {
             //player = map.spawn_entity( 29, 12, "darin" );
 
             
-            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug
-
-            this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
+            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug     
             saves.save(12);
-            saves.read_headers();
+
         }
 
         /// <summary>
@@ -195,7 +194,7 @@ namespace Sully {
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime) {
+        protected override void Draw(GameTime gameTime) {            
             base.Draw(gameTime);
         }
 

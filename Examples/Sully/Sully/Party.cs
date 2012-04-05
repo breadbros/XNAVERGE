@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 
 using Microsoft.Xna.Framework.Content;
+using System.Runtime.Serialization;
 
 using XNAVERGE;
 
@@ -52,32 +53,41 @@ namespace Sully {
             }
         }
     }    
-
-    [Serializable]
+    
     public class PartyMember {
         public const int MAX_LEVEL = 50;
+        public const int NUM_STATS = 14; // We need this since Enum.GetValues won't work on Xbox.
 
-        Dictionary<Stat, int> basestats;
+        private Dictionary<Stat, int> basestats;
 
-        [NonSerialized] private Dictionary<string, EquipmentSlot> equipment_slots;
+        private Dictionary<string, EquipmentSlot> equipment_slots;
         public Dictionary<string, EquipmentSlot> equipment { get { return equipment_slots; } }
 
         public static readonly string[] equipment_slot_order = new string[] { "r. hand", "l. hand", "body", "acc. 1", "acc. 2" };
 
-        [NonSerialized] public Entity ent;
+        public Entity ent;
         public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
 
-        private int _level, _cur_xp, _cur_mp, _cur_hp;
-        public int level  { get { return _level; }  }
-        public int cur_xp { get { return _cur_xp; } } 
-        public int cur_mp { get { return _cur_mp; } }
-        public int cur_hp { get { return _cur_hp; } }
+        public int level { get; private set; }
+        public int cur_xp { get; private set; }
+        public int cur_hp { get; private set; }
+        public int cur_mp { get; private set; }
 
         public void initEquipmentSlots() {
             equipment_slots = new Dictionary<string, EquipmentSlot>();
             foreach (string slotname in EquipmentSlot.names) {
                 equipment_slots[slotname] = new EquipmentSlot(EquipmentSlot.typeFromName(slotname));
             }
+        }
+
+        public void _loadState(int xp, int hp, int mp) {
+            basestats.Clear();
+            basestats.Add(Stat.ATK, 0);
+            basestats.Add(Stat.DEF, 0);
+            cur_xp = xp;
+            cur_hp = hp;
+            cur_mp = mp;
+            _handleLevelUp();
         }
 
         public PartyMember( Entity e ) {
@@ -137,17 +147,17 @@ namespace Sully {
             LevelUpData[] lud = PartyData.partyLevelUpData[name.ToLower()];
 
             foreach( LevelUpData l in lud ) {
-                if( l.xp <= this._cur_xp ) {
+                if( l.xp <= this.cur_xp ) {
                     newlevel = l.level;
                 }
             }
 
             /// congrats, you've levelled up!
-            while( this._level < newlevel ) {
-                LevelUpData nextLevel = lud[this._level];
+            while( this.level < newlevel ) {
+                LevelUpData nextLevel = lud[this.level];
 
-                if( nextLevel.level != this._level + 1 ) {
-                    throw new Exception( "Expected nextLevel.level to be " + ( this._level + 1 ) + ", got " + nextLevel.level );
+                if( nextLevel.level != this.level + 1 ) {
+                    throw new Exception( "Expected nextLevel.level to be " + ( this.level + 1 ) + ", got " + nextLevel.level );
                 }
 
                 foreach( Stat s in nextLevel.stat_increases.Keys ) {
@@ -159,10 +169,10 @@ namespace Sully {
                     }
                 }
 
-                this._cur_hp = this.basestats[Stat.HP];
-                this._cur_mp = this.basestats[Stat.MP];
+                this.cur_hp = this.basestats[Stat.HP];
+                this.cur_mp = this.basestats[Stat.MP];
 
-                this._level++;
+                this.level++;
             }
 
             // should probably return all of the LevelUpDatas for all new levels?  Deal with this when you can actually earn experience in-engine.
@@ -174,7 +184,7 @@ namespace Sully {
                 throw new Exception( "No backsies!  Tried to set a lower XP amount for " + this.name + " (XP was " + cur_xp + ", tried to set to " + new_xp +")" );
             }
 
-            _cur_xp = new_xp;
+            cur_xp = new_xp;
 
             _handleLevelUp();
         }
@@ -326,7 +336,7 @@ namespace Sully {
             partyLevelUpData = new Dictionary<string, LevelUpData[]>();
 
             {
-                string output = System.IO.File.ReadAllText( "content/dat/cast.txt" );
+                string output = Utility.read_file_text( @"content\dat\cast.txt" );
 
                 string[] lines = output.Split( '\n' );
 
@@ -360,7 +370,7 @@ namespace Sully {
 
             foreach( string key in partymemberData.Keys ) {
                 PartyMember pm = partymemberData[key];
-                string output = System.IO.File.ReadAllText( "content/dat/statfiles/" + pm.statfile );
+                string output = Utility.read_file_text( "content/dat/statfiles/" + pm.statfile );
 
                 string[] lines = output.Split( '\n' );
 
@@ -387,17 +397,5 @@ namespace Sully {
             }
         }
 
-        // Assuming the party data has already been initialized once, this will wipe partymemberData
-        // and reload it with the information from the collection passed. Level Up Data is not 
-        // changed, so this is mainly for reloading gamestate from a save file. 
-        // Also, note that if you're using this in something other than the slash-and-burn loadgame
-        // context, you'll need to fiddle with the Party manually to remove links to the old
-        // party members. 
-        public static void LoadFromCollection(ICollection<PartyMember> collection) {
-            partymemberData.Clear(); // TODO: Ensure nothing else links to these
-            foreach (PartyMember pm in collection) {
-                partymemberData.Add(pm.name.ToLower(), pm);
-            }
-        }
     }
 }

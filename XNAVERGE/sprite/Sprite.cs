@@ -8,7 +8,16 @@ namespace XNAVERGE {
 
     // Sprite contains state information necessary for a sprite instance. Anything that is invariant across
     // different instances of the same sprite is stored in the SpriteBasis to preserve memory.
-    public class Sprite : IBounded {
+    public partial class Sprite : IBounded {        
+        protected static Dictionary<String, SpriteBasis> basis_cache = new Dictionary<string,SpriteBasis>();
+
+        // Wipes out the dictionary that stores references to loaded SpriteBases, so that they can be 
+        // collected by the GC when the sprites that use them are gone. 
+        public static void clear_cache() {
+            basis_cache.Clear();
+        }
+
+
 
         public SpriteBasis basis;
 
@@ -109,6 +118,9 @@ namespace XNAVERGE {
         //  METHODS
         // ---------
 
+        public Sprite(String name, String anim) {
+            SpriteBasis b = get_basis_from_name(name);
+        }
         public Sprite(SpriteBasis spr_basis, String anim) : this(spr_basis, anim, 0, 0, false) { }
         public Sprite(SpriteBasis spr_basis, String anim, int x_coord, int y_coord, bool visibility) {
             basis = spr_basis;

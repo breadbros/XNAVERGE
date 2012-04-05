@@ -5,16 +5,19 @@ using System.Text;
 using System.IO;
 
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
 
 namespace XNAVERGE {
     public static class Utility {
         public static readonly float SQRT2;
         public static readonly float INV_SQRT2;
+        internal static GenericDeepConverter converter;
 
         static Utility() {
             SQRT2 = (float)Math.Sqrt(2);
             INV_SQRT2 = 1 / SQRT2;
+            converter = new GenericDeepConverter();
         }
 
 
@@ -22,6 +25,20 @@ namespace XNAVERGE {
         public static int DivRem(int num, int denom, out int rem) {
             rem = num % denom;
             return num / denom;
+        }
+
+        public static Object parse_JSON(String filepath) {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Object>(read_file_text(filepath), converter);
+        }
+
+        // This duplicates the functionality of File.ReadAllText, which is not available in the Compact Framework.
+        // Does not verify the file's existence or encoding.
+        public static String read_file_text(String filepath) {
+            String output = null;
+            using (StreamReader reader = File.OpenText(filepath)) {
+                output = reader.ReadToEnd();
+            }
+            return output;
         }
 
         // Returns the velocity needed to travel the given distance in the given number of ticks
@@ -125,7 +142,7 @@ namespace XNAVERGE {
             return System.Text.RegularExpressions.Regex.Replace(str, WHITESPACE, "");
         }
 
-        private static readonly char[] path_sep = {'/', '\\'};
+        private static readonly char[] path_sep = { '/', '\\' };
         public static String strip_path(String str) {
             int pos = Math.Max(0, str.LastIndexOfAny(path_sep));
             return str.Substring(pos);
@@ -185,7 +202,7 @@ namespace XNAVERGE {
         public static Direction movestring_face_to_direction(int facing) {
             switch (facing) {
                 case Movestring.FACECODE_DOWN:
-                    return Direction.Down;                   
+                    return Direction.Down;
                 case Movestring.FACECODE_UP:
                     return Direction.Up;
                 case Movestring.FACECODE_LEFT:
@@ -209,7 +226,7 @@ namespace XNAVERGE {
         public static int direction_to_movestring_face(Direction dir) {
             switch (dir) {
                 case Direction.Down:
-                    return Movestring.FACECODE_DOWN;                    
+                    return Movestring.FACECODE_DOWN;
                 case Direction.Up:
                     return Movestring.FACECODE_UP;
                 case Direction.Left:
@@ -227,11 +244,52 @@ namespace XNAVERGE {
             }
             throw new ArgumentException("Invalid direction passed to direction_to_movestring_face.");
         }
-    
-    
-    
-    }  
-    
+
+    }
+
     // VERGE uses 3 or 4 different direction-numbering conventions. This seemed like one of the tidier ones.
     public enum Direction { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight }
+
+    internal class GenericDeepConverter : Newtonsoft.Json.Converters.CustomCreationConverter<Object> {
+
+        public override bool CanConvert(Type objectType) {
+            return true; // Can I what? Sure, whatever.
+        }
+
+        public override object Create(Type objectType) {
+            throw new NotImplementedException(); // never used
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+            JsonToken tok = reader.TokenType;
+            String property_name;            
+
+            if (tok == JsonToken.StartObject) { // recurse to make dicts out of objects
+                Dictionary<String, Object> dict = new Dictionary<String, Object>();
+                reader.Read();
+                while (reader.TokenType != JsonToken.EndObject) {                    
+                    System.Diagnostics.Debug.Assert(reader.TokenType == JsonToken.PropertyName);
+                    property_name = (String)reader.Value;
+                    reader.Read();                    
+                    dict[property_name] = ReadJson(reader, objectType, existingValue, serializer);
+                    reader.Read();
+                }
+                return dict;
+            }
+            else if (tok == JsonToken.StartArray) { // recurse to make lists out of arrays
+                List<Object> list = new List<Object>();
+                reader.Read();
+                while (reader.TokenType != JsonToken.EndArray) {                    
+                    list.Add(ReadJson(reader, objectType, existingValue, serializer));
+                    reader.Read();
+                }                
+                return list;
+            }
+            else if (tok == JsonToken.String && String.IsNullOrEmpty((String)(reader.Value)))
+                return String.Empty;
+
+            return serializer.Deserialize(reader); // otherwise, use native deserialization
+        }        
+
+    }
 }

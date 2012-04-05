@@ -5,6 +5,7 @@ using System.Text;
 
 using XNAVERGE;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Sully {
     public class SullyGlobalScripts : ScriptBank {
@@ -21,5 +22,6 @@ namespace Sully {
             //sg.mainMenu.Draw( this.sg );
             //sg.textbox.Draw();
         }
+
     }
 }
