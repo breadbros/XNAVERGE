@@ -39,7 +39,7 @@ namespace Sully {
         public SaveManager(SullyGame game) {
             this.game = game;
             headers = new List<SaveHeader>();
-            //read_headers();
+            read_headers();
         }
 
         public String get_save_filepath(int save_num) {
@@ -127,7 +127,7 @@ namespace Sully {
                 if (File.Exists(backup_path)) File.Copy(backup_path, save_path, true);
             }
             else {
-                //read_header(save_num);
+                read_header(save_num);
             }
         }        
 
@@ -167,8 +167,9 @@ namespace Sully {
                 writer.Write(p.name);
                 writer.Write(p.cur_xp);
                 writer.Write(p.cur_hp);
-                writer.Write(p.cur_mp);                
+                writer.Write(p.cur_mp);
 
+                old_pos = writer.BaseStream.Position;
                 writer.Write(0); // reserve this space for an int
                 temp = 0;
                 foreach (KeyValuePair<string, EquipmentSlot> kvp in p.equipment) {
@@ -270,8 +271,9 @@ namespace Sully {
                 }
             }
 
+            game.party.ClearParty(false);                
             foreach (string character in cur_party_names) {
-                game.party.AddPartyMember(character, PartyData.partymemberData[character.ToLower()].level);
+                game.party.AddPartyMember(character, PartyData.partymemberData[character.ToLower()].level);                
             }
 
             // LOAD INVENTORY DATA

@@ -84,6 +84,7 @@ namespace Sully {
             basestats.Clear();
             basestats.Add(Stat.ATK, 0);
             basestats.Add(Stat.DEF, 0);
+            level = 0;
             cur_xp = xp;
             cur_hp = hp;
             cur_mp = mp;
