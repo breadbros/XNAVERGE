@@ -91,7 +91,7 @@ namespace XNAVERGE.Content {
             String name, chr, movestring;            
             name = input.ReadString();
             chr = input.ReadString();
-            ent = Entity.load_from_chr_filename(chr, name);
+            ent = new Entity(chr, name);
             ent.x = input.ReadInt32() * map.tileset.tilesize;
             ent.y = input.ReadInt32() * map.tileset.tilesize;
             ent.script_name = input.ReadString();

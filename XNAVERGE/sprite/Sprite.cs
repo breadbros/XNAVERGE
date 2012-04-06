@@ -17,8 +17,6 @@ namespace XNAVERGE {
             basis_cache.Clear();
         }
 
-
-
         public SpriteBasis basis;
 
         // --------------------------------------------
@@ -118,19 +116,16 @@ namespace XNAVERGE {
         //  METHODS
         // ---------
 
-        public Sprite(String name, String anim) {
-            SpriteBasis b = get_basis_from_name(name);
-        }
-        public Sprite(SpriteBasis spr_basis, String anim) : this(spr_basis, anim, 0, 0, false) { }
-        public Sprite(SpriteBasis spr_basis, String anim, int x_coord, int y_coord, bool visibility) {
-            basis = spr_basis;
+        public Sprite(String name, String anim) : this(name, anim, 0, 0, false) { }        
+        public Sprite(String name, String anim, int x_coord, int y_coord, bool visibility) {
+            basis = get_basis_from_name(name);
             deleted = false;
 
             // Positioning stuff
-            hitbox = new Rectangle(x_coord, y_coord, spr_basis.default_hitbox.Width, spr_basis.default_hitbox.Height);
+            hitbox = new Rectangle(x_coord, y_coord, basis.default_hitbox.Width, basis.default_hitbox.Height);
             exact_pos = new Vector2((float) x_coord, (float) y_coord);
             velocity = acceleration = Vector2.Zero;
-            destination = new Rectangle(x_coord - spr_basis.default_hitbox.X, y_coord - spr_basis.default_hitbox.Y, spr_basis.frame_width, spr_basis.frame_height);
+            destination = new Rectangle(x_coord - basis.default_hitbox.X, y_coord - basis.default_hitbox.Y, basis.frame_width, basis.frame_height);
 
             // Display stuff
             opacity = 1.0f;                        

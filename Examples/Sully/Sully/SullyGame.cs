@@ -163,7 +163,7 @@ namespace Sully {
 
             
             //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug     
-            saves.save(12);
+            //saves.save(12);
 
         }
 

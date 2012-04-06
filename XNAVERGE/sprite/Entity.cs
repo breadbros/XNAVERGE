@@ -59,9 +59,16 @@ namespace XNAVERGE {
 
         protected int _speed;
 
+        // Strips path data from asset names, because they're generally incorrect legacy paths baked into .MAP files.
+        // To specify a path to search for CHR files, edit Sprite.CHR_LOCATION.
+        public static String _clean_name(String filename) {
+            if (System.IO.Path.GetExtension(filename).ToLower() != ".json") // assume a CHR asset
+                filename = System.IO.Path.GetFileName(filename); 
+            return filename;
+        }
 
-        public Entity( SpriteBasis _basis, String ent_name )
-            : base( _basis, "Idle Down" ) {
+        public Entity(String asset_or_json_name, String ent_name)
+            : base( _clean_name(asset_or_json_name), "Idle Down" ) {
             _facing = Direction.Down;
             obstructing = false;
             obstructable = true;
@@ -77,56 +84,9 @@ namespace XNAVERGE {
             initialize_movement_attributes();
             // Entities come from chrs, so they all have walk and idle animations defined.
         }
-        public Entity( SpriteBasis _basis ) : this( _basis, "" ) { }
 
-        public Entity( String asset_name ) : this( asset_name, asset_name ) { }
-
-        public Entity(String asset_name, String ent_name) : this(Sprite._load_basis_by_asset_name(asset_name), ent_name) { }
-
-
-        // Attempt to load an entity by inferring its asset name from its chr filename.
-        // First checks if the filename matches an asset exactly, then if the filename
-        // sans extension matches, then if the entity name matches (if one is given).
-        public static Entity load_from_chr_filename( String filename ) { return Entity.load_from_chr_filename( filename, "" ); }
-        public static Entity load_from_chr_filename( String filename, String ent_name ) {
-            int pos;
-            SpriteBasis spr = null;
-            filename = Utility.strip_path( filename );
-            try { // there doesn't seem to be a way to check if content exists without trying to load it, so let's do that
-                spr = VERGEGame.game.MapContent.Load<SpriteBasis>( filename );
-            } catch (Microsoft.Xna.Framework.Content.ContentLoadException e) {
-                // OK, the filename doesn't correspond to an asset name. Let's try it without the extension
-                try {
-                    pos = filename.LastIndexOf(".");
-                    if (pos < 0) throw e;
-                    spr = VERGEGame.game.MapContent.Load<SpriteBasis>(filename.Substring(0, pos));
-                }
-                catch (Microsoft.Xna.Framework.Content.ContentLoadException) { // That didn't work either. Check for a default tileset to use.
-                    if (!String.IsNullOrEmpty(ent_name)) {
-                        try {
-                            spr = VERGEGame.game.MapContent.Load<SpriteBasis>(ent_name);
-                        }
-                        catch (Microsoft.Xna.Framework.Content.ContentLoadException) {
-
-                            try {
-                                spr = VERGEGame.game.MapContent.Load<SpriteBasis>( "chrs/"+ent_name );
-                            } catch( Microsoft.Xna.Framework.Content.ContentLoadException ) {
-                                throw new ArgumentException( "Couldn't find a sprite asset named " + filename +
-                                    ", with or without extension, or one matching the entity name \"" + ent_name + "\"." );
-                            }
-                        }
-                    }
-                    else {
-                            throw new ArgumentException("Couldn't find a sprite asset named " + filename +
-                                ", with or without extension.");
-                    }
-                }
-            }
-
-            if( String.IsNullOrEmpty( ent_name ) ) return new Entity( spr, filename );
-            else return new Entity( spr, ent_name );
-        }
-
+        public Entity(String asset_name) : this( asset_name, asset_name ) { }        
+        
         public virtual void idle() { set_animation( idle_animation_prefix + facing ); }
         public virtual void walk() { set_animation( move_animation_prefix + facing ); }
 
