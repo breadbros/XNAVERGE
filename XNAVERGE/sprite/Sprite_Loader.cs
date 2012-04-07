@@ -40,6 +40,7 @@ namespace XNAVERGE {
             int has_extension;
             if (naked_name == asset_name) has_extension = 0;
             else has_extension = 1;
+            Console.WriteLine("!!!" + asset_name);
 
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j <= has_extension; j++) {                    
@@ -79,8 +80,8 @@ namespace XNAVERGE {
                 (int)((Int64)spec["per row"]));
 
             // Assume no padding between frames if unspecified
-            inner_pad = spec.ContainsKey("inner_pad") ? (int)((Int64)spec["inner pad"]) : 0; // # pixels bordering the entire image 
-            outer_pad = spec.ContainsKey("outer_pad") ? (int)((Int64)spec["outer pad"]) : 0; // # pixels between adjacent frames
+            inner_pad = spec.ContainsKey("inner pad") ? (int)((Int64)spec["inner pad"]) : 0; // # pixels bordering the entire image 
+            outer_pad = spec.ContainsKey("outer pad") ? (int)((Int64)spec["outer pad"]) : 0; // # pixels between adjacent frames
 
             temp = Path.Combine(Sprite.DEF_LOCATION, (String)spec["image"]);
             using (FileStream stream = new FileStream(temp, FileMode.Open)) {

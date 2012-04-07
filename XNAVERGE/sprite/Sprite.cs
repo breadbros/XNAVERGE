@@ -176,6 +176,7 @@ namespace XNAVERGE {
         // Adjust the sprite's current frame to account for time passed.
         public virtual void advance_frame() { advance_frame(false); }
         public virtual void advance_frame(bool ignore_delegates) {
+            bool spillover = false;
             // TODO: delegates            
             if (!visible || !animating) {
                 last_draw_tick = VERGEGame.game.tick;
@@ -184,8 +185,15 @@ namespace XNAVERGE {
             if (rate == 1.0f) time_to_next -= 100*(VERGEGame.game.tick - last_draw_tick);
             else time_to_next -= (int)(rate*100*(VERGEGame.game.tick - last_draw_tick));
             while (time_to_next <= 0) {
-                cur_step++;
-                if (cur_step >= cur_animation.length) {
+                if (going_backwards) {
+                    cur_step--;
+                    if (cur_step < 0) spillover = true;
+                }
+                else {
+                    cur_step++;
+                    if (cur_step >= cur_animation.length) spillover = true;
+                }
+                if (spillover) {
                     if (cur_animation.style == AnimationStyle.Looping) cur_step = 0;
                     else if (cur_animation.style == AnimationStyle.Once) {
                         _animation_paused = true;
@@ -238,8 +246,16 @@ namespace XNAVERGE {
             _animation_paused = false;
         }
 
-        public virtual void Draw() {
-            VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[current_frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
+        public virtual void Draw() { Draw(current_frame); }
+        public virtual void Draw(int frame) {
+            VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
+        }
+
+        public virtual void DrawAt(int px, int py) { DrawAt(px, py, current_frame); }
+        public virtual void DrawAt(int px, int py, int frame) {
+            Rectangle ad_hoc_dest = destination;
+            ad_hoc_dest.Location = new Point(px, py);
+            VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
         }
 
         public virtual void Update() {
