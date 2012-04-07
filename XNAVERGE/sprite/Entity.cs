@@ -228,7 +228,7 @@ namespace XNAVERGE {
                 // We can divide the pixel coordinate by the range of plausible y-values, but this leads to floating-point flicker when 
                 // entities have the same y-value and overlap. 
                 // Thus, a fractional offset based on the number of entities (to ensure uniqueness) is added to the sort depth.
-                ( ( (float)foot - game.entity_space.bounds.X ) * game.map.num_entities - index ) / ( game.entity_space.bounds.Height * game.map.num_entities )
+                ( ( (float)foot - game.entity_space.bounds.Y ) * game.map.num_entities - index ) / ( game.entity_space.bounds.Height * game.map.num_entities )
             );
         }
 
