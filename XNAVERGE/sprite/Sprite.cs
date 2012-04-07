@@ -83,7 +83,9 @@ namespace XNAVERGE {
         // --------------------------------------------
         
         public SpriteAnimation cur_animation;
-        public int cur_step; // current step within the animation string
+        public event AnimationEndingDelegate on_done_animating;
+        protected bool fiddle_flag; // used to detect major changes in an AnimationEndingDelegate
+        protected int cur_step; // current step within the animation string
         protected float rate; // A multiplier applied to the animation speed. At 1.0, the animation moves at 1 tick per centisecond/game tick. TODO: actually implement this
         public int last_draw_tick; // the last tick at which the sprite was drawn
         //public int cur_frame { get { return cur_animation.frame[cur_step]; } }
@@ -165,6 +167,7 @@ namespace XNAVERGE {
         // with the animation regardless of what frame it had been set to.
         public virtual void set_frame(int frame) {            
             fixed_frame = frame;
+            fiddle_flag = true;
         }
 
         // This just sets animating to true, but I've included it in case it needs to be overloaded by something.
@@ -176,8 +179,8 @@ namespace XNAVERGE {
         // Adjust the sprite's current frame to account for time passed.
         public virtual void advance_frame() { advance_frame(false); }
         public virtual void advance_frame(bool ignore_delegates) {
-            bool spillover = false;
-            // TODO: delegates            
+            bool spillover = false;            
+                    
             if (!visible || !animating) {
                 last_draw_tick = VERGEGame.game.tick;
                 return;
@@ -194,28 +197,38 @@ namespace XNAVERGE {
                     if (cur_step >= cur_animation.length) spillover = true;
                 }
                 if (spillover) {
-                    if (cur_animation.style == AnimationStyle.Looping) cur_step = 0;
-                    else if (cur_animation.style == AnimationStyle.Once) {
-                        _animation_paused = true;
-                        cur_step--; // stay at the final step
-                        time_to_next = 0;
-                        last_draw_tick = VERGEGame.game.tick;
-                        return;
-                    }
-                    else if (cur_animation.style == AnimationStyle.BackAndForth) {
-                        going_backwards = !going_backwards;
-                        if (going_backwards) {
-                            if (cur_animation.length > 1) cur_step -= 2;
-                            else cur_step--;
-                        }
-                        else {
-                            if (cur_animation.length > 1) cur_step += 2;
-                            else cur_step++;
-                        }
-                    }
-                    else if (cur_animation.style == AnimationStyle.Transition) {
-                        cur_animation = cur_animation.transition_to;
-                        cur_step = 0;
+                    switch (cur_animation.style) {
+                        case AnimationStyle.Looping: 
+                            cur_step = 0;
+                            break;
+                        case AnimationStyle.BackAndForth:
+                            going_backwards = !going_backwards;
+                            if (going_backwards) {
+                                if (cur_animation.length > 1) cur_step -= 2;
+                                else cur_step--;
+                            }
+                            else {
+                                if (cur_animation.length > 1) cur_step += 2;
+                                else cur_step++;
+                            }
+                            break;
+                        case AnimationStyle.Once:
+                            cur_step--; // stay at the final step
+                            if (!_handle_callback()) {
+                                _animation_paused = true;                                
+                                time_to_next = 0;
+                                last_draw_tick = VERGEGame.game.tick;
+                                return;
+                            }
+                            break;
+                        case AnimationStyle.Transition:
+                            cur_step--;
+                            if (!_handle_callback()) {
+                                cur_animation = cur_animation.transition_to;
+                                cur_step = 0;
+                            }
+                            break;
+                        default: throw new InvalidOperationException("Unknown animation style (integer value " + (int)cur_animation.style + ").");
                     }
                 }
                 time_to_next += 100*cur_animation.delay[cur_step];
@@ -223,10 +236,17 @@ namespace XNAVERGE {
             last_draw_tick = VERGEGame.game.tick;
         }
 
+        protected virtual bool _handle_callback() {
+            if (on_done_animating == null) return false;
+            fiddle_flag = false;
+            on_done_animating(this);
+            return fiddle_flag;
+        }
+
         // Switches the entity to the specified animation, setting "animating" to true if it was false.
         // Can also be used to reset the animation currently in progress.
         public virtual void set_animation(String name) {
-            //Console.WriteLine(name);
+            fiddle_flag = true;
             if (String.IsNullOrEmpty(name)) {
                 cur_animation = null;
                 fixed_frame = -1;
@@ -239,6 +259,7 @@ namespace XNAVERGE {
             }
         }
         public virtual void set_animation(SpriteAnimation anim) {
+            fiddle_flag = true;
             cur_step = 0;
             cur_animation = anim;
             time_to_next = anim.delay[0];

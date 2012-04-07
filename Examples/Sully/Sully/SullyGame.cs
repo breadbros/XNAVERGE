@@ -153,12 +153,23 @@ namespace Sully {
 
             /// spawn the player
 
-            // load up the map
-            dspr = new Sprite("darin.json", "Idle");            
+                                    
             _.MapSwitch( "paradise_isle2", 13, 19);
-            dspr.move_to_tile(16, 20);
+
+            // here's some dumb sprite-demoing stuff!
+            dspr = new Sprite("darin.json", "Attack");
+
+            AnimationEndingDelegate del = null;
+            del = (Sprite s) => {
+                s.set_animation("Idle");
+                s.on_done_animating -= del;
+            };
+
+            dspr.on_done_animating += del;
+            dspr.move_to(150, 150);
             dspr.visible = true;
             hook_render = script<RenderLayerDelegate>("draw_darin");
+            dspr.acceleration = new Vector2(-0.0008f, -0.001f);
             
             //VERGEMap.switch_map( "underwater" );
             //player = map.spawn_entity( 29, 12, "darin" );

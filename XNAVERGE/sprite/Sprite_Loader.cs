@@ -40,7 +40,6 @@ namespace XNAVERGE {
             int has_extension;
             if (naked_name == asset_name) has_extension = 0;
             else has_extension = 1;
-            Console.WriteLine("!!!" + asset_name);
 
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j <= has_extension; j++) {                    
