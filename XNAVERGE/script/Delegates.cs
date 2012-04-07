@@ -9,7 +9,7 @@ namespace XNAVERGE {
     // The generic no-frills delegate, most often used for chains of event-scripting callbacks.
     public delegate void BasicDelegate();
 
-    // for rendering events.
+    // for McGrender rendering events.
     public delegate void RenderDelegate( int px, int py );
 
     // for handling controls.
@@ -26,15 +26,21 @@ namespace XNAVERGE {
     /// return true if you want normal map handling to occur after, false if you don't.
     public delegate bool GameControlDelegate();
 
+    // This is an entity movement handler, which is a very complicated thing that has to follow a subtle and undocumented
+    // behavioural contract. If you need one you should probably just ask Gayo to make it for you.
     public delegate int EntityMovementDelegate(Entity ent, Object state, ref EntityMovementData data); 
 
-    // MovescriptDelegates can be associated with movestrings and are called when the movestring completes. Currently
-    // the "aborted" value is always false, but eventually it will be possible to set movestrings to timeout, in which
-    // case they will call the delegate with aborted true.
-    // MovescriptEndingDelegates should not change entity position, alter other entities, or change the entity roster.
-    // If you need to do that, I'll be adding an additional callback you can set up during the logic delegate, to 
-    // be called after movement and collision are finished.
+    // MovestringEndingDelegates can be associated with movestrings and are called on the tick where the movestring 
+    // completes, but after all other entity processing is done.
     public delegate void MovestringEndingDelegate(Entity ent, bool aborted);
+
+    // This type of delegate is called when a finite SpriteAnimation (i.e. one with the Once or Transition style) completes.
+    // Unlike MovestringEndingDelegates, these get called immediately, so it's probably unwise to have them radically alter
+    // the gamestate (say, by loading a map).
+    // By default, the Sprite will do whatever it normally would after the delegate ends. However, if the delegate calls
+    // any of the following Sprite methods, it will preempt the normal animation cleanup (including Transitions):
+    //   * 
+    public delegate void AnimationEndingDelegate(Sprite spr);
 
     // The type of script that handles a scripted render layer's appearance. ScriptRenderLayers do little more than
     // call their RenderLayerDelegate when drawing. None of the set-up (spritebatch initialization, etc) is done for

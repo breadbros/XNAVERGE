@@ -22,6 +22,12 @@ namespace Sully {
             //sg.mainMenu.Draw( this.sg );
             //sg.textbox.Draw();
         }
-
+        public void draw_darin(ScriptRenderLayer layer, Rectangle clipping_region) {
+            sg.dspr.advance_frame();
+            sg.dspr.Update();
+            sg.spritebatch.Begin(SpriteSortMode.Deferred, layer.blending, SamplerState.PointClamp, null, null, null, Matrix.Identity);
+            sg.dspr.Draw();
+            sg.spritebatch.End();
+        }
     }
 }

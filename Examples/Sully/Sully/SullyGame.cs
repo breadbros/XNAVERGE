@@ -39,7 +39,7 @@ namespace Sully {
         }
 
         public bool inMenu = false;
-
+       
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -92,9 +92,6 @@ namespace Sully {
                 inventory.AddItem( Item.masterItemList[key], random.Next( 1, 98 ) );
             }
 
-
-//            inventory.AddItem( i, 3 );
-
             saves = new SaveManager(this);
 
             base.Initialize();
@@ -127,7 +124,7 @@ namespace Sully {
                 familyList = familyList + ",  ";
             }
 */
-            Console.WriteLine( "SullyGmae::LoadContent(), mothafuckas!" );
+            Console.WriteLine( "SullyGame::LoadContent() called here" );
 
             // always do this first
             base.LoadContent();
@@ -156,14 +153,30 @@ namespace Sully {
 
             /// spawn the player
 
-            // load up the map
+                                    
             _.MapSwitch( "paradise_isle2", 13, 19);
+
+            // here's some dumb sprite-demoing stuff!
+            dspr = new Sprite("darin.json", "Attack");
+
+            AnimationEndingDelegate del = null;
+            del = (Sprite s) => {
+                s.set_animation("Idle");
+                s.on_done_animating -= del;
+            };
+
+            dspr.on_done_animating += del;
+            dspr.move_to(150, 150);
+            dspr.visible = true;
+            hook_render = script<RenderLayerDelegate>("draw_darin");
+            dspr.acceleration = new Vector2(-0.0008f, -0.001f);
+            
             //VERGEMap.switch_map( "underwater" );
             //player = map.spawn_entity( 29, 12, "darin" );
 
             
             //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug     
-            saves.save(12);
+            //saves.save(12);
 
         }
 

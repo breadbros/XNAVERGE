@@ -27,11 +27,7 @@ namespace XNAVERGE.Content {
             pixels = input.ReadBytes(dim * dim * 4);
             image.SetData(pixels);
             spr.image = image;
-
-            // Pregenerate bounding boxes for each frame
-            for (int cur_frame=0; cur_frame < spr.num_frames; cur_frame++) {
-                spr.frame_box[cur_frame] = new Rectangle((cur_frame % spr.frames_per_row) * spr.frame_width, (cur_frame / spr.frames_per_row) * spr.frame_height, spr.frame_width, spr.frame_height);
-            }
+            spr.generate_bounding_boxes(0, 0);
 
             // load animations
             num_anim = input.ReadInt32();
