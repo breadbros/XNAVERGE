@@ -220,22 +220,44 @@ namespace XNAVERGE {
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used
         // for standard entity blitting. The elaborate y-sorting term will be ignored if you draw outside the entity render phase.
 
-        public override void Draw() {
+        // Oh god, what's all this about? For XNA to handle the y-sorting, we need to map y-values to a float ranging from 0 to 1. 
+        // We can divide the pixel coordinate by the range of plausible y-values, but this leads to floating-point flicker when 
+        // entities have the same y-value and overlap. 
+        // Thus, a fractional offset based on the number of entities (to ensure uniqueness) is added to the sort depth.
+        protected virtual float _ysort_value() {
             VERGEGame game = VERGEGame.game;
-
-            game.spritebatch.Draw( basis.image, destination, basis.frame_box[current_frame], Color.White, 0, Vector2.Zero, SpriteEffects.None,
-                // Oh god, what's all this about? For XNA to handle the y-sorting, we need to map y-values to a float ranging from 0 to 1. 
-                // We can divide the pixel coordinate by the range of plausible y-values, but this leads to floating-point flicker when 
-                // entities have the same y-value and overlap. 
-                // Thus, a fractional offset based on the number of entities (to ensure uniqueness) is added to the sort depth.
-                ( ( (float)foot - game.entity_space.bounds.Y ) * game.map.num_entities - index ) / ( game.entity_space.bounds.Height * game.map.num_entities )
-            );
+            return (((float)foot - game.entity_space.bounds.Y) * game.map.num_entities - index) / (game.entity_space.bounds.Height * game.map.num_entities);
         }
 
-        public void DrawAt( Rectangle dest, int frame ) {
-            VERGEGame game = VERGEGame.game;
+        public override void Draw(int frame) {            
+            Point center;
+            Rectangle ad_hoc_dest;
+            if (angle == 0f)
+                VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, _ysort_value());
+            else {
+                center = hitbox.Center;
+                center.X -= destination.X;
+                center.Y -= destination.Y;
+                ad_hoc_dest = destination;
+                ad_hoc_dest.Offset(center.X, center.Y);
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, _ysort_value());
+            }
+        }
 
-            game.spritebatch.Draw( basis.image, dest, basis.frame_box[frame], Color.White );
+        public override void DrawAt(int px, int py, int frame) {            
+            Point center;
+            Rectangle ad_hoc_dest = destination;
+            if (angle == 0f) {
+                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X, py + destination.Y - hitbox.Y);            
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White);
+            }
+            else {
+                center = hitbox.Center;
+                center.X -= destination.X;
+                center.Y -= destination.Y;
+                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X + center.X, py + destination.Y - hitbox.Y + center.Y); 
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, 1.0f);
+            }
         }
     }
 }
