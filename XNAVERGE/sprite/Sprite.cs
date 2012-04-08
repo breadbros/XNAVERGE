@@ -77,6 +77,8 @@ namespace XNAVERGE {
         }
 
         public Vector2 velocity, acceleration;
+        public float angle;
+        public float angular_momentum;
 
         // --------------------------------------------
         //  ANIMATiON/DRAWING VARIABLES AND PROPERTIES
@@ -130,7 +132,10 @@ namespace XNAVERGE {
             destination = new Rectangle(x_coord - basis.default_hitbox.X, y_coord - basis.default_hitbox.Y, basis.frame_width, basis.frame_height);
 
             // Display stuff
-            opacity = 1.0f;                        
+            opacity = 1.0f;
+            angle = 0f;
+            angular_momentum = 0f;
+            //angular_momentum = 10f; // Uncomment for AWESOME FUN PARTY TIME
             rate = 1.0f;
             fixed_frame = -1;
             time_to_next = 0;
@@ -179,7 +184,10 @@ namespace XNAVERGE {
         // Adjust the sprite's current frame to account for time passed.
         public virtual void advance_frame() { advance_frame(false); }
         public virtual void advance_frame(bool ignore_delegates) {
-            bool spillover = false;            
+            bool spillover = false;
+            if (angular_momentum != 0f) {
+                angle += angular_momentum*(VERGEGame.game.tick - last_draw_tick)/100f;
+            }
                     
             if (!visible || !animating) {
                 last_draw_tick = VERGEGame.game.tick;
@@ -269,14 +277,36 @@ namespace XNAVERGE {
 
         public virtual void Draw() { Draw(current_frame); }
         public virtual void Draw(int frame) {
-            VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
+            Point center;
+            Rectangle ad_hoc_dest;
+            if (angle == 0f)
+                VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
+            else {
+                center = hitbox.Center;
+                center.X -= destination.X;
+                center.Y -= destination.Y;
+                ad_hoc_dest = destination;
+                ad_hoc_dest.Offset(center.X, center.Y);
+                VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, 1.0f);
+            }
         }
 
         public virtual void DrawAt(int px, int py) { DrawAt(px, py, current_frame); }
         public virtual void DrawAt(int px, int py, int frame) {
+            Point center;
             Rectangle ad_hoc_dest = destination;
             ad_hoc_dest.Location = new Point(px, py);
-            VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
+            if (angle == 0f) {
+                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X, py + destination.Y - hitbox.Y);
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
+            }
+            else {
+                center = hitbox.Center;
+                center.X -= destination.X;
+                center.Y -= destination.Y;
+                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X + center.X, py + destination.Y - hitbox.Y + center.Y); 
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, 1.0f);
+            }
         }
 
         public virtual void Update() {

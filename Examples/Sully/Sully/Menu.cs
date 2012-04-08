@@ -395,7 +395,7 @@ namespace Sully {
                     Color lightColor = ( this.partyCursor >= 0 && this.partyCursor == i ) ? Color.White : Color.DarkGray;
                     Color darkColor = ( this.partyCursor >= 0 && this.partyCursor == i ) ? Color.LightGray : Color.DarkGray;
 
-                    pm.ent.DrawAt( new Rectangle( x, _y, 16, 32 ), 0 );
+                    pm.ent.DrawAt(x + pm.ent.hitbox.X - pm.ent.destination.X, _y + pm.ent.hitbox.Y - pm.ent.destination.Y, 0);
                     partyBox.PrintText( pm.name, _x + 32, _y, lightColor );
                     partyBox.PrintText( pm.klass, _x + 90, _y, darkColor );
                     partyBox.PrintTextRight( "LV.    ", x + 200, _y, darkColor );
@@ -411,7 +411,7 @@ namespace Sully {
             RenderDelegate _drawStatusTop = ( int _x, int _y ) => {
                 Stat s;
                 PartyMember pm = _.sg.party.getMembers()[this.partyCursor];
-                pm.ent.DrawAt( new Rectangle( _x, _y, 16, 32 ), 0 );
+                pm.ent.DrawAt(_x + pm.ent.hitbox.X - pm.ent.destination.X, _y + pm.ent.hitbox.Y - pm.ent.destination.Y, 0);
                 statusBox.PrintText( pm.name, _x + 24, _y );
                 statusBox.PrintText( pm.klass, _x + 32, _y + 12 );
 
