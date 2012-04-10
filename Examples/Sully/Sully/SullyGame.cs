@@ -56,7 +56,8 @@ namespace Sully {
             Klass.initClasses();
             PartyData.InitializePartyData();
             Item.initItems();
-            
+            Skill.initSkills();
+
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );
