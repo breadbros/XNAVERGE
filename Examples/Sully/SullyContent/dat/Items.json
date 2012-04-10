@@ -289,7 +289,10 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+45;"
+        "equip_modcode": "ATK,+45;",
+        "ELEMENT": [
+            "Fire"
+        ]
     },
     {
         "name": "Dark_Sword",
@@ -306,7 +309,13 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+52;CTR,+5;"
+        "equip_modcode": "ATK,+52;CTR,+5;",
+        "ELEMENT": [
+            "Dark"
+        ],
+        "ADD": [
+            "Death"
+        ]
     },
     {
         "name": "Carrot_Blade",
@@ -321,7 +330,16 @@
             "Knight"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+65;"
+        "equip_modcode": "ATK,+65;",
+        "ELEMENT": [
+            "Holy"
+        ],
+        "IMMUNE": [
+            "Blind"
+        ],
+        "ADD": [
+            "Grave"
+        ]
     },
     {
         "name": "Saladbolg",
@@ -418,7 +436,13 @@
             "Spearguy"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+56;HIT,+30;"
+        "equip_modcode": "ATK,+56;HIT,+30;",
+        "ELEMENT": [
+            "Electric"
+        ],
+        "ADD": [
+            "Paralysis"
+        ]
     },
     {
         "name": "Gungnir",
@@ -433,7 +457,14 @@
             "Spearguy"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+62;HIT,+15;"
+        "equip_modcode": "ATK,+62;HIT,+15;",
+        "AUTO": [
+            "Accurate"
+        ],
+        "IMMUNE": [
+            "Blind",
+            "Weak"
+        ]
     },
     {
         "name": "Staff",
@@ -453,8 +484,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;MAG,+4;"
@@ -495,7 +525,8 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+12;MAG,+6;"
+        "equip_modcode": "ATK,+12;MAG,+6;",
+        "ELEMENT": ["Holy"]
     },
     {
         "name": "Mace",
@@ -515,8 +546,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+16;MAG,+4;"
@@ -571,7 +601,13 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+25;MAG,+25;MP,+10;"
+        "equip_modcode": "ATK,+25;MAG,+25;MP,+10;",
+        "ELEMENT": [
+            "Dark"
+        ],
+        "ADD": [
+            "Depress"
+        ]
     },
     {
         "name": "Croziest",
@@ -586,7 +622,10 @@
             "Cleric"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+40;MAG,+20;FER,+20;HP,+15;"
+        "equip_modcode": "ATK,+40;MAG,+20;FER,+20;HP,+15;",
+        "ELEMENT": [
+            "Holy"
+        ]
     },
     {
         "name": "Wonder_Wand",
@@ -602,7 +641,10 @@
             "Priest"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+10;MAG,+15;CTR,-999;FER,-999;"
+        "equip_modcode": "ATK,+10;MAG,+15;CTR,-999;FER,-999;",
+        "AUTO": [
+            "Enlighten"
+        ]
     },
     {
         "name": "Support_Staff",
@@ -635,7 +677,10 @@
             "Wizard"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+30;HIT,+15;MAG,+12;CTR,+100;"
+        "equip_modcode": "ATK,+30;HIT,+15;MAG,+12;CTR,+100;",
+        "ADD": [
+            "Charm"
+        ]
     },
     {
         "name": "Diamond_Staff",
@@ -650,7 +695,14 @@
             "Priest"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+35;MAG,+25;MGR,+20;END,+5;"
+        "equip_modcode": "ATK,+35;MAG,+25;MGR,+20;END,+5;",
+        "IMMUNE": [
+            "Seal",
+            "Silence"
+        ],
+        "ADD": [
+            "Grave"
+        ]
     },
     {
         "name": "Sting_Whip",
@@ -666,7 +718,10 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+28;HIT,+10;FER,+10;"
+        "equip_modcode": "ATK,+28;HIT,+10;FER,+10;",
+        "ADD": [
+            "Slow"
+        ]
     },
     {
         "name": "Frostbite",
@@ -682,7 +737,13 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+36;HIT,+15;FER,+10;"
+        "equip_modcode": "ATK,+36;HIT,+15;FER,+10;",
+        "ELEMENT": [
+            "Ice"
+        ],
+        "ADD": [
+            "Sleep"
+        ]
     },
     {
         "name": "Fairy_Lash",
@@ -697,7 +758,10 @@
             "Priest"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+48;HIT,+20;FER,+10;"
+        "equip_modcode": "ATK,+48;HIT,+20;FER,+10;",
+        "ADD": [
+            "Charm"
+        ]
     },
     {
         "name": "Wrench",
@@ -748,7 +812,10 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+42;FER,+5;"
+        "equip_modcode": "ATK,+42;FER,+5;",
+        "ELEMENT": [
+            "Dark"
+        ]
     },
     {
         "name": "Sledgehammer",
@@ -765,7 +832,10 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+55;FER,+25;CTR,-5;HIT,-8;REA,-1;"
+        "equip_modcode": "ATK,+55;FER,+25;CTR,-5;HIT,-8;REA,-1;",
+        "ADD": [
+            "Fragile"
+        ]
     },
     {
         "name": "Science!",
@@ -780,7 +850,14 @@
             "Engineer"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+40;STR,+15;MAG,+8;HIT,+8;"
+        "equip_modcode": "ATK,+40;STR,+15;MAG,+8;HIT,+8;",
+        "IMMUNE": [
+            "Weak",
+            "Fugue"
+        ],
+        "ADD": [
+            "Blind"
+        ]
     },
     {
         "name": "Brass_Knuckles",
@@ -828,7 +905,10 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+30;STK,+2;CTR,+15;FER,+20;"
+        "equip_modcode": "ATK,+30;STK,+2;CTR,+15;FER,+20;",
+        "ADD": [
+            "Confuse"
+        ]
     },
     {
         "name": "Dagger",
@@ -848,8 +928,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;"
@@ -872,11 +951,13 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+13;"
+        "equip_modcode": "ATK,+13;",
+        "ADD": [
+            "Poison"
+        ]
     },
     {
         "name": "Stiletto",
@@ -929,7 +1010,10 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+15;HIT,+10;STK,+1;"
+        "equip_modcode": "ATK,+15;HIT,+10;STK,+1;",
+        "ELEMENT": [
+            "Ice"
+        ]
     },
     {
         "name": "Assassin's_Knife",
@@ -944,7 +1028,10 @@
             "Thief"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+42;HIT,+20;MAG,+6;"
+        "equip_modcode": "ATK,+42;HIT,+20;MAG,+6;",
+        "ADD": [
+            "Death"
+        ]
     },
     {
         "name": "Sting_Needle",
@@ -964,8 +1051,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;HIT,+10;STK,+2;CTR,+50;FER,-999;"
@@ -988,11 +1074,21 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "HIT,+15;STK,-999;CTR,-999;FER,-999;"
+        "equip_modcode": "HIT,+15;STK,-999;CTR,-999;FER,-999;",
+        "ELEMENT": [
+            "Drain"
+        ],
+        "ADD": [
+            "Poison",
+            "Enervate",
+            "Blind",
+            "Confuse",
+            "Seal",
+            "Sleep"
+        ]
     },
     {
         "name": "Buckler",
@@ -1026,7 +1122,10 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "DEF,+7;DOD,+7;"
+        "equip_modcode": "DEF,+7;DOD,+7;",
+        "HALVE": [
+            "Electric"
+        ]
     },
     {
         "name": "Tower_Shield",
@@ -1060,7 +1159,11 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "DEF,+15;DOD,+10;"
+        "equip_modcode": "DEF,+15;DOD,+10;",
+        "HALVE": [
+            "Fire",
+            "Holy"
+        ]
     },
     {
         "name": "Spellbook",
@@ -1146,8 +1249,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+4;"
@@ -1170,8 +1272,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+10;"
@@ -1191,7 +1292,17 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "MGR,+3;"
+        "equip_modcode": "MGR,+3;",
+        "IMMUNE": [
+            "Confuse",
+            "Charm",
+            "Seal",
+            "Silence",
+            "Grave"
+        ],
+        "HALVE": [
+            "Reduction"
+        ]
     },
     {
         "name": "Muscle_Band",
@@ -1211,11 +1322,13 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "ATK,+6;"
+        "equip_modcode": "ATK,+6;",
+        "IMMUNE": [
+            "Weak"
+        ]
     },
     {
         "name": "Wisdom_Band",
@@ -1235,11 +1348,13 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "MAG,+6;"
+        "equip_modcode": "MAG,+6;",
+        "IMMUNE": [
+            "Fugue"
+        ]
     },
     {
         "name": "Tornado_Bracelet",
@@ -1276,7 +1391,10 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "MP,+10;"
+        "equip_modcode": "MP,+10;",
+        "IMMUNE": [
+            "Enervate"
+        ]
     },
     {
         "name": "Wristwatch",
@@ -1296,11 +1414,13 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "REA,+1;"
+        "equip_modcode": "REA,+1;",
+        "IMMUNE": [
+            "SLOW"
+        ]
     },
     {
         "name": "Garment",
@@ -1320,8 +1440,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+10;"
@@ -1344,8 +1463,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+12;MGR,+3;"
@@ -1368,8 +1486,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+18;MGR,+6;"
@@ -1389,7 +1506,10 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+15;MGR,+10;"
+        "equip_modcode": "DEF,+15;MGR,+10;",
+        "NEGATE": [
+            "Holy"
+        ]
     },
     {
         "name": "Black_Robe",
@@ -1406,7 +1526,13 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+20;MAG,+3;MGR,+3;"
+        "equip_modcode": "DEF,+20;MAG,+3;MGR,+3;",
+        "NEGATE": [
+            "Dark"
+        ],
+        "DOUBLE": [
+            "Holy"
+        ]
     },
     {
         "name": "Long_Coat",
@@ -1445,7 +1571,10 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+12;MGR,+6;DOD,+25;"
+        "equip_modcode": "DEF,+12;MGR,+6;DOD,+25;",
+        "IMMUNE": [
+            "Tangle"
+        ]
     },
     {
         "name": "Jogging_Suit",
@@ -1465,8 +1594,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+20;REA,+1;"
@@ -1487,7 +1615,13 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+30;DOD,+20;CTR,+10;"
+        "equip_modcode": "DEF,+30;DOD,+20;CTR,+10;",
+        "AUTO": [
+            "Evade"
+        ],
+        "IMMUNE": [
+            "Tangle"
+        ]
     },
     {
         "name": "Innocence_Frock",
@@ -1504,7 +1638,17 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+35;MGR,+15;HP,+15;"
+        "equip_modcode": "DEF,+35;MGR,+15;HP,+15;",
+        "IMMUNE": [
+            "Grave",
+            "Death"
+        ],
+        "ABSORB": [
+            "Holy"
+        ],
+        "DOUBLE": [
+            "Dark"
+        ]
     },
     {
         "name": "Flame_Robe",
@@ -1522,7 +1666,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+38;MGR,+12;"
+        "equip_modcode": "DEF,+38;MGR,+12;",
+        "ABSORB": [
+            "Fire"
+        ],
+        "DOUBLE": [
+            "Ice",
+            "Electric"
+        ]
     },
     {
         "name": "Frost_Robe",
@@ -1540,7 +1691,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+38;MGR,+12;"
+        "equip_modcode": "DEF,+38;MGR,+12;",
+        "ABSORB": [
+            "Ice"
+        ],
+        "DOUBLE": [
+            "Fire",
+            "Electric"
+        ]
     },
     {
         "name": "Spark_Robe",
@@ -1559,7 +1717,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+38;MGR,+12;"
+        "equip_modcode": "DEF,+38;MGR,+12;",
+        "ABSORB": [
+            "Electric"
+        ],
+        "DOUBLE": [
+            "Fire",
+            "Ice"
+        ]
     },
     {
         "name": "Dream_Mantle",
@@ -1636,7 +1801,10 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+30;DOD,-10;"
+        "equip_modcode": "DEF,+30;DOD,-10;",
+        "IMMUNE": [
+            "Fragile"
+        ]
     },
     {
         "name": "Titanium_Suit",
@@ -1654,7 +1822,10 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+42;DOD,-10;"
+        "equip_modcode": "DEF,+42;DOD,-10;",
+        "IMMUNE": [
+            "Fragile"
+        ]
     },
     {
         "name": "Dwarven_Mail",
@@ -1671,7 +1842,13 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+35;"
+        "equip_modcode": "DEF,+35;",
+        "NEGATE": [
+            "Fire"
+        ],
+        "DOUBLE": [
+            "Ice"
+        ]
     },
     {
         "name": "Plate_Mail",
@@ -1703,7 +1880,10 @@
             "Engineer"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+48;MGR,+4;END,+4;"
+        "equip_modcode": "DEF,+48;MGR,+4;END,+4;",
+        "ABSORB": [
+            "Electric"
+        ]
     },
     {
         "name": "Rock_Mail",
@@ -1721,7 +1901,10 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+55;MGR,+5;DOD,-15;"
+        "equip_modcode": "DEF,+55;MGR,+5;DOD,-15;",
+        "IMMUNE": [
+            "Fragile"
+        ]
     },
     {
         "name": "Dragon_Armor",
@@ -1738,7 +1921,11 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+54;"
+        "equip_modcode": "DEF,+54;",
+        "HALVE": [
+            "Fire",
+            "Ice"
+        ]
     },
     {
         "name": "Stan's_Armor",
@@ -1753,7 +1940,16 @@
             "Spearguy"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+60;HP,+15;CTR,+15;"
+        "equip_modcode": "DEF,+60;HP,+15;CTR,+15;",
+        "ABSORB": [
+            "Dark"
+        ],
+        "DOUBLE": [
+            "Holy"
+        ],
+        "NEGATE": [
+            "Drain"
+        ]
     },
     {
         "name": "Atlas_Plate",
@@ -1784,7 +1980,18 @@
             "Knight"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+65;MGR,+6;"
+        "equip_modcode": "DEF,+65;MGR,+6;",
+        "IMMUNE": [
+            "Death",
+            "Grave"
+        ],
+        "HALVE": [
+            "Holy",
+            "Dark"
+        ],
+        "NEGATE": [
+            "Reduction"
+        ]
     },
     {
         "name": "Turtle_Shell",
@@ -1804,11 +2011,17 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "END,+120;MGR,+120;DEF,+30;REA,-999;DOD,-15;"
+        "equip_modcode": "END,+120;MGR,+120;DEF,+30;REA,-999;DOD,-15;",
+        "AUTO": [
+            "Protect",
+            "Barrier"
+        ],
+        "NEGATE": [
+            "Reduction"
+        ]
     },
     {
         "name": "Capacitor_Array",
@@ -1823,7 +2036,13 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HIT,+3;"
+        "equip_modcode": "HIT,+3;",
+        "HALVE": [
+            "Electric"
+        ],
+        "ENABLE": [
+            "Taser"
+        ]
     },
     {
         "name": "Solar_Lens",
@@ -1838,7 +2057,13 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "ATK,+5;"
+        "equip_modcode": "ATK,+5;",
+        "IMMUNE": [
+            "Enervate, Fugue, Blind"
+        ],
+        "ENABLE": [
+            "Sunray"
+        ]
     },
     {
         "name": "Turbocharger",
@@ -1853,7 +2078,13 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "REA,+1;"
+        "equip_modcode": "REA,+1;",
+        "IMMUNE": [
+            "Tangle"
+        ],
+        "ENABLE": [
+            "Turbo"
+        ]
     },
     {
         "name": "Photoaccumulator",
@@ -1868,7 +2099,18 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HP,+5;"
+        "equip_modcode": "HP,+5;",
+        "IMMUNE": [
+            "Weak",
+            "Fugue",
+            "Depress",
+            "Tangle",
+            "Fragile",
+            "Slow"
+        ],
+        "ENABLE": [
+            "Charge"
+        ]
     },
     {
         "name": "Neutralizer",
@@ -1883,7 +2125,19 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "MGR,+3;DEF,+3;END,+3;"
+        "equip_modcode": "MGR,+3;DEF,+3;END,+3;",
+        "IMMUNE": [
+            "FireWeak",
+            "IceWeak",
+            "ElectricWeak",
+            "HolyWeak",
+            "DarkWeak",
+            "Depress",
+            "Fragile"
+        ],
+        "ENABLE": [
+            "Neutro"
+        ]
     },
     {
         "name": "Antimagic_Field",
@@ -1898,7 +2152,13 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "MGR,+6;"
+        "equip_modcode": "MGR,+6;",
+        "ADD": [
+            "Silence"
+        ],
+        "ENABLE": [
+            "Negate"
+        ]
     },
     {
         "name": "Headband",
@@ -1918,8 +2178,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "DOD,+3;"
@@ -1978,8 +2237,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "MAG,+2;DOD,+3;"
@@ -2002,11 +2260,18 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "DEF,+5;MGR,+5;DOD,+5;"
+        "equip_modcode": "DEF,+5;MGR,+5;DOD,+5;",
+        "IMMUNE": [
+            "Weak",
+            "Fugue",
+            "Depress",
+            "Tangle",
+            "Fragile",
+            "Slow"
+        ]
     },
     {
         "name": "Helmet",
@@ -2077,11 +2342,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "DOD,+20;REA,+1;"
+        "equip_modcode": "DOD,+20;REA,+1;",
+        "IMMUNE": [
+            "Slow",
+            "Tangle"
+        ]
     },
     {
         "name": "Fury_Ring",
@@ -2101,8 +2369,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "STR,+3;FER,+30;CTR,+5;"
@@ -2125,11 +2392,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HP,+12;"
+        "equip_modcode": "HP,+12;",
+        "IMMUNE": [
+            "Death",
+            "Grave"
+        ]
     },
     {
         "name": "Maiden_Flower",
@@ -2140,9 +2410,43 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "IMMUNE": [
+            "Poison",
+            "Enervate",
+            "Blind",
+            "Confuse",
+            "Charm",
+            "Silence",
+            "Seal",
+            "Sleep",
+            "Paralysis",
+            "Slow",
+            "Weak",
+            "Fragile",
+            "Depress",
+            "Tangle",
+            "Fugue",
+            "Death",
+            "Grave",
+            "FireWeak",
+            "IceWeak",
+            "ElectricWeak",
+            "DarkWeak",
+            "HolyWeak"
+        ]
     },
     {
         "name": "Protect_Locket",
@@ -2162,8 +2466,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "MGR,+10;"
@@ -2186,8 +2489,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "CTR,+250;"
@@ -2210,8 +2512,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "REA,+2;"
@@ -2234,11 +2535,29 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "REA,+2;HIT,+10;ATK,+20;STR,+20;CTR,+250;FER,+250;"
+        "equip_modcode": "REA,+2;HIT,+10;ATK,+20;STR,+20;CTR,+250;FER,+250;",
+        "AUTO": [
+            "Confuse",
+            "Might"
+        ],
+        "IMMUNE": [
+            "Poison",
+            "Enervate",
+            "Blind",
+            "Charm",
+            "Sleep",
+            "Paralysis",
+            "Slow",
+            "Weak",
+            "Fragile",
+            "Depress",
+            "Tangle",
+            "Fugue",
+            "Death"
+        ]
     },
     {
         "name": "Blade_Spirit",
@@ -2258,8 +2577,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "STK,+1;"
@@ -2273,9 +2591,24 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "HALVE": [
+            "Fire",
+            "Ice",
+            "Electric"
+        ]
     },
     {
         "name": "Moral_Relativism_Charm",
@@ -2286,9 +2619,23 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "HALVE": [
+            "Dark",
+            "Holy"
+        ]
     },
     {
         "name": "Omni_Charm",
@@ -2299,9 +2646,26 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "HALVE": [
+            "Fire",
+            "Ice",
+            "Electric",
+            "Dark",
+            "Holy"
+        ]
     },
     {
         "name": "Rabbit's_Foot",
@@ -2312,9 +2676,12 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Thief"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "AUTO": ["Lucky"]
     },
     {
         "name": "Scope",
@@ -2334,11 +2701,13 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HIT,+20;"
+        "equip_modcode": "HIT,+20;",
+        "IMMUNE": [
+            "Blind"
+        ]
     },
     {
         "name": "Texas_Belt_Buckle",
@@ -2358,8 +2727,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "ATK,+6;STR,+6;"

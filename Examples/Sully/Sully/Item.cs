@@ -129,7 +129,9 @@ namespace Sully {
         public string func_targetting, func_effect;
         public Klass[] equip_classes;
         public string equip_modcode;
-        public EquipSlotType equip_slot; 
+        public EquipSlotType equip_slot;
+
+        public string[] ELEMENT, ADD, IMMUNE, AUTO, HALVE, NEGATE, DOUBLE, ABSORB, ENABLE;
 
         public Dictionary<Stat, int> equip_stats;
 
@@ -157,7 +159,6 @@ namespace Sully {
                 } else {
                     throw new Exception( "Invalid parse. '" + modcode + "'" );
                 }
-                
             }
 
             return d;
@@ -206,14 +207,111 @@ namespace Sully {
             if( equip_klasses.Count > 0 ) {
                 equip_classes = equip_klasses.ToArray();
             }
-             
+            
             if( equip_classes != null ) {
                 type = ItemType.Equipment;
+                _EquipmentFinalizer( d );
             } else if( price == 0 ) {
                 type = ItemType.Key;
             } else {
                 type = ItemType.Consumable;
             }
+        }
+
+        private void _EquipmentFinalizer( Dictionary<string, Object> d ) {
+            object o;
+            if( d.TryGetValue( "ELEMENT", out o ) ) {
+
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.ELEMENT = list.ToArray();
+            }
+
+
+            if( d.TryGetValue( "ADD", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.ADD = list.ToArray();
+            }
+
+            if( d.TryGetValue( "IMMUNE", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.IMMUNE = list.ToArray();
+            }
+
+            if( d.TryGetValue( "AUTO", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.AUTO = list.ToArray();
+            }
+
+            if( d.TryGetValue( "HALVE", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.HALVE = list.ToArray();
+            }
+
+            if( d.TryGetValue( "NEGATE", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.NEGATE = list.ToArray();
+            }
+
+            if( d.TryGetValue( "DOUBLE", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.DOUBLE = list.ToArray();
+            }
+
+            if( d.TryGetValue( "ABSORB", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.ABSORB = list.ToArray();
+            }
+
+            if( d.TryGetValue( "ENABLE", out o ) ) {
+                List<String> list = new List<String>();
+
+                foreach( object s in o as List<object> ) {
+                    list.Add( s as string );
+                }
+
+                this.ENABLE = list.ToArray();
+            }
+
         }
 
         public static void initItems() {
