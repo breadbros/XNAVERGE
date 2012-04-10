@@ -392,9 +392,6 @@ namespace Sully {
         public static void initClasses() {
             masterKlassList = new Dictionary<string, Klass>();
 
-//            string output = System.IO.File.ReadAllText( "content/dat/Class.json" );
-
-//            Dictionary<string, object> dict = fastJSON.JSON.Instance.Parse( output ) as Dictionary<string, object>;
             Dictionary<String, Object> dict = (Dictionary<String, Object>)Utility.parse_JSON( @"content\dat\Class.json" );
 
             foreach( string key in dict.Keys ) {
