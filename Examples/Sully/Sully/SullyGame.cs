@@ -56,7 +56,8 @@ namespace Sully {
             Klass.initClasses();
             PartyData.InitializePartyData();
             Item.initItems();
-            
+            Skill.initSkills();
+
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );
@@ -160,6 +161,7 @@ namespace Sully {
             ////////// end of sprite demo
             //////////////////////////////////////////////////
             //////////////////////////////////////////////////
+
 
             //VERGEMap.switch_map( "underwater" );
             //player = map.spawn_entity( 29, 12, "darin" );            

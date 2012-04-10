@@ -38,7 +38,7 @@ namespace Sully {
 
         public SkillType( List<Object> entry ) {
             name = entry[0] as string;
-            //icon = entry[1] as string;
+
             Int64? o = entry[1] as Int64?;
             icon = (int)o.Value;
 
@@ -56,53 +56,80 @@ namespace Sully {
     }
 
     public class Skill {
+        public static Dictionary<string, Skill> masterSkills;
+        public static void initSkills() {
+            masterSkills = new Dictionary<string, Skill>();
 
+            List<Object> list = (List<Object>)Utility.parse_JSON( @"content\dat\Skills.json" );
+
+            foreach( object line in list ) {
+                Dictionary<string, object> myLine = (Dictionary<string, object>)line;
+                Skill s = new Skill( myLine );
+                masterSkills.Add( s.name.ToLower(), s );
+            }
+
+            int i = 0;
+        }
+
+        public static Skill get( string key ) {
+            Skill s = masterSkills[key.ToLower()];
+
+            if( s == null ) {
+                throw new Exception( "Attempted to get an invalid Skill named '" + key + "'.  Why u no get real skill?" );
+            }
+
+            return s;
+        }
+
+
+        public string name { get; private set; }
+        public string description { get; private set; }
+        public int icon { get; private set; }
+        public SkillType parentSkill { get; private set; }
+        public bool use_battle { get; private set; }
+        public bool use_menu { get; private set; }
+        public int base_price { get; private set; }
+        public int mp_cost { get; private set; }
+        public string func_targetting { get; private set; }
+        public string func_effect { get; private set; }
+        public int charge_time { get; private set; }
+        public int delay_time { get; private set; }
+        public bool is_nullable { get; private set; }
+        public bool is_reflectable { get; private set; }
+
+        public Skill( Dictionary<string, object> entry ) {
+            name = entry["name"] as string;
+            description = entry["description"] as string;
+
+            string s = entry["skilltype"] as string;
+            if( s != "" ) {
+                parentSkill = SkillType.get(s);
+            } else {
+                parentSkill = null;
+            }
+
+            Int64? i;
+
+            i = entry["use_battle"] as Int64?;
+            use_battle = i.Value != 0;
+            i = entry["use_menu"] as Int64?;
+            use_menu = i.Value != 0;
+            i = entry["is_nullable"] as Int64?;
+            is_nullable = i.Value != 0;
+            i = entry["is_reflectable"] as Int64?;
+            is_reflectable = i.Value != 0;
+
+            i = entry["mp_cost"] as Int64?;
+            mp_cost = (int)i.Value;
+            i = entry["price"] as Int64?;
+            base_price = (int)i.Value;
+            i = entry["charge_time"] as Int64?;
+            charge_time = (int)i.Value;
+            i = entry["delay_time"] as Int64?;
+            delay_time = (int)i.Value;
+
+            func_targetting = entry["func_targetting"] as string;
+            func_effect = entry["func_effect"] as string;
+        }
     }
 }
-
-/*
-
-        public static Dictionary<string, Klass> masterKlassList;
-
-        public static void initClasses() {
-            masterKlassList = new Dictionary<string, Klass>();
-
-            string output = System.IO.File.ReadAllText( "content/dat/Class.json" );
-
-            Dictionary<string, object> dict = fastJSON.JSON.Instance.Parse( output ) as Dictionary<string, object>;
-            
-            foreach( string key in dict.Keys ) {
-                
-                Klass k = new Klass( 
-                    key, 
-                    dict[key] as Dictionary<string, object>
-                );
-
-                masterKlassList.Add( key.ToLower(), k );
-            }
-        }
-
-        public static Klass getKlass( string s ) {
-            Klass k = masterKlassList[s.ToLower()];
-
-            if( k == null ) {
-                throw new Exception( "Attempted to get an invalid klass named '"+s+"'.  Jerk." );
-            }
-
-            return k;
-        }
-
-        public string name { get {  return _name; } }  
-        public string description { get {  return _description; } }
-        public string[] skills { get { return _skills; } }
-
-        private string _name, _description;
-        private string[] _skills;
-
-        public Klass( string name, Dictionary<string, object> dict )  {
-            this._name = name;
-            this._description = dict["description"] as string;
-            ArrayList ar = dict["skills"] as ArrayList;
-            this._skills = (string[])ar.ToArray( typeof(string) );
-        }
- */ 
