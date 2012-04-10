@@ -526,7 +526,7 @@
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+12;MAG,+6;",
-        "ELEMENT": "Holy"
+        "ELEMENT": ["Holy"]
     },
     {
         "name": "Mace",
@@ -2681,7 +2681,7 @@
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "DEF,+0;",
-        "AUTO": "Lucky"
+        "AUTO": ["Lucky"]
     },
     {
         "name": "Scope",
