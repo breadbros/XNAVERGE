@@ -4,9 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using XNAVERGE;
+
+
 namespace Sully {
 
     public class Inventory {       
+        public const int NUM_ITEM_SETS = 3; // Consumables, Inventory, Key. Needed since Xbox doesn't support Enum.GetValues.
+
         public List<ItemSlot> consumables { get { return item_sets[(int)ItemType.Consumable]; } }
         public List<ItemSlot> equipment { get { return item_sets[(int)ItemType.Equipment]; } }
         public List<ItemSlot> key { get { return item_sets[(int)ItemType.Key]; } }
@@ -15,7 +20,7 @@ namespace Sully {
         public Dictionary<Item, ItemSlot> slotIndex;
 
         public Inventory() {
-            item_sets = new List<ItemSlot>[Enum.GetValues(typeof(ItemType)).Length];
+            item_sets = new List<ItemSlot>[NUM_ITEM_SETS];
             for (int i=0; i<item_sets.Length; i++) item_sets[i] = new List<ItemSlot>();
             slotIndex = new Dictionary<Item, ItemSlot>();
         }
@@ -51,7 +56,7 @@ namespace Sully {
                 }
             }
 
-            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) {
+            if( slot != EquipSlotType.RightHand && slot != EquipSlotType.Body ) { // can't unequip from RH or Body slots
                 ret.AddItem( Item.none, 1 );
             }
 
@@ -68,8 +73,12 @@ namespace Sully {
                 slotIndex[i] = slot = new ItemSlot(i, quant);
                 item_sets[(int)i.type].Add(slot);
             }
-            if (slot.quant < 0) slot.quant = 0;
-            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT ;
+            if (slot.quant > ItemSlot.MAX_QUANT) slot.quant = ItemSlot.MAX_QUANT;
+            if (slot.quant <= 0) {
+                slotIndex.Remove(i);
+                item_sets[(int)i.type].Remove(slot);
+            }
+            
         }
 
         /*
@@ -161,72 +170,94 @@ namespace Sully {
         }
 
         public Item( Dictionary<string, Object> d ) {
+            String slot;
 
             name = ((string)d["name"]).Replace( '_', ' ' );
             description = (string)d["description"];
-            icon = int.Parse( (string)d["icon"] );
-            price = int.Parse( (string)d["price"] );
-            use_battle = int.Parse( (string)d["use_battle"] ) > 0;
-            use_menu = int.Parse( (string)d["use_menu"] ) > 0;
+            icon = (int)((Int64)d["icon"]);
+            price = (int)((Int64)d["price"]);
+            use_battle = (int)((Int64)d["use_battle"]) > 0;
+            use_menu = (int)((Int64)d["use_menu"]) > 0;
 
             func_targetting = (string)d["func_targetting"];
             func_effect = (string)d["func_effect"];
 
-            try {
-                equip_slot = (EquipSlotType)Enum.Parse( typeof( EquipSlotType ), (string)d["equip_slot"], true );
-            } catch( ArgumentException ) {
-                equip_slot = EquipSlotType.NONE;
+            slot = (string)d["equip_slot"];
+            if (String.IsNullOrEmpty(slot)) equip_slot = EquipSlotType.NONE;
+            else {
+                try {
+                    equip_slot = (EquipSlotType)Enum.Parse(typeof(EquipSlotType), (string)d["equip_slot"], true);
+                }
+                catch (ArgumentException) { // slot is defined, but the name is illegal!
+                    equip_slot = EquipSlotType.NONE;
+                }
             }
             equip_modcode = (string)d["equip_modcode"];
             equip_stats = _statsHelper( equip_modcode );
 
-            ArrayList al = d["equip_by"] as ArrayList;
-
-            if( al.Count > 0 ) {
-                ArrayList ar = new ArrayList();
-                
-                foreach( string s in al ) {
-                    if( s == "" ) continue;
-
-                    ar.Add( Klass.get(s) );
+            List<Object> equippable = (List<Object>)d["equip_by"];
+            List<Klass> equip_klasses = new List<Klass>();
+            foreach( string equip_klass in equippable ) {
+                if( equip_klass != "" ) {
+                    equip_klasses.Add( Klass.get(equip_klass) );
                 }
-                equip_classes = (Klass[])ar.ToArray( typeof( Klass ) );
-            } else {
-                equip_classes = null;
             }
 
-            if (equip_classes != null) type = ItemType.Equipment;
-            else if (price == 0) type = ItemType.Key;
-            else type = ItemType.Consumable;
+            if( equip_klasses.Count > 0 ) {
+                equip_classes = equip_klasses.ToArray();
+            }
+             
+            if( equip_classes != null ) {
+                type = ItemType.Equipment;
+            } else if( price == 0 ) {
+                type = ItemType.Key;
+            } else {
+                type = ItemType.Consumable;
+            }
         }
 
         public static void initItems() {
-
+            Item item;
+            List<Object> templist = (List<Object>)(Utility.parse_JSON(@"content\dat\Items.json"));
             masterItemList = new Dictionary<string, Item>();
 
-            string output = System.IO.File.ReadAllText( "content/dat/Items.json" );
-           
-            ArrayList items = fastJSON.JSON.Instance.Parse(output) as ArrayList;
-
-            foreach( Dictionary<string, Object> d in items  ) {
-                Item i = new Item(d);
-                
-                masterItemList.Add( ((string)d["name"]).ToLower(), i );
+            foreach (Object obj in templist) {
+                item = new Item((Dictionary<String, Object>)obj);
+                masterItemList.Add(item.name.ToLower(), item);
             }
+           
         }
     }
+
+    public enum EquipSlotType { Accessory, RightHand, LeftHand, Body, NONE };
 
     public class EquipmentSlot {
         Item equipped;
         EquipSlotType slotType;
+        public static readonly string[] names = {"r. hand", "l. hand", "body", "acc. 1", "acc. 2"};
+
+        public static EquipSlotType typeFromName(string name) {
+            switch (Array.IndexOf<string>(names, name)) {
+                case 0: return EquipSlotType.RightHand;
+                case 1: return EquipSlotType.LeftHand;
+                case 2: return EquipSlotType.Body;
+                case 3: return EquipSlotType.Accessory;
+                case 4: return EquipSlotType.Accessory;
+                default: return EquipSlotType.NONE;
+            }
+        }
 
         public EquipmentSlot( EquipSlotType est ) {
             equipped = null;
             slotType = est;
         }
 
-        public void Equip(Item i, Inventory inv) {
-            if( equipped != null ) {
+        // Equips an item. If force = true, the item will destroy anything currently equipped in that slot!
+        public void Equip(string name, Inventory inv) { Equip(Item.masterItemList[name.ToLower()], inv, false); }
+        public void Equip(Item i, Inventory inv) { Equip(i, inv, false); }
+        public void Equip(string name, Inventory inv, bool force) { Equip(Item.masterItemList[name.ToLower()], inv, force); }
+        public void Equip(Item i, Inventory inv, bool force) {
+            if(!force && equipped != null ) {
                 throw new Exception( "Tried to equip ("+i.name+") without first removing ("+equipped.name+")" );
             }
 
@@ -239,12 +270,14 @@ namespace Sully {
             equipped = i;
         }
 
-        public Item Dequip( Inventory inv ) {
+        // Removes an item. If discard = true, the item will be destroyed rather than sent to inventory!
+        public Item Dequip(Inventory inv) { return Dequip(inv, false); }
+        public Item Dequip( Inventory inv, bool discard ) {
             if( equipped == null ) {
                 return null;
             }
 
-            inv.AddItem( equipped, 1 );
+            if (!discard) inv.AddItem( equipped, 1 );
 
             Item i = equipped;
             equipped = null;

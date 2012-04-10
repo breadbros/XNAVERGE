@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using XNAVERGE;
+
 namespace Sully {
     
     public class SkillType {
@@ -11,11 +13,9 @@ namespace Sully {
         public static void initSkillTypes() {
             masterSkillTypes = new Dictionary<string, SkillType>();
 
-            string output = System.IO.File.ReadAllText( "content/dat/Skilltypes.json" );
+            List<Object> list = (List<Object>)Utility.parse_JSON( @"content\dat\Skilltypes.json" );
 
-            ArrayList ar = fastJSON.JSON.Instance.Parse( output ) as ArrayList;
-
-            foreach( ArrayList line in ar ) {
+            foreach( List<Object> line in list ) {
                 SkillType st = new SkillType(line);
                 masterSkillTypes.Add( st.name.ToLower(), st );
             }
@@ -34,13 +34,23 @@ namespace Sully {
         public string name, description;
         public int icon;
         public bool isHidden;
-        public ArrayList haltingStatuses;
+        public String[] haltingStatuses;
 
-        public SkillType( ArrayList entry ) {
+        public SkillType( List<Object> entry ) {
             name = entry[0] as string;
-            icon = Int32.Parse( entry[1] as string );
+            //icon = entry[1] as string;
+            Int64? o = entry[1] as Int64?;
+            icon = (int)o.Value;
+
             isHidden = (entry[2] as string).ToLower() == "hidden";
-            haltingStatuses = entry[3] as ArrayList;
+
+            List<object> obj = entry[3] as List<object>;
+            List<string> foo = new List<string>();
+            foreach( string s in obj ) {
+                foo.Add( s );
+            }
+            haltingStatuses = foo.ToArray();
+            
             description = entry[4] as string;
         }
     }

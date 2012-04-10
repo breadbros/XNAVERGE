@@ -109,7 +109,8 @@ namespace Sully {
         }
 
         public void sancho( int x, int y, bool adj ) {
-            _.TextBox( _.T_SANCHO, "*SIGH*", "", "...hi." );
+            _.sg.saves.load(12);
+            //_.TextBox( _.T_SANCHO, "*SIGH*", "", "...hi." );
         }
 
         public void undersea( int x, int y, bool adj ) {

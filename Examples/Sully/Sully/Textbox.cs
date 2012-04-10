@@ -64,7 +64,7 @@ namespace Sully {
             color_bounds.Inflate( -2, -2 );
 
             bgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
-            bgColor.SetData( new[] { new Color( new Vector4( 140, 0, 140, 63 ) ) } );
+            bgColor.SetData(new[] { new Color(new Vector4(140 / 255f, 0, 140 / 255f, 63 / 255f)) });
 
 
 
@@ -85,7 +85,8 @@ namespace Sully {
             this.dontReleasePlayerOnDone = !b;
         }
 
-        public void addBox( String str_1, String str_2, String str_3, int speechIdx = 0 ) {
+        public void addBox(String str_1, String str_2, String str_3) { addBox(str_1, str_2, str_3, 0); }
+        public void addBox( String str_1, String str_2, String str_3, int speechIdx) {
 
             List<object> lines = new List<object>();
 

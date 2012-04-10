@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 using XNAVERGE;
 using Microsoft.Xna.Framework;
@@ -19,15 +17,18 @@ namespace Sully {
         // write new save code. These include:
         // * Changing PartyMember.MAX_LEVEL
         // * Changing _.NUM_FLAGS
-        // * Changing a PartyMember's name (only breaks saves with that character)
+        // * Changing the number or names of PartyMembers
+        // * Changing XP required at each level
+        // * Changing the names, ordering, or number of character equipment slots.
         // For now we needn't increase the version for changes of this type, but once we release and have
         // saves in the wild, we'll need to.
-        public int CURRENT_VERSION = 1;
+        public int CURRENT_VERSION = 2;
 
         // saves are numbered from 0 to 99. You can change this, but note that file naming assumes
         // a limit of 1000 (save number 999).
-        public static int MAX_SAVES = 999;
+        public static int MAX_SAVES = 1000;
         public readonly Point THUMBNAIL_SIZE = new Point(64, 48); // if you change this you'll need to move to a new version
+        public List<SaveHeader> headers;
 
         public String save_location {
             get { return Path.Combine(Environment.GetFolderPath(game.user_storage_root), "Sully Chronicles"); }
@@ -36,7 +37,9 @@ namespace Sully {
         private SullyGame game;
 
         public SaveManager(SullyGame game) {
-            this.game = game;            
+            this.game = game;
+            headers = new List<SaveHeader>();
+            read_headers();
         }
 
         public String get_save_filepath(int save_num) {
@@ -48,6 +51,36 @@ namespace Sully {
             return Path.Combine(save_location, "$$BACKUP.sav");
         }
 
+        // Reads headers from the save files into SaveHeader structs and puts them in the headers list.
+        // The headers are loaded in order, but missing files are skipped when building the lists.
+        public void read_headers() {           
+            for (int i = 0; i < MAX_SAVES; i++) read_header(i);                                            
+        }
+
+        protected void read_header(int save_num) {            
+            SaveHeader header;           
+            int temp;
+            string filename = get_save_filepath(save_num); ;
+
+            if (File.Exists(filename)) {
+                using (FileStream fs = new FileStream(filename, FileMode.Open)) {
+                    using (BinaryReader reader = new BinaryReader(fs)) {
+
+                        header = new SaveHeader(this, save_num);
+                        header.save_idx = save_num;
+
+                        if (reader.ReadInt32() != SAVE_SIGNATURE) throw new FormatException("Not a Sully Chronicles save file: " + filename);
+                        temp = reader.ReadInt32(); // version (ignore for now)
+                        header.screencap = read_thumbnail_screencap(reader);
+                        header.playtime = new TimeSpan(reader.ReadInt64());
+                        temp = reader.ReadInt32();
+                        for (int j = 0; j < temp; j++) header.party.Add(reader.ReadString());
+                        header.location = reader.ReadString(); // location name (currently unimplemented);                        
+                    }
+                }
+            }
+        }
+
         // Takes a tiny screencap of the current map renderstack (ignoring mcgrender layers) 
         // and sticks it into the given stream. 
         protected void write_thumbnail_screencap(Stream stream) {
@@ -57,6 +90,14 @@ namespace Sully {
                 game.GraphicsDevice.SetRenderTarget(null);
                 screencap.SaveAsPng(stream, THUMBNAIL_SIZE.X, THUMBNAIL_SIZE.Y);                
             }            
+        }
+
+        protected Texture2D read_thumbnail_screencap(BinaryReader reader) {
+            Texture2D image;
+            using (MemoryStream ms = new MemoryStream(reader.ReadBytes(reader.ReadInt32()))) {
+                image = Texture2D.FromStream(_.sg.GraphicsDevice, ms);
+            }
+            return image;
         }
 
         // Creates the game subdirectory if it's not already there
@@ -82,15 +123,19 @@ namespace Sully {
                     // add more diagnostics here if it becomes a problem
                 }
             }
-            if (!completed) { 
+            if (!completed) {
                 if (File.Exists(backup_path)) File.Copy(backup_path, save_path, true);
+            }
+            else {
+                read_header(save_num);
             }
         }        
 
         // Always returns true.
         protected bool _write_to_save(BinaryWriter writer, int version) {
             PartyMember[] cur_party;
-            
+
+            int temp;
             long old_pos, new_pos;
             
             // SAVE HEADER
@@ -116,17 +161,37 @@ namespace Sully {
             writer.Write("location name"); // not supported yet
 
             // PARTY DATA
-            // ----------
-            BinaryFormatter formatter = new BinaryFormatter();
+            // ----------            
             writer.Write(PartyData.partymemberData.Values.Count);
             foreach (PartyMember p in PartyData.partymemberData.Values) {
-                formatter.Serialize(writer.BaseStream, p);
+                writer.Write(p.name);
+                writer.Write(p.cur_xp);
+                writer.Write(p.cur_hp);
+                writer.Write(p.cur_mp);
+
+                old_pos = writer.BaseStream.Position;
+                writer.Write(0); // reserve this space for an int
+                temp = 0;
+                foreach (KeyValuePair<string, EquipmentSlot> kvp in p.equipment) {
+                    if (kvp.Value.getItem() != null) { // only save slots with stuff in them
+                        temp++;
+                        writer.Write(kvp.Key);
+                        writer.Write(kvp.Value.getItem().name);
+                    }
+                }
+                // Now go back to indicate how many slots were saved.
+                new_pos = writer.BaseStream.Position;
+                writer.BaseStream.Seek(old_pos, SeekOrigin.Begin);
+                writer.Write(temp);
+                writer.BaseStream.Seek(new_pos, SeekOrigin.Begin);
             }
 
             // INVENTORY DATA
-            // --------------            
-            foreach (List<ItemSlot> list in game.inventory.item_sets) {
-                writer.Write(list.Count);
+            // --------------         
+            temp = 0;
+            foreach (List<ItemSlot> list in game.inventory.item_sets) temp += list.Count;
+            writer.Write(temp);
+            foreach (List<ItemSlot> list in game.inventory.item_sets) {                
                 foreach (ItemSlot slot in list) {
                     writer.Write(slot.item.name);
                     writer.Write(slot.quant);
@@ -152,62 +217,82 @@ namespace Sully {
         }
 
         public void load(int save_num) {
-            String save_path;
+            String save_path, mapname = null;
+            Point player_coords = default(Point);
             save_path = get_save_filepath(save_num);
             if (!File.Exists(save_path)) throw new FileNotFoundException(save_path + " was not found.");
 
             using (FileStream fs = new FileStream(save_path, FileMode.Open)) {
                 using (BinaryReader reader = new BinaryReader(fs)) {
-                    _read_from_save(reader, CURRENT_VERSION);
+                    _read_from_save(reader, CURRENT_VERSION, ref mapname, ref player_coords);
                 }
-            }
+            }            
+            _.MapSwitch(mapname, player_coords.X, player_coords.Y, true);
         }
 
-        protected void _read_from_save(BinaryReader reader, int version) {
+        protected void _read_from_save(BinaryReader reader, int version, ref string mapname, ref Point player_coords) {
             List<String> cur_party_names;
-            List<PartyMember> characters;
-            int cur_int;
-
-            
+            PartyMember cur_char;
+            int temp, temp2;            
 
             // LOAD HEADER
             // -----------
 
             if (reader.ReadInt32() != SAVE_SIGNATURE) throw new FormatException("Not a Sully Chronicles save file.");
-            cur_int = reader.ReadInt32();
-            if (cur_int != CURRENT_VERSION) throw new FormatException("Wrong save file format. This is a version " +
-                                                       cur_int + " save file, but a version " + CURRENT_VERSION +
+            temp = reader.ReadInt32();
+            if (temp != CURRENT_VERSION) throw new FormatException("Wrong save file format. This is a version " +
+                                                       temp + " save file, but a version " + CURRENT_VERSION +
                                                        " file is required."); // TODO: add version converters 
-            cur_int = reader.ReadInt32(); // offset to end of screencap
-            reader.BaseStream.Seek(cur_int, SeekOrigin.Current);
+            temp = reader.ReadInt32(); // offset to end of screencap
+            reader.BaseStream.Seek(temp, SeekOrigin.Current);
             
             game.saved_time = new TimeSpan(reader.ReadInt64());
             
-            cur_int = reader.ReadInt32(); // number of current party members
+            temp = reader.ReadInt32(); // number of current party members
             cur_party_names = new List<String>();
-            for (int i = 0; i < cur_int; i++) cur_party_names.Add(reader.ReadString());
+            for (int i = 0; i < temp; i++) cur_party_names.Add(reader.ReadString());
 
             reader.ReadString(); // location name -- currently unused
 
             // LOAD PARTY DATA
             // ---------------
-            BinaryFormatter formatter = new BinaryFormatter();
-            characters = new List<PartyMember>();
-            cur_int = reader.ReadInt32(); // # of characters total
-            for (int i=0; i<cur_int; i++) characters.Add((PartyMember)(formatter.Deserialize(reader.BaseStream)));
+            game.inventory.ClearInventory();                        
+            temp = reader.ReadInt32(); // # of characters total
+            for (int i = 0; i < temp; i++) {
+                cur_char = PartyData.partymemberData[reader.ReadString().ToLower()];
+                cur_char._loadState(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()); // current xp/hp/mp
 
-            game.party.ClearParty(true);
-            PartyData.LoadFromCollection(characters);
+                temp2 = reader.ReadInt32(); // number of slots with things in them
+                foreach (EquipmentSlot slot in cur_char.equipment.Values) {
+                    if (slot.getItem() != null) slot.Dequip(game.inventory, true);
+                }
+                for (int j = 0; j < temp2; j++) {
+                    cur_char.equipment[reader.ReadString()].Equip(reader.ReadString(), game.inventory);
+                }
+            }
+
+            game.party.ClearParty(false);                
+            foreach (string character in cur_party_names) {
+                game.party.AddPartyMember(character, PartyData.partymemberData[character.ToLower()].level);                
+            }
 
             // LOAD INVENTORY DATA
             // -------------------            
-            foreach (List<ItemSlot> list in game.inventory.item_sets) {
-                cur_int = reader.ReadInt32();
-                foreach (ItemSlot item in list) item.quant = 0;
-                for (int i = 0; i < cur_int; i++) {
-                    
-                }
+            temp = reader.ReadInt32();
+            for (int i = 0; i < temp; i++) {
+                game.inventory.AddItem(reader.ReadString(), reader.ReadInt32());
             }
+
+            // LOAD SCENARIO DATA
+            // ------------------
+            temp = _.flags.Length;
+            for (int i = 0; i < temp; i++) _.flags[i] = reader.ReadInt32();
+
+            // LOAD MAP DATA 
+            // -------------
+            mapname = reader.ReadString();
+            player_coords.X = reader.ReadInt32();
+            player_coords.Y = reader.ReadInt32();
 
         }
        
