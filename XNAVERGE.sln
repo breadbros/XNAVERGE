@@ -22,8 +22,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sully", "Examples\Sully\Sul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SullyContent", "Examples\Sully\SullyContent\SullyContent.contentproj", "{BE4DABF9-B23E-45E7-8DF9-2D6E882AEC5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fastJSON", "Upstream\fastJSON\fastJSON\fastJSON.csproj", "{207E91B1-C9F8-4913-88E1-3549EF5F3273}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xbox 360 Copy of Sully", "Examples\Sully\Sully\Xbox 360 Copy of Sully.csproj", "{658F1AEA-06D3-49F2-8C99-2946C10699FE}"
 EndProject
 Global
@@ -150,18 +148,6 @@ Global
 		{BE4DABF9-B23E-45E7-8DF9-2D6E882AEC5A}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{BE4DABF9-B23E-45E7-8DF9-2D6E882AEC5A}.Release|x86.ActiveCfg = Release|x86
 		{BE4DABF9-B23E-45E7-8DF9-2D6E882AEC5A}.Release|Xbox 360.ActiveCfg = Release|x86
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Release|Any CPU.Build.0 = Release|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Release|x86.ActiveCfg = Release|Any CPU
-		{207E91B1-C9F8-4913-88E1-3549EF5F3273}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 		{658F1AEA-06D3-49F2-8C99-2946C10699FE}.Debug|Any CPU.ActiveCfg = Debug|Xbox 360
 		{658F1AEA-06D3-49F2-8C99-2946C10699FE}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
 		{658F1AEA-06D3-49F2-8C99-2946C10699FE}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360

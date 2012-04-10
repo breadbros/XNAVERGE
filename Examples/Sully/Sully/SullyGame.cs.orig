@@ -95,8 +95,11 @@ namespace Sully {
                 inventory.AddItem( Item.masterItemList[key], random.Next( 1, 98 ) );
             }
 
+<<<<<<< HEAD
+=======
             saves = new SaveManager(this);
 
+>>>>>>> breadbros/master
             base.Initialize();
         }
 
@@ -107,7 +110,31 @@ namespace Sully {
         public Sprite dspr;
         protected override void LoadContent() {
 
+<<<<<<< HEAD
+            Console.WriteLine( "SullyGmae::LoadContent(), mothafuckas!" );
+=======
+/*
+            string familyName;
+            string familyList = "";
+            FontFamily[] fontFamilies;
+
+            InstalledFontCollection installedFontCollection = new InstalledFontCollection();
+
+            // Get the array of FontFamily objects.
+            fontFamilies = installedFontCollection.Families;
+
+            // The loop below creates a large string that is a comma-separated
+            // list of all font family names.
+
+            int count = fontFamilies.Length;
+            for( int j = 0; j < count; ++j ) {
+                familyName = fontFamilies[j].Name;
+                familyList = familyList + familyName;
+                familyList = familyList + ",  ";
+            }
+*/
             Console.WriteLine( "SullyGame::LoadContent() called here" );
+>>>>>>> breadbros/master
 
             // always do this first
             base.LoadContent();
@@ -142,31 +169,37 @@ namespace Sully {
                                     
             _.MapSwitch( "paradise_isle2", 13, 19);
 
-
-            //////////////////////////////////////////////////
-            //////////////////////////////////////////////////
-            ///////////  here's some dumb sprite-demoing stuff!
+            // here's some dumb sprite-demoing stuff!
             dspr = new Sprite("darin.json", "Attack");
+
             AnimationEndingDelegate del = null;
             del = (Sprite s) => {
                 s.set_animation("Idle");
                 s.on_done_animating -= del;
             };
+
             dspr.on_done_animating += del;
             dspr.move_to(150, 150);
             dspr.visible = true;
             hook_render = script<RenderLayerDelegate>("draw_darin");
             dspr.acceleration = new Vector2(-0.0008f, -0.001f);
-            ////////// end of sprite demo
-            //////////////////////////////////////////////////
-            //////////////////////////////////////////////////
-
+            
             //VERGEMap.switch_map( "underwater" );
-            //player = map.spawn_entity( 29, 12, "darin" );            
-            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug     
-            //saves.save(12);
+            //player = map.spawn_entity( 29, 12, "darin" );
+
+<<<<<<< HEAD
+            player = map.spawn_entity( 13, 19, "darin" );     // paradise isle real
+            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug
 
             player.speed += 100;
+
+            this.hook_render = script<RenderLayerDelegate>( "draw_UI" );
+=======
+            
+            //player = map.spawn_entity( 63, 59, "darin" );       // paradise isle debug     
+>>>>>>> breadbros/master
+            //saves.save(12);
+
         }
 
         /// <summary>

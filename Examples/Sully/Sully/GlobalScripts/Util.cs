@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Audio;
@@ -117,9 +118,66 @@ namespace Sully {
             else _.sg.spritebatch.Draw( iconAtlas, new Rectangle(x,y,16,16), icon_get( idx ), Color.White );
         }
 
+        public static Dictionary<char, int> system_font_size;
+        
+        /// this may be completely unneeded!
+        public static void initFont() {
 
+            system_font_size = new Dictionary<char, int>(); 
 
+            const string s = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()_+-=<>,./?;:'\\|[]{}`~ ";
+            int lineHeight = 0;
+            foreach( char c in s ) {
 
+                Vector2 v2 = _.sg.system_font.MeasureString( ""+c );
+
+                if( v2.X > lineHeight ) {
+                    lineHeight = (int)v2.X;
+                }
+
+                system_font_size[c] = (int)v2.Y;
+            }
+        }
+
+        
+        public static int wordlen( string s ) {
+            return (int)_.sg.system_font.MeasureString( s ).X;
+        } 
+
+        public static string[] autotext( string input, int w ) {
+            List<string> ret = new List<string>();
+            string[] words = input.Split( ' ' );
+
+            int cur = wordlen(words[0]);
+            string s = words[0];
+
+            for( int i = 1; i < words.Length; i++ ) {
+                bool forceNewline = words[i].IndexOf( '|' ) >= 0;
+                
+                int next = wordlen( " " + words[i] );
+
+                if( forceNewline ) {
+                    ret.Add( s );
+                    s = "";
+                    cur = 0;
+                } else  if( cur + next > w  ) {
+                    ret.Add( s );
+                    s = words[i];
+                    cur = next;
+                } else {
+                    if( cur > 0 ) {
+                        s += " ";
+                    }
+
+                    cur += next;
+                    s += words[i];
+                }
+            }
+
+            ret.Add( s );
+
+            return ret.ToArray();
+        }
 
 
 

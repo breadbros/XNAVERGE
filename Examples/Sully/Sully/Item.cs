@@ -46,7 +46,7 @@ namespace Sully {
             _adjustItemQuantity(i, -quant);
         }
 
-        public Inventory GetWearableEquipmentSet( String klass, EquipSlotType slot ) {
+        public Inventory GetWearableEquipmentSet( Klass klass, EquipSlotType slot ) {
 
             Inventory ret = new Inventory();
 
@@ -127,7 +127,7 @@ namespace Sully {
         public int icon, price;
         public bool use_battle, use_menu;
         public string func_targetting, func_effect;
-        public string[] equip_classes;
+        public Klass[] equip_classes;
         public string equip_modcode;
         public EquipSlotType equip_slot; 
 
@@ -196,22 +196,24 @@ namespace Sully {
             equip_stats = _statsHelper( equip_modcode );
 
             List<Object> equippable = (List<Object>)d["equip_by"];
-            if (equippable == null || equippable.Count <= 0) equip_classes = null;
-            else {
-                equip_classes = new String[equippable.Count];
-                for (int i = 0; i < equippable.Count; i++) equip_classes[i] = (String)equippable[i];
-                
+            List<Klass> equip_klasses = new List<Klass>();
+            foreach( string equip_klass in equippable ) {
+                if( equip_klass != "" ) {
+                    equip_klasses.Add( Klass.get(equip_klass) );
+                }
             }
-            /*
-            if( al.Count > 0 ) {
-                equip_classes = (string[])al.ToArray( typeof( string ) );
-            } else {
-                equip_classes = null;
-            }*/
 
-            if (equip_classes != null) type = ItemType.Equipment;
-            else if (price == 0) type = ItemType.Key;
-            else type = ItemType.Consumable;
+            if( equip_klasses.Count > 0 ) {
+                equip_classes = equip_klasses.ToArray();
+            }
+             
+            if( equip_classes != null ) {
+                type = ItemType.Equipment;
+            } else if( price == 0 ) {
+                type = ItemType.Key;
+            } else {
+                type = ItemType.Consumable;
+            }
         }
 
         public static void initItems() {
