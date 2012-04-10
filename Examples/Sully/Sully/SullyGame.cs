@@ -61,7 +61,7 @@ namespace Sully {
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );
             this.setMcGrender( mcg );
-
+            
             this.game_input_handler = () => {
 
                 if( this.mainMenu.CanSummonMenu() && action.menu.pressed ) {

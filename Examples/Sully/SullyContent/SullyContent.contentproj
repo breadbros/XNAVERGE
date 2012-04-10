@@ -136,6 +136,10 @@
       <Processor>EffectProcessor</Processor>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="dat\Skills.json">
+      <Name>Skills</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="dat\Skilltypes.json">
       <Name>Skilltypes</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
