@@ -64,7 +64,7 @@ namespace Sully {
             color_bounds.Inflate( -2, -2 );
 
             bgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
-            bgColor.SetData(new[] { new Color(new Vector4(140 / 255f, 0, 140 / 255f, 63 / 255f)) });
+            bgColor.SetData(new[] { new Color(140, 0, 140) });
 
 
 
