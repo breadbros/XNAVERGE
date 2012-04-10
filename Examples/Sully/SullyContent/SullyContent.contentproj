@@ -138,6 +138,9 @@
       <Name>EnemyGroups</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="dat\Status.json">
+      <Name>Status</Name>
+    </Compile>
     <None Include="sprites\img\bdarin.png">
       <Name>bdarin</Name>
       <Importer>TextureImporter</Importer>

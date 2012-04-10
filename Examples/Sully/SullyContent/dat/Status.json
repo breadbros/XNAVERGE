@@ -1,0 +1,443 @@
+// This first line is a list of valid removal conditions.
+Conditions: on_end, on_death, on_rest, on_hit, on_act, on_life
+
+// Actual definitions start here
+// Enter X for no icon and -- for no effect function.
+// You can't use -- for no icon because the parser 
+// will go "dur this is the end of the definition!"
+// Other parameters; DESC, REMOVE, CANCELS.
+// REMOVE and CANCELS are both comma-delimited lists. 
+//
+// Remove conditions:
+//  on_death
+//  on_rest
+//  on_end
+//  
+
+Poison
+//Icon  Dur RenderFunc  EffectFunc
+127 -1  SR_Poison   -
+DESC "Lose HP steadily in and out of battle."
+REMOVE on_death, on_rest // Commas are important here! 
+
+--
+
+Enervate
+//Icon  Dur RenderFunc  EffectFunc
+128 -1  SR_Enervate -
+DESC "Lose MP steadily in and out of battle."
+REMOVE on_death, on_rest
+
+--
+
+Blind
+//Icon  Dur RenderFunc  EffectFunc
+129 -1  SR_Blind    -
+DESC "Hit and critical rate reduced."
+REMOVE on_death, on_rest
+
+// Blind reduces the target's effective HIT by 50%.and reduces his effective FER to 1. 
+//
+// @see getHIT(), getFER(), nme_hit(), nme_fer()
+
+--
+
+Confuse
+//Icon  Dur RenderFunc  EffectFunc
+130 -1  SR_Confuse  -
+DESC "Attack random targets until damaged."
+REMOVE on_hit, on_death, on_end
+
+--
+
+Charm
+//Icon  Dur RenderFunc  EffectFunc
+131 -1  SR_Charm    -
+DESC "Attack own party until damaged."
+REMOVE on_hit, on_death, on_end
+
+--
+
+Silence
+//Icon  Dur RenderFunc  EffectFunc
+132 100 SR_Silence  -
+DESC "Cannot use magic."
+REMOVE on_death, on_rest
+
+--
+
+Seal
+//Icon  Dur RenderFunc  EffectFunc
+133 100 SR_Seal     -
+DESC "Cannot use any special abilities."
+REMOVE on_death, on_rest
+
+--
+
+Sleep
+//Icon  Dur RenderFunc  EffectFunc
+134 75  SR_Sleep    -
+DESC "Cannot take action until damaged."
+REMOVE on_hit, on_death, on_end
+
+--
+
+Paralysis
+//Icon  Dur RenderFunc  EffectFunc
+135 75  SR_Paralysis    -
+DESC "Cannot take action."
+REMOVE on_death, on_rest
+
+--
+
+Slow
+//Icon  Dur RenderFunc  EffectFunc
+136 75  SR_Slow     -
+DESC "Reaction speed reduced."
+REMOVE on_death, on_end
+CANCELS Quick
+
+// Decreases REA by 33%.
+//
+// @see getREA(), nme_rea()
+
+--
+
+Weak
+//Icon  Dur RenderFunc  EffectFunc
+137 75  SR_Weak     -
+DESC "Attack power reduced."
+REMOVE on_death, on_end
+CANCELS Might
+
+// Weak reduces the character's effective STR by 33%.
+//
+// @see getSTR(), nme_str()
+
+--
+
+Fragile
+//Icon  Dur RenderFunc  EffectFunc
+138 75  SR_Fragile  -
+DESC "Physical defense reduced."
+REMOVE on_death, on_end
+CANCELS Protect
+
+/// increases damage from physical attacks to 150%
+///
+/// @see BasicDamageCalc()
+
+--
+
+Depress
+//Icon  Dur RenderFunc  EffectFunc
+139 75  SR_Depress  -
+DESC "Magic defense reduced."
+REMOVE on_death, on_end
+CANCELS Barrier
+
+/// increases damage from magical attacks to 150%
+///
+/// @see BasicDamageCalc()
+
+--
+
+Tangle
+//Icon  Dur RenderFunc  EffectFunc
+140 75  SR_Tangle   -
+DESC "Evasion reduced."
+REMOVE on_death, on_end
+CANCELS Evade
+
+// Tangle reduces the target's effective DOD by 50%.
+//
+// @see getDOD(), nme_dod()
+
+--
+
+Fugue
+//Icon  Dur RenderFunc  EffectFunc
+141 75  SR_Fragile  -
+DESC "Magic power reduced."
+REMOVE on_death, on_end
+CANCELS Enlighten
+
+// Fugue reduces the target's effective MAG by 33%.
+//
+// @see getMAG(), nme_mag()
+
+--
+
+Death
+//Icon  Dur RenderFunc  EffectFunc
+142 -1  SR_Death    Status_Death
+DESC "Instantly defeated."
+REMOVE on_death
+
+--
+
+Quick
+//Icon  Dur RenderFunc  EffectFunc
+143 75  SR_Quick    -
+DESC "Reaction speed increased."
+REMOVE on_death, on_end
+CANCELS Slow
+
+// Quick increases the character's effective REA by 50%.
+//
+// @see getREA(), nme_rea()
+
+--
+
+Might
+//Icon  Dur RenderFunc  EffectFunc
+144 75  SR_Might    -
+DESC "Attack power increased."
+REMOVE on_death, on_end
+CANCELS Weak
+
+// Might increases the character's effective STR by 50%.
+//
+// @see getSTR(), nme_str()
+
+--
+
+Protect
+//Icon  Dur RenderFunc  EffectFunc
+145 75  SR_Protect  -
+DESC "Physical defense increased."
+REMOVE on_death, on_end
+CANCELS Fragile
+
+/// reduces damage from physical attacks to 66%
+///
+/// @see BasicDamageCalc()
+
+--
+
+Barrier
+//Icon  Dur RenderFunc  EffectFunc
+146 75  SR_Barrier  -
+DESC "Magic defense increased."
+REMOVE on_death, on_end
+CANCELS Depress
+
+/// reduces damage from magical attacks to 66%
+///
+/// @see BasicDamageCalc()
+
+--
+
+Accurate
+//Icon  Dur RenderFunc  EffectFunc
+147 75  SR_Accurate -
+DESC "Hit and critical increased."
+REMOVE on_death, on_end
+
+// Accurate increases the character's effective HIT by 50% and doubles his effective FER.
+//
+// @see getHIT(), getFER(), nme_hit(), nme_fer()
+
+--
+
+Evade
+//Icon  Dur RenderFunc  EffectFunc
+148 75  SR_Evade    -
+DESC "Evasion increased."
+REMOVE on_death, on_end
+CANCELS Tangle
+
+// Evade increases the character's effective DOD by 50%.
+//
+// @see getDOD(), nme_dod()
+
+--
+
+Enlighten
+//Icon  Dur RenderFunc  EffectFunc
+149 75  SR_Enlighten    -
+DESC "Magic power increased."
+REMOVE on_death, on_end
+CANCELS Fugue
+
+// Enlighten increases the character's effective MAG by 50%.
+//
+// @see getMag(), nme_mag()
+
+--
+
+Invincible
+//Icon  Dur RenderFunc  EffectFunc
+150 25  SR_Invincible   -
+DESC "Immune to direct damage."
+REMOVE on_death, on_end
+
+/// reduces damage from all attacks to 0
+///
+/// @see BasicDamageCalc()
+
+--
+
+Lifeline
+//Icon  Dur RenderFunc  EffectFunc
+151 -1  SR_Lifeline -
+DESC "Revive automatically when defeated."
+REMOVE on_death, on_end
+
+// @see trigger_on_death()
+
+--
+
+Regenerate
+//Icon  Dur RenderFunc  EffectFunc
+152 100 SR_Regenerate   -
+DESC "Gradually regain HP."
+REMOVE on_death, on_end
+
+--
+
+Nullify
+//Icon  Dur RenderFunc  EffectFunc
+153 75  SR_Nullify  -
+DESC "Most magic has no effect"
+REMOVE on_death, on_end
+
+--
+
+Reflect
+//Icon  Dur RenderFunc  EffectFunc
+154 75  SR_Reflect  -
+DESC "Most spells are reflected."
+REMOVE on_death, on_end
+
+--
+
+Counter
+//Icon  Dur RenderFunc  EffectFunc
+155 50  SR_Counter  -
+DESC "Always counter-attacks."
+REMOVE on_death, on_end
+
+// Counter sets the character's CTR to 999.
+//
+// @see getCtr(), nme_ctr()
+
+--
+
+Grave
+//Icon  Dur RenderFunc  EffectFunc
+156 -1  SR_Grave    -
+DESC "Cannot be revived."
+REMOVE on_end
+
+/// @see bat_revive()
+
+///[21:12:00] <Gayo> Fragile increases the damage the character takes from physical sources (attacks and technical skills) by 50%..
+///[21:12:07] <Gayo> Depress increases the damage the character takes from magical sources by 50%..
+///[21:12:39] <Gayo> Protect reduces all the damage the character takes from physical sources (attacks and technical skills) by 33%.
+///[21:12:43] <Gayo> Barrier reduces all the damage the character takes from physical sources (attacks and technical skills) by 33%.
+///
+/// Barrier
+/// Protect
+/// Depress
+/// Fragile
+/// Reflect
+/// Regenerate
+/// Nullify
+/// Invincible
+/// Poison
+/// Enervate
+/// Death
+/// Confuse
+/// Charm
+/// Silence
+/// Seal
+/// Sleep
+/// Paralysis
+
+--
+
+Neutro
+// Note that Neutro only resists Fire, Ice, Electric, Holy, and Dark, 
+// not weird elements like AntiMech or Reduction.
+//Icon  Dur RenderFunc  EffectFunc
+157 -1  SR_Neutro   -
+DESC "Elemental damage is reduced." 
+REMOVE on_end, on_death
+
+--
+
+Rewarding
+// This only matters on enemies. It's added by the Lucky Day Fortune skill, and nothing else.
+// It makes the target guaranteed to drop items and ensures that any theft attempts against
+// it will succeed if it has something to steal.
+//Icon  Dur RenderFunc  EffectFunc
+X   -1  SR_Rewarding    -
+DESC "You're sure to get something good!"
+// No removal conditions because it's permanent and only applied to enemies.
+
+--
+
+FireWeak
+//Icon  Dur RenderFunc  EffectFunc
+158 -1  SR_FireWeak -
+DESC "Weak against Fire damage."
+REMOVE on_end, on_death
+
+--
+
+IceWeak
+//Icon  Dur RenderFunc  EffectFunc
+159 -1  SR_IceWeak  -
+DESC "Weak against Fire damage."
+REMOVE on_end, on_death
+
+--
+
+ElectricWeak
+//Icon  Dur RenderFunc  EffectFunc
+160 -1  SR_ElectricWeak -
+DESC "Weak against Electric damage."
+REMOVE on_end, on_death
+
+--
+
+HolyWeak
+//Icon  Dur RenderFunc  EffectFunc
+161 -1  SR_HolyWeak -
+DESC "Weak against Holy damage."
+REMOVE on_end, on_death
+
+--
+
+DarkWeak
+//Icon  Dur RenderFunc  EffectFunc
+162 -1  SR_DarkWeak -
+DESC "Weak against Dark damage."
+REMOVE on_end, on_death
+
+--
+
+Immune
+//Icon  Dur RenderFunc  EffectFunc
+163 150 SR_Immune   -
+DESC "Protected from ailments."
+REMOVE on_end, on_death
+
+--
+
+Lucky
+//Icon  Dur RenderFunc  EffectFunc
+X   -1  SR_Lucky    -
+DESC "Maybe something good will happen?"
+REMOVE on_end, on_death
+
+
+// NEW STATUS EFFECTS:
+// Neutro halves Fire, Ice, Electric, Dark, and Holy damage. It's applied as if you had a halve effect on top of whatever other elemental effects you already have.
+// The *Weak statuses cause you to take double damage from the specified element. Unlike Neutro, these supersede all other elemental resistances, including Neutro -- even if you normally absorb the element, you take double damage as though you were simply weak to it.
+// Rewarding causes the affected enemy to have a 100% drop/steal chance, assuming it has anything to drop or be stolen.
+// Immune makes the character immune to any status effect that Panacea can remove. Note that it does not remove these status effects if they're already on the target.
+// Lucky allows you to roll twice and use the better roll with the Fortune skill. It has no use for anyone but Lance.
+
+END_OF_FILE
