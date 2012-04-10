@@ -1,0 +1,107 @@
+{
+    "Evil_Carot": {
+        "stats": {
+            "maxhp": 15,
+            "maxmp": 12,
+            "str": 10,
+            "end": 30,
+            "mag": 18,
+            "mgr": 32,
+            "hit": 18,
+            "dod": 8,
+            "stk": 1,
+            "fer": 15,
+            "rea": 2,
+            "ctr": 20,
+            "mon": 20,
+            "exp": 3
+        },
+        "sprite": "carot.spr",
+        "icon": 2,
+        "ai": "DefaultEnemyAI",
+        "DROP": [
+            "Herb",
+            100
+        ],
+        "ELEMENT": "Dark",
+        "NEGATE": "AntiMech"
+    },
+    "Jelly_Baby": {
+        "stats": {
+            "maxhp": 10,
+            "maxmp": 0,
+            "str": 5,
+            "end": 6,
+            "mag": 4,
+            "mgr": 7,
+            "hit": 88,
+            "dod": 4,
+            "stk": 1,
+            "fer": 5,
+            "rea": 4,
+            "ctr": 0,
+            "mon": 2,
+            "exp": 1
+        },
+        "sprite": "blob.spr",
+        "icon": 2,
+        "ai": "DefaultEnemyAI",
+        "DOUBLE": "Ice",
+        "HALVE": "Fire",
+        "NEGATE": "AntiMech"
+    },
+    "Bunny": {
+        "stats": {
+            "maxhp": 3,
+            "maxmp": 12,
+            "str": 5,
+            "end": 6,
+            "mag": 8,
+            "mgr": 7,
+            "hit": 10,
+            "dod": 1,
+            "stk": 1,
+            "fer": 5,
+            "rea": 6,
+            "ctr": 0,
+            "mon": 5,
+            "exp": 1
+        },
+        "sprite": "bunny.spr",
+        "icon": 2,
+        "ai": "DefaultEnemyAI",
+        "DROP": [
+            "Pooh",
+            50
+        ],
+        "NEGATE": "AntiMech"
+    },
+    "Evil_Bunny": {
+        "stats": {
+            "maxhp": 36,
+            "maxmp": 40,
+            "str": 8,
+            "end": 8,
+            "mag": 14,
+            "mgr": 9,
+            "hit": 12,
+            "dod": 1,
+            "stk": 1,
+            "fer": 10,
+            "rea": 5,
+            "ctr": 0,
+            "mon": 30,
+            "exp": 4
+        },
+        "sprite": "evil_bunny.spr",
+        "icon": 2,
+        "ai": "DefaultEnemyAI",
+        "DROP": [
+            "Atlas_Scroll",
+            15
+        ],
+        "DOUBLE": "Holy",
+        "ABSORB": "Dark",
+        "NEGATE": "AntiMech"
+    }
+}
