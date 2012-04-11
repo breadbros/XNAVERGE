@@ -59,8 +59,8 @@ namespace Sully {
             Element.initElements();
             Status.initStatuses();
 
-            Item.initItems();
             Skill.initSkills();
+            Item.initItems();
 
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );

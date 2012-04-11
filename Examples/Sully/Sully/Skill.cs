@@ -62,22 +62,25 @@ namespace Sully {
             masterElement = new Dictionary<string, Element>();
 
             masterElement.Add(
-                "Fire", new Element( "Fire", 0, "Burny!" )
+                "fire", new Element( "Fire", 0, "Burny!" )
             );
             masterElement.Add(
-                "Ice", new Element( "Ice", 0, "Freezy!" )
+                "ice", new Element( "Ice", 0, "Freezy!" )
             );
             masterElement.Add(
-                "Electric", new Element( "Electric", 0, "Zappy!" )
+                "electric", new Element( "Electric", 0, "Zappy!" )
             );
             masterElement.Add(
-                "Holy", new Element( "Holy", 0, "Blessy!" )
+                "holy", new Element( "Holy", 0, "Blessy!" )
             );
             masterElement.Add(
-                "Dark", new Element( "Dark", 0, "Damney!" )
+                "dark", new Element( "Dark", 0, "Damney!" )
             );
             masterElement.Add(
-                "Drain", new Element( "Drain", 0, "Draino!" )
+                "drain", new Element( "Drain", 0, "Draino!" )
+            );
+            masterElement.Add(
+                "reduction", new Element( "Reduction", 0, "Halvey!" )
             );
         }
 

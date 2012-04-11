@@ -125,15 +125,21 @@ namespace Sully {
         public string name, description;
         public ItemType type;
         public int icon, price;
+
         public bool use_battle, use_menu;
         public string func_targetting, func_effect;
+        
+        
+        /// These are Equipment-only.  Subclass?
         public Klass[] equip_classes;
         public string equip_modcode;
         public EquipSlotType equip_slot;
-
-        public string[] ELEMENT, ADD, IMMUNE, AUTO, HALVE, NEGATE, DOUBLE, ABSORB, ENABLE;
-
+        public Element[] ELEMENT, NEGATE, DOUBLE, ABSORB, HALVE;
+        public Skill[] ENABLE;
+        public Status[] ADD, IMMUNE, AUTO;
         public Dictionary<Stat, int> equip_stats;
+
+
 
         public static Dictionary<string, Item> masterItemList;
 
@@ -221,97 +227,77 @@ namespace Sully {
         private void _EquipmentFinalizer( Dictionary<string, Object> d ) {
             object o;
             if( d.TryGetValue( "ELEMENT", out o ) ) {
-
-                List<String> list = new List<String>();
-
+                List<Element> list = new List<Element>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Element.get( s as string ) );
                 }
-
                 this.ELEMENT = list.ToArray();
             }
 
 
             if( d.TryGetValue( "ADD", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Status> list = new List<Status>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Status.get(s as string) );
                 }
-
                 this.ADD = list.ToArray();
             }
 
             if( d.TryGetValue( "IMMUNE", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Status> list = new List<Status>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Status.get(s as string) );
                 }
-
                 this.IMMUNE = list.ToArray();
             }
 
             if( d.TryGetValue( "AUTO", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Status> list = new List<Status>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Status.get(s as string) );
                 }
-
                 this.AUTO = list.ToArray();
             }
 
             if( d.TryGetValue( "HALVE", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Element> list = new List<Element>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Element.get( s as string ) );
                 }
-
                 this.HALVE = list.ToArray();
             }
 
             if( d.TryGetValue( "NEGATE", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Element> list = new List<Element>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Element.get(s as string) );
                 }
-
                 this.NEGATE = list.ToArray();
             }
 
             if( d.TryGetValue( "DOUBLE", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Element> list = new List<Element>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Element.get( s as string ) );
                 }
-
                 this.DOUBLE = list.ToArray();
             }
 
             if( d.TryGetValue( "ABSORB", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Element> list = new List<Element>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Element.get( s as string ) );
                 }
-
                 this.ABSORB = list.ToArray();
             }
 
             if( d.TryGetValue( "ENABLE", out o ) ) {
-                List<String> list = new List<String>();
-
+                List<Skill> list = new List<Skill>();
                 foreach( object s in o as List<object> ) {
-                    list.Add( s as string );
+                    list.Add( Skill.get(s as string) );
                 }
-
                 this.ENABLE = list.ToArray();
             }
-
         }
 
         public static void initItems() {
