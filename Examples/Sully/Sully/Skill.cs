@@ -55,6 +55,71 @@ namespace Sully {
         }
     }
 
+    public class Status {
+        public static Dictionary<string, Status> masterStatus;
+
+        public static void initStatuses() {
+            masterStatus = new Dictionary<string, Status>();
+
+            Dictionary<string, object> dict = (Dictionary<string, object>)Utility.parse_JSON( @"content\dat\Status.json" );
+
+            foreach( string key in dict.Keys ) {
+
+                Dictionary<string, object> myLine = (Dictionary<string, object>)dict[key];
+                Status s = new Status( key, myLine );
+                masterStatus.Add( s.name.ToLower(), s );
+            }
+
+            int i = 0;
+        }
+
+        public static Status get( string key ) {
+            Status s = masterStatus[key.ToLower()];
+
+            if( s == null ) {
+                throw new Exception( "Attempted to get an invalid Status named '" + key + "'.  Status seeker." );
+            }
+
+            return s;
+        }
+
+        public string name { get; private set; }
+        public int icon { get; private set; }
+        public int duration { get; private set; }
+        public string render_func { get; private set; }
+        public string effect_func { get; private set; }
+        public string description { get; private set; }
+        public string[] remove_events { get; private set; }
+        public string CANCELS { get; private set; }
+
+        public Status( string name, Dictionary<string, object> entry ) {
+            this.name = name;
+            Int64? i;
+
+            i = entry["icon"] as Int64?;
+            icon = (int)i.Value;
+            i = entry["duration"] as Int64?;
+            duration = (int)i.Value;
+
+            render_func = entry["render_func"] as string;
+            effect_func = entry["effect_func"] as string;
+
+            if( entry.ContainsKey( "CANCELS" ) ) {
+                CANCELS = entry["CANCELS"] as string;
+            }
+
+            description = entry["description"] as string;
+
+            List<object> obj = entry["remove"] as List<object>;
+            List<string> foo = new List<string>();
+            foreach( string s in obj ) {
+                foo.Add( s );
+            }
+            remove_events = foo.ToArray();
+
+        }
+    }
+
     public class Skill {
         public static Dictionary<string, Skill> masterSkills;
         public static void initSkills() {

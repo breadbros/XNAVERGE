@@ -55,6 +55,9 @@ namespace Sully {
             SkillType.initSkillTypes();
             Klass.initClasses();
             PartyData.InitializePartyData();
+
+            Status.initStatuses();
+
             Item.initItems();
             Skill.initSkills();
 

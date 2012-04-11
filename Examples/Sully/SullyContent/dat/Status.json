@@ -223,6 +223,7 @@
         "icon": 146,
         "duration": 75,
         "render_func": "",
+		"effect_func": "",
         "description": "Magic defense increased.",
         "remove": [
             "on_death",
