@@ -82,6 +82,10 @@ namespace Sully {
             masterElement.Add(
                 "reduction", new Element( "Reduction", 0, "Halvey!" )
             );
+            masterElement.Add(
+                "antimech", new Element( "AntiMech", 0, "Roboty!" )
+            );
+
         }
 
         public static Element get( string key ) {

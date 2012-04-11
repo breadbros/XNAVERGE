@@ -144,7 +144,7 @@ namespace Sully {
         public static Dictionary<string, Item> masterItemList;
 
         public static Item get( string key ) {
-            return masterItemList[key.ToLower()];
+            return masterItemList[key.ToLower().Replace(' ','_')];
         }
 
         private Dictionary<Stat, int> _statsHelper( string modcode ) {
@@ -179,7 +179,7 @@ namespace Sully {
         public Item( Dictionary<string, Object> d ) {
             String slot;
 
-            name = ((string)d["name"]).Replace( '_', ' ' );
+            name = ((string)d["name"]); //.Replace( '_', ' ' );
             description = (string)d["description"];
             icon = (int)((Int64)d["icon"]);
             price = (int)((Int64)d["price"]);

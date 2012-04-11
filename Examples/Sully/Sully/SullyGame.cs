@@ -62,6 +62,8 @@ namespace Sully {
             Skill.initSkills();
             Item.initItems();
 
+            Enemy.initEnemies(); 
+
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );

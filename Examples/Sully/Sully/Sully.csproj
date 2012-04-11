@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enemy.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="MapScripts\UnderwaterCavern.cs" />
