@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 
@@ -139,7 +139,7 @@ namespace XNAVERGE {
 
         private const String WHITESPACE = @"\s";
         public static String strip_whitespace(String str) {
-            return System.Text.RegularExpressions.Regex.Replace(str, WHITESPACE, "");
+            return Regex.Replace(str, WHITESPACE, "", RegexOptions.ECMAScript);
         }
 
         // Returns a Direction based on the signs of the x and y values given. ++ is DownRight, -0 is Left, etc.

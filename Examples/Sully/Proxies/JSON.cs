@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text;
 using JSIL.Meta;
 using JSIL.Proxy;
-using fastJSON;
 
 namespace Sully.Proxies {
     [JSProxy(
-        typeof(fastJSON.JSON),
+        "Newtonsoft.Json.JsonConvert",
         memberPolicy: JSProxyMemberPolicy.ReplaceDeclared,
-        attributePolicy: JSProxyAttributePolicy.ReplaceDeclared
+        attributePolicy: JSProxyAttributePolicy.ReplaceDeclared,
+        inheritable: true
     )]
-    public class FastJSONProxy {
-        [JSReplacement("JSIL.JSON.Parse($json)")]
+    public static class NewtonsoftJSONProxy {
+        [JSReplacement("JSIL.JSON.Parse($value)")]
         [JSIsPure]
-        public object Parse (string json) {
+        public static T DeserializeObject<T> (string value, params AnyType[] converters) {
             throw new InvalidOperationException();
         }
     }
