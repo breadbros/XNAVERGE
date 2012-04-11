@@ -55,6 +55,52 @@ namespace Sully {
         }
     }
 
+    public class Element {
+        public static Dictionary<string, Element> masterElement;
+
+        public static void initElements() {
+            masterElement = new Dictionary<string, Element>();
+
+            masterElement.Add(
+                "Fire", new Element( "Fire", 0, "Burny!" )
+            );
+            masterElement.Add(
+                "Ice", new Element( "Ice", 0, "Freezy!" )
+            );
+            masterElement.Add(
+                "Electric", new Element( "Electric", 0, "Zappy!" )
+            );
+            masterElement.Add(
+                "Holy", new Element( "Holy", 0, "Blessy!" )
+            );
+            masterElement.Add(
+                "Dark", new Element( "Dark", 0, "Damney!" )
+            );
+            masterElement.Add(
+                "Drain", new Element( "Drain", 0, "Draino!" )
+            );
+        }
+
+        public static Element get( string key ) {
+            Element e = masterElement[key.ToLower()];
+
+            if( e == null ) {
+                throw new Exception( "Attempted to get an invalid Element named '" + key + "'.  Plato disapproves.." );
+            }
+
+            return e;
+        }
+
+        public string name { get; private set; }
+        public string description { get; private set; }
+        public int icon { get; private set; }
+        public Element( string name, int icon, string description ) {
+            this.name = name;
+            this.icon = icon;
+            this.description = description;
+        }
+    }
+
     public class Status {
         public static Dictionary<string, Status> masterStatus;
 
@@ -69,8 +115,6 @@ namespace Sully {
                 Status s = new Status( key, myLine );
                 masterStatus.Add( s.name.ToLower(), s );
             }
-
-            int i = 0;
         }
 
         public static Status get( string key ) {
@@ -133,7 +177,6 @@ namespace Sully {
                 masterSkills.Add( s.name.ToLower(), s );
             }
 
-            int i = 0;
         }
 
         public static Skill get( string key ) {

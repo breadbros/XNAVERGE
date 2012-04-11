@@ -56,6 +56,7 @@ namespace Sully {
             Klass.initClasses();
             PartyData.InitializePartyData();
 
+            Element.initElements();
             Status.initStatuses();
 
             Item.initItems();
