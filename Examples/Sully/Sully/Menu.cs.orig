@@ -87,6 +87,7 @@ namespace Sully {
             int x = color_bounds.Location.X + rx;
             int y = color_bounds.Location.Y + ry;
 
+<<<<<<< HEAD
             SullyGame game = (SullyGame)VERGEGame.game;
             game.print_right( s, x, y + 1, Color.Black, false );
             game.print_right( s, x + 1, y + 1, Color.Black, false );
@@ -94,25 +95,51 @@ namespace Sully {
             game.print_right( s, x, y, c, false );
         }
 
+
         // Draws a sub window with vertical scroll bar and cursor, but draws none of the contents
         // This function is a god amoungst men
-        public void MenuDrawSubWindow( GraphicsDevice gd, int x1, int y1, int x2, int y2, int current_cursor_pos, int entry_y_height, int total_entry_count, int entry_start, int y_fuzz_factor )
+        public void MenuDrawSubWindow( int x1, int y1, int x2, int y2, int current_cursor_pos, int entry_y_height, int total_entry_count, int entry_start, int y_fuzz_factor )
             // Pass: Dimensions of box by top left and bottom right coords, current selected entry (pass negative for none),
             //          height of one entry, total number of entries, entry at top of window, and size modifier
             // No error checking, and can display strangely if odd values are passed
         {
+            _.setDrawTarget( _.sg.spritebatch );
+
             int ydiff = y2 - y1 - 8;
             int entry_fit = ( y2 - y1 ) / entry_y_height;
             if( total_entry_count < entry_fit ) entry_fit = total_entry_count;
+=======
+            // Draws a sub window with vertical scroll bar and cursor, but draws none of the contents
+            // This function is a god amoungst men
+            public void MenuDrawSubWindow( GraphicsDevice gd, int x1, int y1, int x2, int y2, int current_cursor_pos, int entry_y_height, int total_entry_count, int entry_start, int y_fuzz_factor )
+                // Pass: Dimensions of box by top left and bottom right coords, current selected entry (pass negative for none),
+                //          height of one entry, total number of entries, entry at top of window, and size modifier
+                // No error checking, and can display strangely if odd values are passed
+            {
+                int ydiff = y2 - y1 - 8;
+                int entry_fit = ( y2 - y1 ) / entry_y_height;
+                if( total_entry_count < entry_fit ) entry_fit = total_entry_count;
 
-            _.DrawRect( gd, x1, y1, x2, y2, _.sg.boxcolors[2] );
-            _.DrawRect(gd, x2 - 10, y1 + 2, x2 - 2, y2 - 2, _.sg.boxcolors[2]);
+                _.DrawRect( gd, x1, y1, x2, y2, _.sg.boxcolors[2] );
+                _.DrawRect(gd, x2 - 10, y1 + 2, x2 - 2, y2 - 2, _.sg.boxcolors[2]);
 
-            _.DrawRectFill(gd, x2 - 8, y1 + 4 + ((ydiff * entry_start) / total_entry_count),
-                x2 - 4, y1 + 4 + ( ( ydiff * ( entry_fit + entry_start ) ) / total_entry_count ), _.sg.boxcolors[2] );
+                _.DrawRectFill(gd, x2 - 8, y1 + 4 + ((ydiff * entry_start) / total_entry_count),
+                 x2 - 4, y1 + 4 + ( ( ydiff * ( entry_fit + entry_start ) ) / total_entry_count ), _.sg.boxcolors[2] );
+                if( current_cursor_pos >= 0 ) {
+                    _.DrawRect(gd, x1 + 4, y1 + 4 + (entry_y_height * (current_cursor_pos - entry_start)), x1 + 10, y1 + entry_y_height - y_fuzz_factor + (entry_y_height * (current_cursor_pos - entry_start)), _.sg.boxcolors[2]);
+                    _.DrawRectFill(gd, x1 + 6, y1 + 6 + (entry_y_height * (current_cursor_pos - entry_start)), x1 + 8, y1 + entry_y_height - y_fuzz_factor - 2 + (entry_y_height * (current_cursor_pos - entry_start)), _.sg.boxcolors[2]);
+                }
+            }
+>>>>>>> breadbros/master
+
+            _.DrawRect( x1, y1, x2, y2, _.sg.boxcolors[2] );
+            _.DrawRect( x2 - 10, y1 + 2, x2 - 2, y2 - 2, _.sg.boxcolors[2] );
+
+            _.DrawRectFill( x2 - 8, y1 + 4 + ( ( ydiff * entry_start ) / total_entry_count ),
+             x2 - 4, y1 + 4 + ( ( ydiff * ( entry_fit + entry_start ) ) / total_entry_count ), _.sg.boxcolors[2] );
             if( current_cursor_pos >= 0 ) {
-                _.DrawRect(gd, x1 + 4, y1 + 4 + (entry_y_height * (current_cursor_pos - entry_start)), x1 + 10, y1 + entry_y_height - y_fuzz_factor + (entry_y_height * (current_cursor_pos - entry_start)), _.sg.boxcolors[2]);
-                _.DrawRectFill(gd, x1 + 6, y1 + 6 + (entry_y_height * (current_cursor_pos - entry_start)), x1 + 8, y1 + entry_y_height - y_fuzz_factor - 2 + (entry_y_height * (current_cursor_pos - entry_start)), _.sg.boxcolors[2]);
+                _.DrawRect( x1 + 4, y1 + 4 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 10, y1 + entry_y_height - y_fuzz_factor + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
+                _.DrawRectFill( x1 + 6, y1 + 6 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), x1 + 8, y1 + entry_y_height - y_fuzz_factor - 2 + ( entry_y_height * ( current_cursor_pos - entry_start ) ), _.sg.boxcolors[2] );
             }
         }
 
@@ -232,10 +259,10 @@ namespace Sully {
             boxcolors[2] = new Color( 144, 144, 144 );
 
             activeBgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
-            activeBgColor.SetData(new[] { new Color(140, 0, 140) });
+            activeBgColor.SetData(new[] { new Color(new Vector4(140 / 255f, 0, 140 / 255f, 63 / 255f)) });
 
             inactiveBgColor = new Texture2D( _.sg.GraphicsDevice, 1, 1, false, SurfaceFormat.Color );
-            inactiveBgColor.SetData(new[] { new Color(0, 0, 0) });
+            inactiveBgColor.SetData(new[] { new Color(new Vector4(0, 0, 0, 63 / 255f)) });
 
             ControlDelegate cd1 = ( DirectionalButtons dir, VERGEActions action ) => {
                 if( commandBox.child != null ) {
@@ -292,7 +319,7 @@ namespace Sully {
 
             RenderDelegate drawCommandbox = ( int x, int y ) => {
                 commandBox.UpdateBounds( x, y );
-                game.spritebatch.Draw(GetHighlightBg(highlightedMenu == commandBox), commandBox.color_bounds, Color.White * .5f);
+                game.spritebatch.Draw( GetHighlightBg(highlightedMenu == commandBox), commandBox.color_bounds, Color.White * .5f );
                 game.spritebatch.Draw( commandBox.image, commandBox.bounds, Color.White );
 
                 int mx = 15;
@@ -369,15 +396,20 @@ namespace Sully {
                 }
 
                 if( curInv.Count == 0 ) {
-
+<<<<<<< HEAD
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 144, itemBox.cursor, 13, 1, 0, 0 );
+=======
                     itemBox.MenuDrawSubWindow( game.GraphicsDevice, _x, _y, _x + 200, _y + 180, itemBox.cursor, 13, 1, 0, 0 );
-
+>>>>>>> breadbros/master
                     itemBox.PrintText( "No items.", _x + 32, _y );
 
                 } else {
 
+<<<<<<< HEAD
+                    itemBox.MenuDrawSubWindow( _x, _y, _x + 200, _y + 144, itemBox.cursor, lineSize, curInv.Count, menu_start, 4 );
+=======
                     itemBox.MenuDrawSubWindow(game.GraphicsDevice, _x, _y, _x + 200, _y + 150, itemBox.cursor, lineSize, curInv.Count, menu_start, 4);
-
+>>>>>>> breadbros/master
                     _y += 4;
 
                     itemBox.DrawItemList( _x, _y, lineSize, menu_start, displayNumber, curInv, true );

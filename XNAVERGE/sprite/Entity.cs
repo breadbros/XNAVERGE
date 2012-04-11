@@ -59,9 +59,16 @@ namespace XNAVERGE {
 
         protected int _speed;
 
+        // Strips path data from asset names, because they're generally incorrect legacy paths baked into .MAP files.
+        // To specify a path to search for CHR files, edit Sprite.CHR_LOCATION.
+        public static String _clean_name(String filename) {
+            if (System.IO.Path.GetExtension(filename).ToLower() != ".json") // assume a CHR asset
+                filename = System.IO.Path.GetFileName(filename); 
+            return filename;
+        }
 
-        public Entity( SpriteBasis _basis, String ent_name )
-            : base( _basis, "Idle Down" ) {
+        public Entity(String asset_or_json_name, String ent_name)
+            : base( _clean_name(asset_or_json_name), "Idle Down" ) {
             _facing = Direction.Down;
             obstructing = false;
             obstructable = true;
@@ -77,62 +84,9 @@ namespace XNAVERGE {
             initialize_movement_attributes();
             // Entities come from chrs, so they all have walk and idle animations defined.
         }
-        public Entity( SpriteBasis _basis ) : this( _basis, "" ) { }
 
-        public Entity( String asset_name ) : this( asset_name, asset_name ) { }
-
-        public Entity( String asset_name, String ent_name ) : this( _loadSpriteByFilename( asset_name ), ent_name ) { }
-        public static SpriteBasis _loadSpriteByFilename( string asset_name ) {
-            try {
-                return VERGEGame.game.MapContent.Load<SpriteBasis>( asset_name );
-            } catch( Microsoft.Xna.Framework.Content.ContentLoadException ) {
-                return VERGEGame.game.MapContent.Load<SpriteBasis>( "chrs/" + asset_name );
-            }
-        }
-
-        // Attempt to load an entity by inferring its asset name from its chr filename.
-        // First checks if the filename matches an asset exactly, then if the filename
-        // sans extension matches, then if the entity name matches (if one is given).
-        public static Entity load_from_chr_filename( String filename ) { return Entity.load_from_chr_filename( filename, "" ); }
-        public static Entity load_from_chr_filename( String filename, String ent_name ) {
-            int pos;
-            SpriteBasis spr = null;
-            filename = Utility.strip_path( filename );
-            try { // there doesn't seem to be a way to check if content exists without trying to load it, so let's do that
-                spr = VERGEGame.game.MapContent.Load<SpriteBasis>( filename );
-            } catch (Microsoft.Xna.Framework.Content.ContentLoadException e) {
-                // OK, the filename doesn't correspond to an asset name. Let's try it without the extension
-                try {
-                    pos = filename.LastIndexOf(".");
-                    if (pos < 0) throw e;
-                    spr = VERGEGame.game.MapContent.Load<SpriteBasis>(filename.Substring(0, pos));
-                }
-                catch (Microsoft.Xna.Framework.Content.ContentLoadException) { // That didn't work either. Check for a default tileset to use.
-                    if (!String.IsNullOrEmpty(ent_name)) {
-                        try {
-                            spr = VERGEGame.game.MapContent.Load<SpriteBasis>(ent_name);
-                        }
-                        catch (Microsoft.Xna.Framework.Content.ContentLoadException) {
-
-                            try {
-                                spr = VERGEGame.game.MapContent.Load<SpriteBasis>( "chrs/"+ent_name );
-                            } catch( Microsoft.Xna.Framework.Content.ContentLoadException ) {
-                                throw new ArgumentException( "Couldn't find a sprite asset named " + filename +
-                                    ", with or without extension, or one matching the entity name \"" + ent_name + "\"." );
-                            }
-                        }
-                    }
-                    else {
-                            throw new ArgumentException("Couldn't find a sprite asset named " + filename +
-                                ", with or without extension.");
-                    }
-                }
-            }
-
-            if( String.IsNullOrEmpty( ent_name ) ) return new Entity( spr, filename );
-            else return new Entity( spr, ent_name );
-        }
-
+        public Entity(String asset_name) : this( asset_name, asset_name ) { }        
+        
         public virtual void idle() { set_animation( idle_animation_prefix + facing ); }
         public virtual void walk() { set_animation( move_animation_prefix + facing ); }
 
@@ -266,22 +220,44 @@ namespace XNAVERGE {
         // Draws the entity. This can be used to blit the entity at weird times (for instance, during a render script), but it's mainly used
         // for standard entity blitting. The elaborate y-sorting term will be ignored if you draw outside the entity render phase.
 
-        public override void Draw() {
+        // Oh god, what's all this about? For XNA to handle the y-sorting, we need to map y-values to a float ranging from 0 to 1. 
+        // We can divide the pixel coordinate by the range of plausible y-values, but this leads to floating-point flicker when 
+        // entities have the same y-value and overlap. 
+        // Thus, a fractional offset based on the number of entities (to ensure uniqueness) is added to the sort depth.
+        protected virtual float _ysort_value() {
             VERGEGame game = VERGEGame.game;
-
-            game.spritebatch.Draw( basis.image, destination, basis.frame_box[current_frame], Color.White, 0, Vector2.Zero, SpriteEffects.None,
-                // Oh god, what's all this about? For XNA to handle the y-sorting, we need to map y-values to a float ranging from 0 to 1. 
-                // We can divide the pixel coordinate by the range of plausible y-values, but this leads to floating-point flicker when 
-                // entities have the same y-value and overlap. 
-                // Thus, a fractional offset based on the number of entities (to ensure uniqueness) is added to the sort depth.
-                ( ( (float)foot - game.entity_space.bounds.X ) * game.map.num_entities - index ) / ( game.entity_space.bounds.Height * game.map.num_entities )
-            );
+            return (((float)foot - game.entity_space.bounds.Y) * game.map.num_entities - index) / (game.entity_space.bounds.Height * game.map.num_entities);
         }
 
-        public void DrawAt( Rectangle dest, int frame ) {
-            VERGEGame game = VERGEGame.game;
+        public override void Draw(int frame) {            
+            Point center;
+            Rectangle ad_hoc_dest;
+            if (angle == 0f)
+                VERGEGame.game.spritebatch.Draw(basis.image, destination, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, _ysort_value());
+            else {
+                center = hitbox.Center;
+                center.X -= destination.X;
+                center.Y -= destination.Y;
+                ad_hoc_dest = destination;
+                ad_hoc_dest.Offset(center.X, center.Y);
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, _ysort_value());
+            }
+        }
 
-            game.spritebatch.Draw( basis.image, dest, basis.frame_box[frame], Color.White );
+        public override void DrawAt(int px, int py, int frame) {            
+            Point center;
+            Rectangle ad_hoc_dest = destination;
+            if (angle == 0f) {
+                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X, py + destination.Y - hitbox.Y);            
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White);
+            }
+            else {
+                center = hitbox.Center;
+                center.X -= destination.X;
+                center.Y -= destination.Y;
+                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X + center.X, py + destination.Y - hitbox.Y + center.Y); 
+                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, 1.0f);
+            }
         }
     }
 }

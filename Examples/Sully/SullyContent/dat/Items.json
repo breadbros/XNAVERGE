@@ -53,7 +53,7 @@
     },
     {
         "name": "Bronze_Key",
-        "description": "Key to the love shack.|Awww yeah.",
+        "description": "Key to the love shack. | Awww yeah.",
         "icon": 21,
         "price": 0,
         "use_battle": 0,
@@ -118,7 +118,7 @@
     },
     {
         "name": "Bacon",
-        "description": "There's only one thing that smells like bacon, and it's this.|Restores 90 HP.",
+        "description": "There's only one thing that smells like bacon, and it's this. | Restores 90 HP.",
         "icon": 33,
         "price": 100,
         "use_battle": 1,
@@ -209,7 +209,7 @@
     },
     {
         "name": "Wooden_Sword",
-        "description": "It's dangerous to go alone! Take this.|ATK+15",
+        "description": "It's dangerous to go alone! Take this. | ATK+15",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -226,7 +226,7 @@
     },
     {
         "name": "Iron_Sword",
-        "description": "Better than the wooden sword, because it's made of metal.|ATK+22",
+        "description": "Better than the wooden sword, because it's made of metal. | ATK+22",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -243,7 +243,7 @@
     },
     {
         "name": "White_Sword",
-        "description": "Is your sword white enough? Try Crest WhiteStrips today!|ATK+32",
+        "description": "Is your sword white enough? Try Crest WhiteStrips today! | ATK+32",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -260,7 +260,7 @@
     },
     {
         "name": "Paired_Swords",
-        "description": "This is like a normal sword except there are two. So it's better!|ATK+24, STK+1",
+        "description": "This is like a normal sword except there are two. So it's better! | ATK+24, STK+1",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -276,7 +276,7 @@
     },
     {
         "name": "Flaming_Sword",
-        "description": "As seen in the Bible!|Fire, ATK +45",
+        "description": "As seen in the Bible! | Fire, ATK +45",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -289,11 +289,14 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+45;"
+        "equip_modcode": "ATK,+45;",
+        "ELEMENT": [
+            "Fire"
+        ]
     },
     {
         "name": "Dark_Sword",
-        "description": "A cursed weapon that brings death to foes.|Dark, ATK+52, CTR+5, adds Death",
+        "description": "A cursed weapon that brings death to foes. | Dark, ATK+52, CTR+5, adds Death",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -306,11 +309,17 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+52;CTR,+5;"
+        "equip_modcode": "ATK,+52;CTR,+5;",
+        "ELEMENT": [
+            "Dark"
+        ],
+        "ADD": [
+            "Death"
+        ]
     },
     {
         "name": "Carrot_Blade",
-        "description": "Surging with power! Sacred blade, smite my enemies!|Holy, ATK+65, adds Grave",
+        "description": "Surging with power! Sacred blade, smite my enemies! | Holy, ATK+65, adds Grave",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -321,11 +330,20 @@
             "Knight"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+65;"
+        "equip_modcode": "ATK,+65;",
+        "ELEMENT": [
+            "Holy"
+        ],
+        "IMMUNE": [
+            "Blind"
+        ],
+        "ADD": [
+            "Grave"
+        ]
     },
     {
         "name": "Saladbolg",
-        "description": "This legendary weapon cleaves opponents in two as easily as chopping tomatoes.|ATK+40, STR+5, HIT+30, FER+100",
+        "description": "This legendary weapon cleaves opponents in two as easily as chopping tomatoes. | ATK+40, STR+5, HIT+30, FER+100",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -341,7 +359,7 @@
     },
     {
         "name": "Hand_Axe",
-        "description": "When you don't know what to do, just axe!|ATK+26, FER+25",
+        "description": "When you don't know what to do, just axe! | ATK+26, FER+25",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -358,7 +376,7 @@
     },
     {
         "name": "Battleaxe",
-        "description": "This Valentine's Day, say it with axe.|ATK+40, FER+25",
+        "description": "This Valentine's Day, say it with axe. | ATK+40, FER+25",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -375,7 +393,7 @@
     },
     {
         "name": "Spear",
-        "description": "The quintessential weapon: it's long and the end is pointy.|ATK+30, HIT+10",
+        "description": "The quintessential weapon: it's long and the end is pointy. | ATK+30, HIT+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -391,7 +409,7 @@
     },
     {
         "name": "Steel_Lance",
-        "description": "10,000 jousters can't be wrong!|ATK+42, HIT+15",
+        "description": "10,000 jousters can't be wrong! | ATK+42, HIT+15",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -407,7 +425,7 @@
     },
     {
         "name": "Thunderstroke",
-        "description": "A spear as swift and deadly as a bolt of lightning.|Electric, ATK+56, HIT+30, adds Paralysis",
+        "description": "A spear as swift and deadly as a bolt of lightning. | Electric, ATK+56, HIT+30, adds Paralysis",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -418,11 +436,17 @@
             "Spearguy"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+56;HIT,+30;"
+        "equip_modcode": "ATK,+56;HIT,+30;",
+        "ELEMENT": [
+            "Electric"
+        ],
+        "ADD": [
+            "Paralysis"
+        ]
     },
     {
         "name": "Gungnir",
-        "description": "A legendary spear named after an ancient hero.|ATK+62, HIT+15, +Accurate, resist Blind and Weak",
+        "description": "A legendary spear named after an ancient hero. | ATK+62, HIT+15, +Accurate, resist Blind and Weak",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -433,11 +457,18 @@
             "Spearguy"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+62;HIT,+15;"
+        "equip_modcode": "ATK,+62;HIT,+15;",
+        "AUTO": [
+            "Accurate"
+        ],
+        "IMMUNE": [
+            "Blind",
+            "Weak"
+        ]
     },
     {
         "name": "Staff",
-        "description": "The thinking man's club.|ATK+10, MAG+4",
+        "description": "The thinking man's club. | ATK+10, MAG+4",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -453,15 +484,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;MAG,+4;"
     },
     {
         "name": "Wand",
-        "description": "Using a weapon this wimpy is really making a statement.|ATK+6, MAG+9, no CTR, no FER",
+        "description": "Using a weapon this wimpy is really making a statement. | ATK+6, MAG+9, no CTR, no FER",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -481,7 +511,7 @@
     },
     {
         "name": "Pastoral_Staff",
-        "description": "A staff used by shepherds. Blessed by the spirits of a thousand sheep.|Holy, ATK+12, MAG+6",
+        "description": "A staff used by shepherds. Blessed by the spirits of a thousand sheep. | Holy, ATK+12, MAG+6",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -495,11 +525,12 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+12;MAG,+6;"
+        "equip_modcode": "ATK,+12;MAG,+6;",
+        "ELEMENT": ["Holy"]
     },
     {
         "name": "Mace",
-        "description": "Sutble. Stealthy. An instrument of finesse, suitable f-|*THUD*SMASH*",
+        "description": "Sutble. Stealthy. An instrument of finesse, suitable f- | *THUD*SMASH*",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -515,15 +546,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+16;MAG,+4;"
     },
     {
         "name": "Jeweled_Rod",
-        "description": "See, this is what you get when ricers learn magic.|ATK+15, MAG+8",
+        "description": "See, this is what you get when ricers learn magic. | ATK+15, MAG+8",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -541,7 +571,7 @@
     },
     {
         "name": "Druid_Staff",
-        "description": "I guess it's a staff that belonged to a druid?|ATK+23, MAG+10",
+        "description": "I guess it's a staff that belonged to a druid? | ATK+23, MAG+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -559,7 +589,7 @@
     },
     {
         "name": "Pharaoh_Sceptre",
-        "description": "Perfect for the immortal god-king in your life.|Dark, ATK+25, MAG+25, MP+10, adds Depress",
+        "description": "Perfect for the immortal god-king in your life. | Dark, ATK+25, MAG+25, MP+10, adds Depress",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -571,11 +601,17 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+25;MAG,+25;MP,+10;"
+        "equip_modcode": "ATK,+25;MAG,+25;MP,+10;",
+        "ELEMENT": [
+            "Dark"
+        ],
+        "ADD": [
+            "Depress"
+        ]
     },
     {
         "name": "Croziest",
-        "description": "A weapon so holy that only a supremely righteous soul can wield it.|Holy, ATK+40, MAG+20, FER+20, HP+15",
+        "description": "A weapon so holy that only a supremely righteous soul can wield it. | Holy, ATK+40, MAG+20, FER+20, HP+15",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -586,11 +622,14 @@
             "Cleric"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+40;MAG,+20;FER,+20;HP,+15;"
+        "equip_modcode": "ATK,+40;MAG,+20;FER,+20;HP,+15;",
+        "ELEMENT": [
+            "Holy"
+        ]
     },
     {
         "name": "Wonder_Wand",
-        "description": "This wand pushes your magical ability to its limits.|ATK+10, MAG+15, no CTR, no FER, +Enlighten",
+        "description": "This wand pushes your magical ability to its limits. | ATK+10, MAG+15, no CTR, no FER, +Enlighten",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -602,11 +641,14 @@
             "Priest"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+10;MAG,+15;CTR,-999;FER,-999;"
+        "equip_modcode": "ATK,+10;MAG,+15;CTR,-999;FER,-999;",
+        "AUTO": [
+            "Enlighten"
+        ]
     },
     {
         "name": "Support_Staff",
-        "description": "This staff's powerful defensive magic should ease your crippling insecurities.|ATK+40, MAG+4, MGR+12, END+12",
+        "description": "This staff's powerful defensive magic should ease your crippling insecurities. | ATK+40, MAG+4, MGR+12, END+12",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -624,7 +666,7 @@
     },
     {
         "name": "Stylin'_Cane",
-        "description": "The True King of Funk pulled this dope cane from the engine block of a 1974 Ford Mustang II.|ATK+30, HIT+15, MAG+12, CTR+100, adds Charm",
+        "description": "The True King of Funk pulled this dope cane from the engine block of a 1974 Ford Mustang II. | ATK+30, HIT+15, MAG+12, CTR+100, adds Charm",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -635,11 +677,14 @@
             "Wizard"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+30;HIT,+15;MAG,+12;CTR,+100;"
+        "equip_modcode": "ATK,+30;HIT,+15;MAG,+12;CTR,+100;",
+        "ADD": [
+            "Charm"
+        ]
     },
     {
         "name": "Diamond_Staff",
-        "description": "One of the strongest staffs (if not THE strongest staff) known to man.|ATK+35, MAG+25, MGR+20, END+5, resist Silence and Seal",
+        "description": "One of the strongest staffs (if not THE strongest staff) known to man. | ATK+35, MAG+25, MGR+20, END+5, resist Silence and Seal",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -650,11 +695,18 @@
             "Priest"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+35;MAG,+25;MGR,+20;END,+5;"
+        "equip_modcode": "ATK,+35;MAG,+25;MGR,+20;END,+5;",
+        "IMMUNE": [
+            "Seal",
+            "Silence"
+        ],
+        "ADD": [
+            "Grave"
+        ]
     },
     {
         "name": "Sting_Whip",
-        "description": "Hurts so good! Wait, no, not 'good'. What's the other one... bad!|ATK+28, HIT+10, FER+10, adds Slow",
+        "description": "Hurts so good! Wait, no, not 'good'. What's the other one... bad! | ATK+28, HIT+10, FER+10, adds Slow",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -666,11 +718,14 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+28;HIT,+10;FER,+10;"
+        "equip_modcode": "ATK,+28;HIT,+10;FER,+10;",
+        "ADD": [
+            "Slow"
+        ]
     },
     {
         "name": "Frostbite",
-        "description": "One touch of this icy whip will make your blood run cold.|Ice, ATK+36, HIT+15, FER+10, adds Sleep",
+        "description": "One touch of this icy whip will make your blood run cold. | Ice, ATK+36, HIT+15, FER+10, adds Sleep",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -682,11 +737,17 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+36;HIT,+15;FER,+10;"
+        "equip_modcode": "ATK,+36;HIT,+15;FER,+10;",
+        "ELEMENT": [
+            "Ice"
+        ],
+        "ADD": [
+            "Sleep"
+        ]
     },
     {
         "name": "Fairy_Lash",
-        "description": "A thorned whip used by Oberon's carriage-driver. Except for some reason it was in a chest.|ATK+48, HIT+20, FER+10, adds Charm",
+        "description": "A thorned whip used by Oberon's carriage-driver. Except for some reason it was in a chest. | ATK+48, HIT+20, FER+10, adds Charm",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -697,11 +758,14 @@
             "Priest"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+48;HIT,+20;FER,+10;"
+        "equip_modcode": "ATK,+48;HIT,+20;FER,+10;",
+        "ADD": [
+            "Charm"
+        ]
     },
     {
         "name": "Wrench",
-        "description": "Sara's sturdy wrench. It's a bit unwieldy, but it packs a wallop.|ATK+25, HIT-5",
+        "description": "Sara's sturdy wrench. It's a bit unwieldy, but it packs a wallop. | ATK+25, HIT-5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -717,7 +781,7 @@
     },
     {
         "name": "Lead_Pipe",
-        "description": "A section of heavy pipe. +2 against Romans.|ATK+30",
+        "description": "A section of heavy pipe. +2 against Romans. | ATK+30",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -735,7 +799,7 @@
     },
     {
         "name": "Nightstick",
-        "description": "This is a stick, but it's much stronger than a normal stick because it has a sideways handle thing.|ATK+45, FER+5",
+        "description": "This is a stick, but it's much stronger than a normal stick because it has a sideways handle thing. | ATK+45, FER+5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -748,11 +812,14 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+42;FER,+5;"
+        "equip_modcode": "ATK,+42;FER,+5;",
+        "ELEMENT": [
+            "Dark"
+        ]
     },
     {
         "name": "Sledgehammer",
-        "description": "It's not very practical, but there's a certain style that only a sledgehammer has.|ATK+55, FER+25, CTR-5, HIT-8, REA-1, adds Fragile",
+        "description": "It's not very practical, but there's a certain style that only a sledgehammer has. | ATK+55, FER+25, CTR-5, HIT-8, REA-1, adds Fragile",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -765,11 +832,14 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+55;FER,+25;CTR,-5;HIT,-8;REA,-1;"
+        "equip_modcode": "ATK,+55;FER,+25;CTR,-5;HIT,-8;REA,-1;",
+        "ADD": [
+            "Fragile"
+        ]
     },
     {
         "name": "Science!",
-        "description": "They all laughed at me! Well, who's laughing now!?|ATK+40, STR+15, MAG+8, HIT+8, adds Blind, resist Weak and Fugue",
+        "description": "They all laughed at me! Well, who's laughing now!? | ATK+40, STR+15, MAG+8, HIT+8, adds Blind, resist Weak and Fugue",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -780,11 +850,18 @@
             "Engineer"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+40;STR,+15;MAG,+8;HIT,+8;"
+        "equip_modcode": "ATK,+40;STR,+15;MAG,+8;HIT,+8;",
+        "IMMUNE": [
+            "Weak",
+            "Fugue"
+        ],
+        "ADD": [
+            "Blind"
+        ]
     },
     {
         "name": "Brass_Knuckles",
-        "description": "For legal reasons, we have to call these a paperweight.|ATK+15, STK+1, CTR+15, FER+20",
+        "description": "For legal reasons, we have to call these a paperweight. | ATK+15, STK+1, CTR+15, FER+20",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -800,7 +877,7 @@
     },
     {
         "name": "Razor_Claws",
-        "description": "Razor claws combine the fun of punching with the effectiveness of stabbing!|ATK+26, STK+1, CTR+15, FER+20",
+        "description": "Razor claws combine the fun of punching with the effectiveness of stabbing! | ATK+26, STK+1, CTR+15, FER+20",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -816,7 +893,7 @@
     },
     {
         "name": "Giant_Robot_Hands",
-        "description": "GIANT|  ROBOT|    HANDS!!!!|ATK+30, STK+2, CTR+15, FER+20, adds Confuse",
+        "description": "GIANT |   ROBOT |     HANDS!!!! | ATK+30, STK+2, CTR+15, FER+20, adds Confuse",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -828,11 +905,14 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+30;STK,+2;CTR,+15;FER,+20;"
+        "equip_modcode": "ATK,+30;STK,+2;CTR,+15;FER,+20;",
+        "ADD": [
+            "Confuse"
+        ]
     },
     {
         "name": "Dagger",
-        "description": "This is a good introductory model for someone who's just getting into stabbing.|ATK+10",
+        "description": "This is a good introductory model for someone who's just getting into stabbing. | ATK+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -848,15 +928,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;"
     },
     {
         "name": "Poison_Dagger",
-        "description": "Poison is slow, but you don't have to do anything.|ATK+13, adds Poison",
+        "description": "Poison is slow, but you don't have to do anything. | ATK+13, adds Poison",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -872,15 +951,17 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+13;"
+        "equip_modcode": "ATK,+13;",
+        "ADD": [
+            "Poison"
+        ]
     },
     {
         "name": "Stiletto",
-        "description": "A long, thin knife. Voted Weapon of the Year in Scoundrel Quarterly.|ATK+18, HIT+5, FER+5",
+        "description": "A long, thin knife. Voted Weapon of the Year in Scoundrel Quarterly. | ATK+18, HIT+5, FER+5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -899,7 +980,7 @@
     },
     {
         "name": "Khukri",
-        "description": "This deadly curved knife has an extra H for added cutting power.|ATK+30,FER+10",
+        "description": "This deadly curved knife has an extra H for added cutting power. | ATK+30,FER+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -916,7 +997,7 @@
     },
     {
         "name": "North_Wind",
-        "description": "With this icy blade in hand your attacks will be as fast and lethal as a winter storm.|Ice, ATK+15, HIT+10, STK+1",
+        "description": "With this icy blade in hand your attacks will be as fast and lethal as a winter storm. | Ice, ATK+15, HIT+10, STK+1",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -929,11 +1010,14 @@
             "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+15;HIT,+10;STK,+1;"
+        "equip_modcode": "ATK,+15;HIT,+10;STK,+1;",
+        "ELEMENT": [
+            "Ice"
+        ]
     },
     {
         "name": "Assassin's_Knife",
-        "description": "<Hahn> Hmm... assassins are cool because they have two asses.|ATK+42, HIT+20, MAG+6, adds Death",
+        "description": "<Hahn> Hmm... assassins are cool because they have two asses. | ATK+42, HIT+20, MAG+6, adds Death",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -944,11 +1028,14 @@
             "Thief"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "ATK,+42;HIT,+20;MAG,+6;"
+        "equip_modcode": "ATK,+42;HIT,+20;MAG,+6;",
+        "ADD": [
+            "Death"
+        ]
     },
     {
         "name": "Sting_Needle",
-        "description": "This unassuming needle lets you lash out like a swarm of angry wasps.|ATK+10, HIT+10, STK+2, CTR+50, no FER",
+        "description": "This unassuming needle lets you lash out like a swarm of angry wasps. | ATK+10, HIT+10, STK+2, CTR+50, no FER",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -964,15 +1051,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
         "equip_modcode": "ATK,+10;HIT,+10;STK,+2;CTR,+50;FER,-999;"
     },
     {
         "name": "Syringe",
-        "description": "Be sure to properly dispose of all sharps.|HIT+15, no CTR, no FER, adds impairments",
+        "description": "Be sure to properly dispose of all sharps. | HIT+15, no CTR, no FER, adds impairments",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -988,15 +1074,25 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "RightHand",
-        "equip_modcode": "HIT,+15;STK,-999;CTR,-999;FER,-999;"
+        "equip_modcode": "HIT,+15;STK,-999;CTR,-999;FER,-999;",
+        "ELEMENT": [
+            "Drain"
+        ],
+        "ADD": [
+            "Poison",
+            "Enervate",
+            "Blind",
+            "Confuse",
+            "Seal",
+            "Sleep"
+        ]
     },
     {
         "name": "Buckler",
-        "description": "Make sure to read the swashing instructions on the back.|DEF+5, DOD+5",
+        "description": "Make sure to read the swashing instructions on the back. | DEF+5, DOD+5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1014,7 +1110,7 @@
     },
     {
         "name": "Laser_Shield",
-        "description": "This shield blocks attacks with the power of lasers, somehow.|DEF+7, DOD+7, halve Electric",
+        "description": "This shield blocks attacks with the power of lasers, somehow. | DEF+7, DOD+7, halve Electric",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1026,11 +1122,14 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "DEF,+7;DOD,+7;"
+        "equip_modcode": "DEF,+7;DOD,+7;",
+        "HALVE": [
+            "Electric"
+        ]
     },
     {
         "name": "Tower_Shield",
-        "description": "Only REAL MEN can hoist this five-foot-tall shield.|DEF+10, DOD+10",
+        "description": "Only REAL MEN can hoist this five-foot-tall shield. | DEF+10, DOD+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1047,7 +1146,7 @@
     },
     {
         "name": "Sunburst_Shield",
-        "description": "Sun Protection Factor 15|DEF+15, DOD+10, halve Fire and Holy",
+        "description": "Sun Protection Factor 15 | DEF+15, DOD+10, halve Fire and Holy",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1060,11 +1159,15 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "DEF,+15;DOD,+10;"
+        "equip_modcode": "DEF,+15;DOD,+10;",
+        "HALVE": [
+            "Fire",
+            "Holy"
+        ]
     },
     {
         "name": "Spellbook",
-        "description": "This book explains the principles behind magic, but only Dexter can understand it, and he already knows magic.|MAG+4, MGR+4",
+        "description": "This book explains the principles behind magic, but only Dexter can understand it, and he already knows magic. | MAG+4, MGR+4",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1080,7 +1183,7 @@
     },
     {
         "name": "Grimoire",
-        "description": "It has a skull on the cover, so you know it has to be good!|MAG+9, MGR+9",
+        "description": "It has a skull on the cover, so you know it has to be good! | MAG+9, MGR+9",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1096,7 +1199,7 @@
     },
     {
         "name": "Main_Gauche",
-        "description": "Don't use it in your RightHand - that would be gauche.|ATK+5, CTR+5, DOD+5",
+        "description": "Don't use it in your RightHand - that would be gauche. | ATK+5, CTR+5, DOD+5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1113,7 +1216,7 @@
     },
     {
         "name": "Swordbreaker",
-        "description": "A classic duelist's weapon.|ATK+10, CTR+10, DOD+10",
+        "description": "A classic duelist's weapon. | ATK+10, CTR+10, DOD+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1130,7 +1233,7 @@
     },
     {
         "name": "Bracer",
-        "description": "A bracer. There's only one, so it'll look a little strange, but maybe you can play it off like it's a fashion thing.|DEF+4",
+        "description": "A bracer. There's only one, so it'll look a little strange, but maybe you can play it off like it's a fashion thing. | DEF+4",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1146,15 +1249,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+4;"
     },
     {
         "name": "Silver_Bracer",
-        "description": "Stronger than a normal bracer, but will tarnish if not polished regularly.|DEF+10",
+        "description": "Stronger than a normal bracer, but will tarnish if not polished regularly. | DEF+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1170,15 +1272,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
         "equip_modcode": "DEF,+10;"
     },
     {
         "name": "Rosary",
-        "description": "for (int bead=0;bead<59;bead++) {|    meditate_on(mystery[bead])|}|MGR +3, resist some afflictions)",
+        "description": "for (int bead=0;bead<59;bead++) { |     meditate_on(mystery[bead]) | } | MGR +3, resist some afflictions)",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1191,11 +1292,21 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "MGR,+3;"
+        "equip_modcode": "MGR,+3;",
+        "IMMUNE": [
+            "Confuse",
+            "Charm",
+            "Seal",
+            "Silence",
+            "Grave"
+        ],
+        "HALVE": [
+            "Reduction"
+        ]
     },
     {
         "name": "Muscle_Band",
-        "description": "You could work out, or you could just wear this thing.|ATK+6, resist Weak",
+        "description": "You could work out, or you could just wear this thing. | ATK+6, resist Weak",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1211,15 +1322,17 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "ATK,+6;"
+        "equip_modcode": "ATK,+6;",
+        "IMMUNE": [
+            "Weak"
+        ]
     },
     {
         "name": "Wisdom_Band",
-        "description": "This band is chock full of magic, so if you wear it some is bound to rub off on you.|MAG+6, resist Fugue",
+        "description": "This band is chock full of magic, so if you wear it some is bound to rub off on you. | MAG+6, resist Fugue",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1235,15 +1348,17 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "MAG,+6;"
+        "equip_modcode": "MAG,+6;",
+        "IMMUNE": [
+            "Fugue"
+        ]
     },
     {
         "name": "Tornado_Bracelet",
-        "description": "Wearing this bracelet lets you strike with the wild fury of a tornado.|STK+1, HIT-7",
+        "description": "Wearing this bracelet lets you strike with the wild fury of a tornado. | STK+1, HIT-7",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1262,7 +1377,7 @@
     },
     {
         "name": "Crystal_Ball",
-        "description": "It rolls, so be careful not to drop it.|MP+10",
+        "description": "It rolls, so be careful not to drop it. | MP+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1276,11 +1391,14 @@
             "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "MP,+10;"
+        "equip_modcode": "MP,+10;",
+        "IMMUNE": [
+            "Enervate"
+        ]
     },
     {
         "name": "Wristwatch",
-        "description": "The wristwatch is why God invented the left arm. Never be late again!|REA+1, resist Slow",
+        "description": "The wristwatch is why God invented the left arm. Never be late again! | REA+1, resist Slow",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1296,15 +1414,17 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "LeftHand",
-        "equip_modcode": "REA,+1;"
+        "equip_modcode": "REA,+1;",
+        "IMMUNE": [
+            "SLOW"
+        ]
     },
     {
         "name": "Garment",
-        "description": "Hide your nakedness!|DEF+10",
+        "description": "Hide your nakedness! | DEF+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1320,15 +1440,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+10;"
     },
     {
         "name": "Cloak",
-        "description": "Activate cloaking device!|DEF+12, MGR+3",
+        "description": "Activate cloaking device! | DEF+12, MGR+3",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1344,15 +1463,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+12;MGR,+3;"
     },
     {
         "name": "Robe",
-        "description": "Pants interfere with mana flow, so wizards usually wear robes.|DEF+18, MGR+6",
+        "description": "Pants interfere with mana flow, so wizards usually wear robes. | DEF+18, MGR+6",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1368,15 +1486,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+18;MGR,+6;"
     },
     {
         "name": "Vestments",
-        "description": "Only church members can wear these clothes because otherwise God will get mad.|DEF+15, MGR+10, negate Holy",
+        "description": "Only church members can wear these clothes because otherwise God will get mad. | DEF+15, MGR+10, negate Holy",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1389,11 +1506,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+15;MGR,+10;"
+        "equip_modcode": "DEF,+15;MGR,+10;",
+        "NEGATE": [
+            "Holy"
+        ]
     },
     {
         "name": "Black_Robe",
-        "description": "Popular with cultists the world over.|DEF+20, MAG+3, MGR+3, negate Dark but double Holy",
+        "description": "Popular with cultists the world over. | DEF+20, MAG+3, MGR+3, negate Dark but double Holy",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1406,11 +1526,17 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+20;MAG,+3;MGR,+3;"
+        "equip_modcode": "DEF,+20;MAG,+3;MGR,+3;",
+        "NEGATE": [
+            "Dark"
+        ],
+        "DOUBLE": [
+            "Holy"
+        ]
     },
     {
         "name": "Long_Coat",
-        "description": "I guess it's pretty long, but I was expecting more.|DEF+26, MGR+9",
+        "description": "I guess it's pretty long, but I was expecting more. | DEF+26, MGR+9",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1430,7 +1556,7 @@
     },
     {
         "name": "Silk_Clothes",
-        "description": "Because sometimes you just want to look good.|DEF+12, MGR+6, DOD+25, resist Tangle",
+        "description": "Because sometimes you just want to look good. | DEF+12, MGR+6, DOD+25, resist Tangle",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1445,11 +1571,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+12;MGR,+6;DOD,+25;"
+        "equip_modcode": "DEF,+12;MGR,+6;DOD,+25;",
+        "IMMUNE": [
+            "Tangle"
+        ]
     },
     {
         "name": "Jogging_Suit",
-        "description": "Helps you run fast, but looks kind of dumb.|DEF+20, REA+1",
+        "description": "Helps you run fast, but looks kind of dumb. | DEF+20, REA+1",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1465,15 +1594,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
         "equip_modcode": "DEF,+20;REA,+1;"
     },
     {
         "name": "Ninja_Suit",
-        "description": "You will never be a ninja, but if you wear this, at least you can pretend.|DEF+30, DOD+20, CTR+10, +Evade",
+        "description": "You will never be a ninja, but if you wear this, at least you can pretend. | DEF+30, DOD+20, CTR+10, +Evade",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1487,11 +1615,17 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+30;DOD,+20;CTR,+10;"
+        "equip_modcode": "DEF,+30;DOD,+20;CTR,+10;",
+        "AUTO": [
+            "Evade"
+        ],
+        "IMMUNE": [
+            "Tangle"
+        ]
     },
     {
         "name": "Innocence_Frock",
-        "description": "This sky-blue frock can only be worn by those pure of heart, and also Crystal.|DEF+35, MGR+15, HP+15, resist Grave & Death, absorb Holy but double Dark",
+        "description": "This sky-blue frock can only be worn by those pure of heart, and also Crystal. | DEF+35, MGR+15, HP+15, resist Grave & Death, absorb Holy but double Dark",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1504,11 +1638,21 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+35;MGR,+15;HP,+15;"
+        "equip_modcode": "DEF,+35;MGR,+15;HP,+15;",
+        "IMMUNE": [
+            "Grave",
+            "Death"
+        ],
+        "ABSORB": [
+            "Holy"
+        ],
+        "DOUBLE": [
+            "Dark"
+        ]
     },
     {
         "name": "Flame_Robe",
-        "description": "A bright red robe that absorbs fire but is weak to ice and electricity.|DEF+38, MGR+12, absorb Fire but double Ice and Electric",
+        "description": "A bright red robe that absorbs fire but is weak to ice and electricity. | DEF+38, MGR+12, absorb Fire but double Ice and Electric",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1522,11 +1666,18 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+38;MGR,+12;"
+        "equip_modcode": "DEF,+38;MGR,+12;",
+        "ABSORB": [
+            "Fire"
+        ],
+        "DOUBLE": [
+            "Ice",
+            "Electric"
+        ]
     },
     {
         "name": "Frost_Robe",
-        "description": "A bright blue robe that absorbs ice but is weak to fire and electricity.|DEF+38, MGR+12, absorb Ice but double Fire and Electric",
+        "description": "A bright blue robe that absorbs ice but is weak to fire and electricity. | DEF+38, MGR+12, absorb Ice but double Fire and Electric",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1540,11 +1691,18 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+38;MGR,+12;"
+        "equip_modcode": "DEF,+38;MGR,+12;",
+        "ABSORB": [
+            "Ice"
+        ],
+        "DOUBLE": [
+            "Fire",
+            "Electric"
+        ]
     },
     {
         "name": "Spark_Robe",
-        "description": "A bright yellow robe that absorbs electricity but is weak to fire and ice.|DEF+38, MGR+12, absorb Electric but double Fire and Ice",
+        "description": "A bright yellow robe that absorbs electricity but is weak to fire and ice. | DEF+38, MGR+12, absorb Electric but double Fire and Ice",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1559,11 +1717,18 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+38;MGR,+12;"
+        "equip_modcode": "DEF,+38;MGR,+12;",
+        "ABSORB": [
+            "Electric"
+        ],
+        "DOUBLE": [
+            "Fire",
+            "Ice"
+        ]
     },
     {
         "name": "Dream_Mantle",
-        "description": "A flowing mantle as mysterious as a dream.|DEF+46, MGR+15, MP+10",
+        "description": "A flowing mantle as mysterious as a dream. | DEF+46, MGR+15, MP+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1582,7 +1747,7 @@
     },
     {
         "name": "Leather_Vest",
-        "description": "Normally people would look at you funny if you wore this, but you have a sword too, so they'll probably leave you alone.|DEF+15",
+        "description": "Normally people would look at you funny if you wore this, but you have a sword too, so they'll probably leave you alone. | DEF+15",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1602,7 +1767,7 @@
     },
     {
         "name": "Chain_Mail",
-        "description": "Chain mail extends the concept of a chain into two dimensions.|DEF+22",
+        "description": "Chain mail extends the concept of a chain into two dimensions. | DEF+22",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1622,7 +1787,7 @@
     },
     {
         "name": "Iron_Suit",
-        "description": "You could maybe put some fridge magnets on this, personalize it a bit.|DEF+30, DOD-10, resist Fragile",
+        "description": "You could maybe put some fridge magnets on this, personalize it a bit. | DEF+30, DOD-10, resist Fragile",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1636,11 +1801,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+30;DOD,-10;"
+        "equip_modcode": "DEF,+30;DOD,-10;",
+        "IMMUNE": [
+            "Fragile"
+        ]
     },
     {
         "name": "Titanium_Suit",
-        "description": "Wait, they have titanium? Why don't they use it everywhere?|DEF+42, DOD-10, resist Fragile",
+        "description": "Wait, they have titanium? Why don't they use it everywhere? | DEF+42, DOD-10, resist Fragile",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1654,11 +1822,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+42;DOD,-10;"
+        "equip_modcode": "DEF,+42;DOD,-10;",
+        "IMMUNE": [
+            "Fragile"
+        ]
     },
     {
         "name": "Dwarven_Mail",
-        "description": "It's a bit small, but discomfort builds character.|DEF+35, negate Fire but double Ice",
+        "description": "It's a bit small, but discomfort builds character. | DEF+35, negate Fire but double Ice",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1671,11 +1842,17 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+35;"
+        "equip_modcode": "DEF,+35;",
+        "NEGATE": [
+            "Fire"
+        ],
+        "DOUBLE": [
+            "Ice"
+        ]
     },
     {
         "name": "Plate_Mail",
-        "description": "Some assembly required.|DEF+45, DOD-5",
+        "description": "Some assembly required. | DEF+45, DOD-5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1692,7 +1869,7 @@
     },
     {
         "name": "Steel_Frame",
-        "description": "'Robot chic' is this year's hot new look.|DEF+48, MGR+4, END+4, absorb Electric",
+        "description": "'Robot chic' is this year's hot new look. | DEF+48, MGR+4, END+4, absorb Electric",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1703,11 +1880,14 @@
             "Engineer"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+48;MGR,+4;END,+4;"
+        "equip_modcode": "DEF,+48;MGR,+4;END,+4;",
+        "ABSORB": [
+            "Electric"
+        ]
     },
     {
         "name": "Rock_Mail",
-        "description": "Armor made of solid stone. Powerful, but weak against paper.|DEF+55, MGR+5, DOD-15, resist Fragile",
+        "description": "Armor made of solid stone. Powerful, but weak against paper. | DEF+55, MGR+5, DOD-15, resist Fragile",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1721,11 +1901,14 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+55;MGR,+5;DOD,-15;"
+        "equip_modcode": "DEF,+55;MGR,+5;DOD,-15;",
+        "IMMUNE": [
+            "Fragile"
+        ]
     },
     {
         "name": "Dragon_Armor",
-        "description": "Dragon scales make good armor, but upset vegan types.|DEF+54, halve Fire and Ice",
+        "description": "Dragon scales make good armor, but upset vegan types. | DEF+54, halve Fire and Ice",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1738,11 +1921,15 @@
             "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+54;"
+        "equip_modcode": "DEF,+54;",
+        "HALVE": [
+            "Fire",
+            "Ice"
+        ]
     },
     {
         "name": "Stan's_Armor",
-        "description": "Ew, it smells kind of funny.|DEF+60, CTR+15, HP+15, absorb Dark but double Holy",
+        "description": "Ew, it smells kind of funny. | DEF+60, CTR+15, HP+15, absorb Dark but double Holy",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1753,11 +1940,20 @@
             "Spearguy"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+60;HP,+15;CTR,+15;"
+        "equip_modcode": "DEF,+60;HP,+15;CTR,+15;",
+        "ABSORB": [
+            "Dark"
+        ],
+        "DOUBLE": [
+            "Holy"
+        ],
+        "NEGATE": [
+            "Drain"
+        ]
     },
     {
         "name": "Atlas_Plate",
-        "description": "The ultimate in not-dying technology.|DEF+60, STR+6, END+6, MGR+6",
+        "description": "The ultimate in not-dying technology. | DEF+60, STR+6, END+6, MGR+6",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1773,7 +1969,7 @@
     },
     {
         "name": "Heroic_Panoply",
-        "description": "Only a protagonist can wear this plot-infused armor.|DEF+65, MGR+6, halve Holy and Dark, resist Death and Grave",
+        "description": "Only a protagonist can wear this plot-infused armor. | DEF+65, MGR+6, halve Holy and Dark, resist Death and Grave",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1784,11 +1980,22 @@
             "Knight"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "DEF,+65;MGR,+6;"
+        "equip_modcode": "DEF,+65;MGR,+6;",
+        "IMMUNE": [
+            "Death",
+            "Grave"
+        ],
+        "HALVE": [
+            "Holy",
+            "Dark"
+        ],
+        "NEGATE": [
+            "Reduction"
+        ]
     },
     {
         "name": "Turtle_Shell",
-        "description": "Slow and steady wins the race.|DEF+30, END+120, MGR+120, DOD-15, REA-999, +Protect, +Barrier",
+        "description": "Slow and steady wins the race. | DEF+30, END+120, MGR+120, DOD-15, REA-999, +Protect, +Barrier",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1804,15 +2011,21 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Body",
-        "equip_modcode": "END,+120;MGR,+120;DEF,+30;REA,-999;DOD,-15;"
+        "equip_modcode": "END,+120;MGR,+120;DEF,+30;REA,-999;DOD,-15;",
+        "AUTO": [
+            "Protect",
+            "Barrier"
+        ],
+        "NEGATE": [
+            "Reduction"
+        ]
     },
     {
         "name": "Capacitor_Array",
-        "description": "Enables Sara's 'Taser' skill.|HIT+3, halve Electric",
+        "description": "Enables Sara's 'Taser' skill. | HIT+3, halve Electric",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1823,11 +2036,17 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HIT,+3;"
+        "equip_modcode": "HIT,+3;",
+        "HALVE": [
+            "Electric"
+        ],
+        "ENABLE": [
+            "Taser"
+        ]
     },
     {
         "name": "Solar_Lens",
-        "description": "Enables Sara's 'Sunray' skill.|ATK+5, resist Enervate, Blind and Fugue",
+        "description": "Enables Sara's 'Sunray' skill. | ATK+5, resist Enervate, Blind and Fugue",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1838,11 +2057,17 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "ATK,+5;"
+        "equip_modcode": "ATK,+5;",
+        "IMMUNE": [
+            "Enervate, Fugue, Blind"
+        ],
+        "ENABLE": [
+            "Sunray"
+        ]
     },
     {
         "name": "Turbocharger",
-        "description": "Enables Sara's 'Turbo' skill.|REA+1, resist Tangle",
+        "description": "Enables Sara's 'Turbo' skill. | REA+1, resist Tangle",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1853,11 +2078,17 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "REA,+1;"
+        "equip_modcode": "REA,+1;",
+        "IMMUNE": [
+            "Tangle"
+        ],
+        "ENABLE": [
+            "Turbo"
+        ]
     },
     {
         "name": "Photoaccumulator",
-        "description": "Enables Sara's 'Charge' skill.|HP+5, resist stat reducers",
+        "description": "Enables Sara's 'Charge' skill. | HP+5, resist stat reducers",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1868,11 +2099,22 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HP,+5;"
+        "equip_modcode": "HP,+5;",
+        "IMMUNE": [
+            "Weak",
+            "Fugue",
+            "Depress",
+            "Tangle",
+            "Fragile",
+            "Slow"
+        ],
+        "ENABLE": [
+            "Charge"
+        ]
     },
     {
         "name": "Neutralizer",
-        "description": "Enables Sara's 'Neutro' skill.|MGR+3, END+3, DEF+3, resist ElementWeak, Depress, and Fragile",
+        "description": "Enables Sara's 'Neutro' skill. | MGR+3, END+3, DEF+3, resist ElementWeak, Depress, and Fragile",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1883,11 +2125,23 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "MGR,+3;DEF,+3;END,+3;"
+        "equip_modcode": "MGR,+3;DEF,+3;END,+3;",
+        "IMMUNE": [
+            "FireWeak",
+            "IceWeak",
+            "ElectricWeak",
+            "HolyWeak",
+            "DarkWeak",
+            "Depress",
+            "Fragile"
+        ],
+        "ENABLE": [
+            "Neutro"
+        ]
     },
     {
         "name": "Antimagic_Field",
-        "description": "Enables Sara's 'Negate' skill.|MGR+6, attacks add Silence",
+        "description": "Enables Sara's 'Negate' skill. | MGR+6, attacks add Silence",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1898,11 +2152,17 @@
             "Engineer"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "MGR,+6;"
+        "equip_modcode": "MGR,+6;",
+        "ADD": [
+            "Silence"
+        ],
+        "ENABLE": [
+            "Negate"
+        ]
     },
     {
         "name": "Headband",
-        "description": "For when you want something on your head, but a hat is too much.|DOD+3",
+        "description": "For when you want something on your head, but a hat is too much. | DOD+3",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1918,15 +2178,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "DOD,+3;"
     },
     {
         "name": "Hood",
-        "description": "Where the hood at?|DEF+1, MGR+2, MAG+3",
+        "description": "Where the hood at? | DEF+1, MGR+2, MAG+3",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1944,7 +2203,7 @@
     },
     {
         "name": "Silver_Circlet",
-        "description": "This circlet is incomplete, but well-made.|DEF+3, MGR+5, MAG+7",
+        "description": "This circlet is incomplete, but well-made. | DEF+3, MGR+5, MAG+7",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1962,7 +2221,7 @@
     },
     {
         "name": "Jaunty_Cap",
-        "description": "Can you handle the jauntiness?|MAG+2, DOD+3",
+        "description": "Can you handle the jauntiness? | MAG+2, DOD+3",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -1978,15 +2237,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "MAG,+2;DOD,+3;"
     },
     {
         "name": "My_Grand_Hat",
-        "description": "The King of Hats.|DEF+5, MGR+5, DOD+5, resist stat reducers",
+        "description": "The King of Hats. | DEF+5, MGR+5, DOD+5, resist stat reducers",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2002,15 +2260,22 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "DEF,+5;MGR,+5;DOD,+5;"
+        "equip_modcode": "DEF,+5;MGR,+5;DOD,+5;",
+        "IMMUNE": [
+            "Weak",
+            "Fugue",
+            "Depress",
+            "Tangle",
+            "Fragile",
+            "Slow"
+        ]
     },
     {
         "name": "Helmet",
-        "description": "For people whose job involves getting hit in the head.|DEF+5",
+        "description": "For people whose job involves getting hit in the head. | DEF+5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2027,7 +2292,7 @@
     },
     {
         "name": "Gold_Helmet",
-        "description": "Adventure in style with this snazzy golden helmet!|DEF+10",
+        "description": "Adventure in style with this snazzy golden helmet! | DEF+10",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2044,7 +2309,7 @@
     },
     {
         "name": "Tiara",
-        "description": "Oh, thank you, it's such an honor!|DEF+3, MAG+3, MGR+4",
+        "description": "Oh, thank you, it's such an honor! | DEF+3, MAG+3, MGR+4",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2061,7 +2326,7 @@
     },
     {
         "name": "Blur_Ring",
-        "description": "Wearing this ring makes you as elusive as Bigfoot.|DOD+20, REA+1, resist Tangle",
+        "description": "Wearing this ring makes you as elusive as Bigfoot. | DOD+20, REA+1, resist Tangle",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2077,15 +2342,18 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "DOD,+20;REA,+1;"
+        "equip_modcode": "DOD,+20;REA,+1;",
+        "IMMUNE": [
+            "Slow",
+            "Tangle"
+        ]
     },
     {
         "name": "Fury_Ring",
-        "description": "Wearing this ring allows you to tap the boundless rage of Tatsumi.|STR+3, FER+30, CTR+5",
+        "description": "Wearing this ring allows you to tap the boundless rage of Tatsumi. | STR+3, FER+30, CTR+5",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2101,15 +2369,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "STR,+3;FER,+30;CTR,+5;"
     },
     {
         "name": "Life_Ring",
-        "description": "Wearing this ring postpones your inevitable demise.|HP+12, resist Death and Grave",
+        "description": "Wearing this ring postpones your inevitable demise. | HP+12, resist Death and Grave",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2125,11 +2392,14 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HP,+12;"
+        "equip_modcode": "HP,+12;",
+        "IMMUNE": [
+            "Death",
+            "Grave"
+        ]
     },
     {
         "name": "Maiden_Flower",
@@ -2140,9 +2410,43 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "IMMUNE": [
+            "Poison",
+            "Enervate",
+            "Blind",
+            "Confuse",
+            "Charm",
+            "Silence",
+            "Seal",
+            "Sleep",
+            "Paralysis",
+            "Slow",
+            "Weak",
+            "Fragile",
+            "Depress",
+            "Tangle",
+            "Fugue",
+            "Death",
+            "Grave",
+            "FireWeak",
+            "IceWeak",
+            "ElectricWeak",
+            "DarkWeak",
+            "HolyWeak"
+        ]
     },
     {
         "name": "Protect_Locket",
@@ -2162,8 +2466,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "MGR,+10;"
@@ -2186,8 +2489,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "CTR,+250;"
@@ -2210,8 +2512,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "REA,+2;"
@@ -2234,11 +2535,29 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "REA,+2;HIT,+10;ATK,+20;STR,+20;CTR,+250;FER,+250;"
+        "equip_modcode": "REA,+2;HIT,+10;ATK,+20;STR,+20;CTR,+250;FER,+250;",
+        "AUTO": [
+            "Confuse",
+            "Might"
+        ],
+        "IMMUNE": [
+            "Poison",
+            "Enervate",
+            "Blind",
+            "Charm",
+            "Sleep",
+            "Paralysis",
+            "Slow",
+            "Weak",
+            "Fragile",
+            "Depress",
+            "Tangle",
+            "Fugue",
+            "Death"
+        ]
     },
     {
         "name": "Blade_Spirit",
@@ -2258,8 +2577,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "STK,+1;"
@@ -2273,9 +2591,24 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "HALVE": [
+            "Fire",
+            "Ice",
+            "Electric"
+        ]
     },
     {
         "name": "Moral_Relativism_Charm",
@@ -2286,9 +2619,23 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "HALVE": [
+            "Dark",
+            "Holy"
+        ]
     },
     {
         "name": "Omni_Charm",
@@ -2299,9 +2646,26 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Knight",
+            "Wizard",
+            "Priest",
+            "Funkmaster",
+            "Engineer",
+            "Spearguy",
+            "Cleric",
+            "Thief",
+            "Avatar"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "HALVE": [
+            "Fire",
+            "Ice",
+            "Electric",
+            "Dark",
+            "Holy"
+        ]
     },
     {
         "name": "Rabbit's_Foot",
@@ -2312,9 +2676,12 @@
         "use_menu": 0,
         "func_targetting": "",
         "func_effect": "",
-        "equip_by": [],
-        "equip_slot": "",
-        "equip_modcode": ""
+        "equip_by": [
+            "Thief"
+        ],
+        "equip_slot": "Accessory",
+        "equip_modcode": "DEF,+0;",
+        "AUTO": ["Lucky"]
     },
     {
         "name": "Scope",
@@ -2334,15 +2701,17 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
-        "equip_modcode": "HIT,+20;"
+        "equip_modcode": "HIT,+20;",
+        "IMMUNE": [
+            "Blind"
+        ]
     },
     {
         "name": "Texas_Belt_Buckle",
-        "description": "Remember the Alamo!|STR+6, ATK+6",
+        "description": "Remember the Alamo! | STR+6, ATK+6",
         "icon": 129,
         "price": 50,
         "use_battle": 0,
@@ -2358,8 +2727,7 @@
             "Spearguy",
             "Cleric",
             "Thief",
-            "Avatar",
-            ""
+            "Avatar"
         ],
         "equip_slot": "Accessory",
         "equip_modcode": "ATK,+6;STR,+6;"

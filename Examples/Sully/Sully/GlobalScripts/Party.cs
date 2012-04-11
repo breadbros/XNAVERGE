@@ -30,7 +30,8 @@ namespace Sully {
                         pm[i].ent = _.sg.map.spawn_entity(0, 0, pm[i].normal_chr );
                         _.sg.followers.add( pm[i].ent );
                     }
-                
+
+                    _.sg.player.speed += 100;                
                 }
 
                 _ms_x = -1;

@@ -8,9 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAVERGE {
     public class SpriteAnimation {
-        public String name;
-        public String pattern { get { return _pattern; } }
-        protected String _pattern; // the base animation string (not used after the initial parsing)
+        public String name; 
+        public readonly String pattern; // the base animation string (not used after the initial parsing)
         public AnimationStyle style;
         public SpriteAnimation transition_to; // Which animation to switch to when this animation ends. Only used with the "Transition" style.        
         public int length;
@@ -30,32 +29,32 @@ namespace XNAVERGE {
             
             name = anim_name;
             style = anim_style;          
-            _pattern = SpriteAnimation.clean_pattern(anim_pattern);            
-            len = _pattern.Length;
+            pattern = SpriteAnimation.clean_pattern(anim_pattern);            
+            len = pattern.Length;
             transition_to = null;
 
-            if (_pattern.Substring(0, 1) != SpriteAnimation.FRAME) throw new MalformedAnimationPatternException(_pattern, "Patterns must begin with \"F\""); 
+            if (pattern.Substring(0, 1) != SpriteAnimation.FRAME) throw new MalformedAnimationPatternException(pattern, "Patterns must begin with \"F\""); 
             cur_pos = 1; 
             expecting_frame = false; 
             while (cur_pos < len) {
-                if (expecting_frame) next_pos = _pattern.IndexOf(SpriteAnimation.FRAME, cur_pos);
-                else next_pos = _pattern.IndexOf(SpriteAnimation.WAIT, cur_pos);
+                if (expecting_frame) next_pos = pattern.IndexOf(SpriteAnimation.FRAME, cur_pos);
+                else next_pos = pattern.IndexOf(SpriteAnimation.WAIT, cur_pos);
                 if (next_pos == -1) next_pos = len;
                 try {
-                    cur_val = Int32.Parse(_pattern.Substring(cur_pos, next_pos - cur_pos));
+                    cur_val = Int32.Parse(pattern.Substring(cur_pos, next_pos - cur_pos));
                 }
                 catch (Exception) {
-                    throw new MalformedAnimationPatternException(_pattern, "Patterns must alternate between F# and W# terms, where each # is a positive integer.");
+                    throw new MalformedAnimationPatternException(pattern, "Patterns must alternate between F# and W# terms, where each # is a positive integer.");
                 }
                 if (expecting_frame) {
                     //Console.WriteLine("Wait {0}", cur_val);
-                    if (cur_val < 0) throw new MalformedAnimationPatternException(_pattern, "Negative wait specified."); 
+                    if (cur_val < 0) throw new MalformedAnimationPatternException(pattern, "Negative wait specified."); 
                     wait_queue.Enqueue(cur_val);
                 }
                 else {
                     //Console.WriteLine("Frame {0}", cur_val);
-                    if (cur_val < 0) throw new MalformedAnimationPatternException(_pattern, "Negative frame specified."); 
-                    if (cur_val >= num_frames) throw new MalformedAnimationPatternException(_pattern, "Frame " + cur_val + " specified, but the sprite only has " + num_frames + " frames. Note that frames begin at 0."); 
+                    if (cur_val < 0) throw new MalformedAnimationPatternException(pattern, "Negative frame specified."); 
+                    if (cur_val >= num_frames) throw new MalformedAnimationPatternException(pattern, "Frame " + cur_val + " specified, but the sprite only has " + num_frames + " frames. Note that frames begin at 0."); 
                     frame_queue.Enqueue(cur_val);
                 }
                 expecting_frame = !expecting_frame;
@@ -77,7 +76,7 @@ namespace XNAVERGE {
         // to use. It makes no effort to check that the pattern actually matches the animation arrays given.
         public SpriteAnimation(String anim_name, String anim_pattern, int[] frame_arr, int[] delay_arr, AnimationStyle anim_style) {
             name = anim_name;
-            _pattern = anim_pattern;
+            pattern = anim_pattern;
             frame = frame_arr;
             delay = delay_arr;
             length = frame_arr.Length;

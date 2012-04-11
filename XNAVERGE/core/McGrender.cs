@@ -96,8 +96,6 @@ if( DEBUG ) Console.WriteLine( "STOPPING" );
                         this.cur_x = this.final_x;
                         this.cur_y = this.final_y;
 
-//this.Reverse();
-
                         if( OnStop != null ) {
                             OnStop();
                             OnStop = null;
@@ -115,7 +113,6 @@ if( DEBUG ) Console.WriteLine( "STOPPING" );
                 OnDraw( (int)this.cur_x, (int)this.cur_y );
             }
         }
-
 
         public void Reverse() {
             float temp_x, temp_y;

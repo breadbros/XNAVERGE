@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+
 using Microsoft.Xna.Framework.Content;
 using System.Runtime.Serialization;
 
@@ -12,6 +13,7 @@ using XNAVERGE;
 
 namespace Sully {
   
+
     public enum Stat {
         HP, MP, STR, END, MAG, MGR, HIT, DOD, STK, FER, REA, CTR, ATK, DEF
     };
@@ -50,10 +52,16 @@ namespace Sully {
 
         public static readonly string[] equipment_slot_order = new string[] { "r. hand", "l. hand", "body", "acc. 1", "acc. 2" };
 
-        public Entity ent;
+<<<<<<< HEAD
+        [NonSerialized] public Entity ent;
         public string name, normal_chr, overworld_chr, battle_spr, statfile, description;
 
         public Klass klass;
+=======
+        public Entity ent;
+        public string name, klass, normal_chr, overworld_chr, battle_spr, statfile, description;
+>>>>>>> breadbros/master
+
         public int level { get; private set; }
         public int cur_xp { get; private set; }
         public int cur_hp { get; private set; }
@@ -392,8 +400,11 @@ namespace Sully {
         public static void initClasses() {
             masterKlassList = new Dictionary<string, Klass>();
 
-            Dictionary<String, Object> dict = (Dictionary<String, Object>)Utility.parse_JSON( @"content\dat\Class.json" );
+            string output = System.IO.File.ReadAllText( "content/dat/Class.json" );
 
+            Dictionary<string, object> dict = fastJSON.JSON.Instance.Parse( output ) as Dictionary<string, object>;
+
+            
             foreach( string key in dict.Keys ) {
                 
                 Klass k = new Klass( 
@@ -425,15 +436,13 @@ namespace Sully {
         public Klass( string name, Dictionary<string, object> dict )  {
             this._name = name;
             this._description = dict["description"] as string;
-
-            List<object> o = (List<object>)dict["skills"];
-
-            List<SkillType> ar = new List<SkillType>();
-            foreach( string skilltypename in o ) {
+            
+            ArrayList ar = new ArrayList();
+            foreach( string skilltypename in dict["skills"] as ArrayList ) {
                 ar.Add( SkillType.get( skilltypename ) );
             }
 
-            this._skills = ar.ToArray();
+            this._skills = (SkillType[])ar.ToArray( typeof(SkillType) );
         }
     }
 }

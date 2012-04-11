@@ -365,6 +365,7 @@ namespace XNAVERGE {
             // TODO: out-transition here
             if( game.map != null ) game.map.scripts.do_on_exit();
             game.MapContent.Unload();
+            Sprite.clear_cache(); // wipe out cached SpriteBases (since we just nuked their textures)
             try {
                 game.map = VERGEGame.game.MapContent.Load<VERGEMap>( new_map );
             } catch( Exception ) {
@@ -382,7 +383,7 @@ namespace XNAVERGE {
         public Tileset load_tileset(String filename) {
             int pos;
             Tileset ts = null;
-            filename = Utility.strip_path(filename);
+            filename = System.IO.Path.GetFileName(filename);
             if (!String.IsNullOrEmpty(tileset_override)) {
                 ts = VERGEGame.game.MapContent.Load<Tileset>(tileset_override);                
             }

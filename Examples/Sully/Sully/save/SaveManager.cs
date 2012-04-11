@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 using XNAVERGE;
 using Microsoft.Xna.Framework;
@@ -19,11 +17,12 @@ namespace Sully {
         // write new save code. These include:
         // * Changing PartyMember.MAX_LEVEL
         // * Changing _.NUM_FLAGS
-        // * Changing a PartyMember's name (only breaks saves with that character)
+        // * Changing the number or names of PartyMembers
+        // * Changing XP required at each level
         // * Changing the names, ordering, or number of character equipment slots.
         // For now we needn't increase the version for changes of this type, but once we release and have
         // saves in the wild, we'll need to.
-        public int CURRENT_VERSION = 1;
+        public int CURRENT_VERSION = 2;
 
         // saves are numbered from 0 to 99. You can change this, but note that file naming assumes
         // a limit of 1000 (save number 999).
@@ -162,11 +161,14 @@ namespace Sully {
             writer.Write("location name"); // not supported yet
 
             // PARTY DATA
-            // ----------
-            BinaryFormatter formatter = new BinaryFormatter();
+            // ----------            
             writer.Write(PartyData.partymemberData.Values.Count);
             foreach (PartyMember p in PartyData.partymemberData.Values) {
-                formatter.Serialize(writer.BaseStream, p);
+                writer.Write(p.name);
+                writer.Write(p.cur_xp);
+                writer.Write(p.cur_hp);
+                writer.Write(p.cur_mp);
+
                 old_pos = writer.BaseStream.Position;
                 writer.Write(0); // reserve this space for an int
                 temp = 0;
@@ -230,7 +232,7 @@ namespace Sully {
 
         protected void _read_from_save(BinaryReader reader, int version, ref string mapname, ref Point player_coords) {
             List<String> cur_party_names;
-            List<PartyMember> characters;
+            PartyMember cur_char;
             int temp, temp2;            
 
             // LOAD HEADER
@@ -254,23 +256,24 @@ namespace Sully {
 
             // LOAD PARTY DATA
             // ---------------
-            game.inventory.ClearInventory();
-            BinaryFormatter formatter = new BinaryFormatter();
-            characters = new List<PartyMember>();
+            game.inventory.ClearInventory();                        
             temp = reader.ReadInt32(); // # of characters total
             for (int i = 0; i < temp; i++) {
-                characters.Add((PartyMember)(formatter.Deserialize(reader.BaseStream)));
-                characters[i].initEquipmentSlots();
+                cur_char = PartyData.partymemberData[reader.ReadString().ToLower()];
+                cur_char._loadState(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()); // current xp/hp/mp
+
                 temp2 = reader.ReadInt32(); // number of slots with things in them
+                foreach (EquipmentSlot slot in cur_char.equipment.Values) {
+                    if (slot.getItem() != null) slot.Dequip(game.inventory, true);
+                }
                 for (int j = 0; j < temp2; j++) {
-                    characters[i].equipment[reader.ReadString()].Equip(reader.ReadString(), game.inventory);
+                    cur_char.equipment[reader.ReadString()].Equip(reader.ReadString(), game.inventory);
                 }
             }
 
-            game.party.ClearParty(true);
-            PartyData.LoadFromCollection(characters);
+            game.party.ClearParty(false);                
             foreach (string character in cur_party_names) {
-                game.party.AddPartyMember(character, PartyData.partymemberData[character.ToLower()].level);
+                game.party.AddPartyMember(character, PartyData.partymemberData[character.ToLower()].level);                
             }
 
             // LOAD INVENTORY DATA
