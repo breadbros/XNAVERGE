@@ -293,6 +293,7 @@ namespace XNAVERGE {
 
         public virtual void DrawAt(int px, int py, SpriteBatch sb) { DrawAt( px, py, current_frame, sb ); }
         public virtual void DrawAt(int px, int py) { DrawAt(px, py, current_frame, null); }
+        public virtual void DrawAt( int px, int py, int frame ) { DrawAt( px, py, frame, null ); }
         public virtual void DrawAt(int px, int py, int frame, SpriteBatch sb ) {
             Point center;
             Rectangle ad_hoc_dest = destination;
