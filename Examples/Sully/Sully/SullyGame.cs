@@ -67,6 +67,9 @@ namespace Sully {
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );
+            mcg.AddLayer( "battle_background" );
+            mcg.AddLayer( "battle_sprites" );
+            mcg.AddLayer( "battle_ui" );
             this.setMcGrender( mcg );
             
             this.game_input_handler = () => {
@@ -86,6 +89,7 @@ namespace Sully {
                 return true;
             };
 
+            Battle.LoadBackgrounds( Content );
 
             boxcolors = new Color[3];
             boxcolors[0] = new Color( 0, 0, 0 );
