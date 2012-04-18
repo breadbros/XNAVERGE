@@ -23,7 +23,16 @@ namespace XNAVERGE {
         public bool DEBUG = false;
 
         Texture2D image = null;
+        Sprite sprite = null;
+
         Rectangle im_bounds;
+
+        public McgNode( Sprite s, McgLayer l, int start_x, int start_y ) : this( s, l, start_x, start_y, null, null, null ) { }
+        public McgNode( Sprite s, McgLayer l, int start_x, int start_y, int? end_x, int? end_y, int? delay ) {
+            sprite = s;
+            _Node( l, start_x, start_y, end_x, end_y, delay );
+        }
+
 
         public McgNode(RenderDelegate act, McgLayer l, int start_x, int start_y) : this(act, l, start_x, start_y, null, null, null) { }
         public McgNode( RenderDelegate act, McgLayer l, int start_x, int start_y, int? end_x, int? end_y, int? delay) {
@@ -106,9 +115,10 @@ if( DEBUG ) Console.WriteLine( "STOPPING" );
         }
 
         public void Draw() {
-
             if( image != null ) {
                 layer.stack.spritebatch.Draw( image, im_bounds, Color.White );
+            } else if( sprite != null ) {
+                sprite.DrawAt( (int)this.cur_x, (int)this.cur_y, layer.stack.spritebatch );
             } else if( OnDraw != null ) {
                 OnDraw( (int)this.cur_x, (int)this.cur_y );
             }

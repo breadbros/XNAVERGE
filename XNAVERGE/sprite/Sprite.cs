@@ -291,21 +291,30 @@ namespace XNAVERGE {
             }
         }
 
-        public virtual void DrawAt(int px, int py) { DrawAt(px, py, current_frame); }
-        public virtual void DrawAt(int px, int py, int frame) {
+        public virtual void DrawAt(int px, int py, SpriteBatch sb) { DrawAt( px, py, current_frame, sb ); }
+        public virtual void DrawAt(int px, int py) { DrawAt(px, py, current_frame, null); }
+        public virtual void DrawAt(int px, int py, int frame, SpriteBatch sb ) {
             Point center;
             Rectangle ad_hoc_dest = destination;
             ad_hoc_dest.Location = new Point(px, py);
             if (angle == 0f) {
                 ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X, py + destination.Y - hitbox.Y);
-                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
-            }
-            else {
+
+                if( sb == null ) {
+                    sb = VERGEGame.game.spritebatch; 
+                }
+                sb.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, 0, Vector2.Zero, SpriteEffects.None, 1.0f);
+           
+            } else {
                 center = hitbox.Center;
                 center.X -= destination.X;
                 center.Y -= destination.Y;
-                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X + center.X, py + destination.Y - hitbox.Y + center.Y); 
-                VERGEGame.game.spritebatch.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, 1.0f);
+                ad_hoc_dest.Location = new Point(px + destination.X - hitbox.X + center.X, py + destination.Y - hitbox.Y + center.Y);
+
+                if( sb == null ) {
+                    sb = VERGEGame.game.spritebatch;
+                }
+                sb.Draw(basis.image, ad_hoc_dest, basis.frame_box[frame], Color.White, angle, new Vector2((float)center.X, (float)center.Y), SpriteEffects.None, 1.0f);
             }
         }
 

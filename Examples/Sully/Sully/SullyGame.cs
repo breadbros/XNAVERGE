@@ -167,6 +167,7 @@ namespace Sully {
             dspr.move_to(150, 150);
             dspr.visible = true;
             hook_render = script<RenderLayerDelegate>("draw_darin");
+
             dspr.acceleration = new Vector2(-0.0008f, -0.001f);
             ////////// end of sprite demo
             //////////////////////////////////////////////////
@@ -179,6 +180,8 @@ namespace Sully {
             //saves.save(12);
 
             player.speed += 100;
+
+            Battle.init();
         }
 
         /// <summary>
