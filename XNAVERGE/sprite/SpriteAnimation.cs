@@ -18,6 +18,24 @@ namespace XNAVERGE {
         protected const String FRAME = "F";
         protected const String WAIT = "W";
 
+
+        public SpriteAnimation( String anim_name, int num_frames, System.Collections.Generic.List<System.Object> anim_pattern, AnimationStyle anim_style ) {
+
+            name = anim_name;
+            style = anim_style;
+            length = anim_pattern.Count;
+            transition_to = null;
+            frame = new int[length];
+            delay = new int[length];
+            for( int i = 0; i < length; i++ ) {
+
+                System.Collections.Generic.List<System.Object> item = (System.Collections.Generic.List<System.Object>)anim_pattern[i];
+
+                frame[i] = (int)(System.Int64)item[0];
+                delay[i] = (int)(System.Int64)item[1];
+            }
+        }
+
         public SpriteAnimation(String anim_name, int num_frames, String anim_pattern) : this(anim_name, num_frames, anim_pattern, AnimationStyle.Looping) { }
         public SpriteAnimation(String anim_name, int num_frames, String anim_pattern, AnimationStyle anim_style) {
             int cur_pos, next_pos, len, cur_val;

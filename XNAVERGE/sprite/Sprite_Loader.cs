@@ -76,7 +76,7 @@ namespace XNAVERGE {
                 (int)((Int64)arr[0]),
                 (int)((Int64)arr[1]),
                 (int)((Int64)spec["frames"]),
-                (int)((Int64)spec["per row"]));
+                (int)((Int64)spec["per_row"]));
 
             // Assume no padding between frames if unspecified
             inner_pad = spec.ContainsKey("inner pad") ? (int)((Int64)spec["inner pad"]) : 0; // # pixels bordering the entire image 
@@ -99,9 +99,17 @@ namespace XNAVERGE {
             spec = (Dictionary<String, Object>)(spec["animations"]);
             foreach (KeyValuePair<String, Object> kvp in spec) {
                 arr = (List<Object>)kvp.Value;
-                anim = new SpriteAnimation(kvp.Key, b.num_frames, (String)arr[0], 
-                    (AnimationStyle)Enum.Parse(typeof(AnimationStyle), (string)arr[1], true));
-                b.animations.Add(anim.name, anim);                
+                if( arr[0] is System.Collections.Generic.List<System.Object> ) {
+
+                    System.Collections.Generic.List<System.Object> animPat = (System.Collections.Generic.List<System.Object>)arr[0];
+
+                    anim = new SpriteAnimation( kvp.Key, b.num_frames, animPat, (AnimationStyle)Enum.Parse( typeof( AnimationStyle ), (string)arr[1], true ) );
+                } else {
+                    anim = new SpriteAnimation( kvp.Key, b.num_frames, (String)arr[0],
+                        (AnimationStyle)Enum.Parse( typeof( AnimationStyle ), (string)arr[1], true ) );
+                } 
+                
+                b.animations.Add( anim.name, anim );                
             }
             foreach (SpriteAnimation a in b.animations.Values) { // now go back and set up any transitions
                 if (a.style == AnimationStyle.Transition) {

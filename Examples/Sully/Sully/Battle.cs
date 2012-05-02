@@ -11,13 +11,24 @@ using XNAVERGE;
 
 namespace Sully {
     class Battle {
-        
+
         public static Dictionary<string, Texture2D> masterBackgrounds;
+        public static Dictionary<string, Sprite> masterPCs;
+        public static Dictionary<string, Sprite> masterEnemies;
 
         public static void LoadBackgrounds( ContentManager content ) {
             masterBackgrounds = new Dictionary<string, Texture2D>();
+            masterPCs = new Dictionary<string, Sprite>();
+            masterEnemies = new Dictionary<string, Sprite>();
 
             masterBackgrounds.Add( "grass", content.Load<Texture2D>("battlebg_grass") );
+
+
+            Sprite s = new Sprite( "darin.json", "Idle" );
+            masterPCs.Add( "Darin", s );
+
+            s = new Sprite( "bandit.json", "Idle" );
+            masterEnemies.Add( "bandit", s );
         }
 
         public static void init() {
@@ -29,9 +40,9 @@ namespace Sully {
                 new McgNode( masterBackgrounds["grass"], new Rectangle(0,0,320,240), l, 0, 0 )
             );
 
-
             l = _.sg.renderstack.GetLayer( "battle_sprites" );
             
+
         }
     }
 }
