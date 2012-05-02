@@ -181,7 +181,7 @@ namespace Sully {
 
             player.speed += 100;
 
-            //Battle.init();
+            Battle.init();
         }
 
         /// <summary>

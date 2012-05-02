@@ -28,7 +28,7 @@ namespace Sully {
             masterPCs.Add( "Darin", s );
 
             s = new Sprite( "bandit.json", "Idle" );
-            masterEnemies.Add( "bandit", s );
+            masterEnemies.Add( "Bandit", s );
         }
 
         public static void init() {
@@ -41,7 +41,14 @@ namespace Sully {
             );
 
             l = _.sg.renderstack.GetLayer( "battle_sprites" );
-            
+
+            node = l.AddNode(
+                new McgNode( masterPCs["Darin"], l, 250, 132 )
+            );
+
+            node = l.AddNode(
+                new McgNode( masterEnemies["Bandit"], l, 75, 132 )
+            );            
 
         }
     }
