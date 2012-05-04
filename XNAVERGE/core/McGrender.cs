@@ -30,6 +30,7 @@ namespace XNAVERGE {
         public McgNode( Sprite s, McgLayer l, int start_x, int start_y ) : this( s, l, start_x, start_y, null, null, null ) { }
         public McgNode( Sprite s, McgLayer l, int start_x, int start_y, int? end_x, int? end_y, int? delay ) {
             sprite = s;
+            s.visible = true;
             _Node( l, start_x, start_y, end_x, end_y, delay );
         }
 
@@ -87,6 +88,10 @@ namespace XNAVERGE {
         }
 
         public void Update( int ticksSinceLastUpdate ) {
+            if (sprite != null) {
+                sprite.advance_frame();
+                sprite.Update();
+            }
 
 if( DEBUG ) Console.WriteLine( "ticksSinceLastUpdate: " + ticksSinceLastUpdate );
 if( DEBUG ) Console.WriteLine( this );

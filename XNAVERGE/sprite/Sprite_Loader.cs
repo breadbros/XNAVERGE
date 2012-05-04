@@ -79,8 +79,8 @@ namespace XNAVERGE {
                 (int)((Int64)spec["per_row"]));
 
             // Assume no padding between frames if unspecified
-            inner_pad = spec.ContainsKey("inner pad") ? (int)((Int64)spec["inner pad"]) : 0; // # pixels bordering the entire image 
-            outer_pad = spec.ContainsKey("outer pad") ? (int)((Int64)spec["outer pad"]) : 0; // # pixels between adjacent frames
+            inner_pad = spec.ContainsKey("inner_pad") ? (int)((Int64)spec["inner_pad"]) : 0; // # pixels bordering the entire image 
+            outer_pad = spec.ContainsKey("outer_pad") ? (int)((Int64)spec["outer_pad"]) : 0; // # pixels between adjacent frames
 
             temp = Path.Combine(Sprite.DEF_LOCATION, (String)spec["image"]);
             using (FileStream stream = new FileStream(temp, FileMode.Open)) {
