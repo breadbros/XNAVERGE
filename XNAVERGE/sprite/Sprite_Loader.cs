@@ -46,6 +46,7 @@ namespace XNAVERGE {
                     cur = (i == 0 ? CHR_LOCATION : "") + (j == 0 ? asset_name : naked_name);
                     if (File.Exists(@"content\" + cur + ".xnb")) {
                         spr = VERGEGame.game.MapContent.Load<SpriteBasis>(cur);
+                        spr.name = cur;
                         i = 999;
                         j = 999;
                     }

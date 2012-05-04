@@ -23,7 +23,8 @@ namespace XNAVERGE {
 
         public static Regex regex = new Regex(
                 @"([ulrdxyptzwfb])\s*(\d*)",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ECMAScript
+        );
 
 
         public MovestringCommand[] commands;
