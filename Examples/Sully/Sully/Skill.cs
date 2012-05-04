@@ -55,6 +55,122 @@ namespace Sully {
         }
     }
 
+    public class Element {
+        public static Dictionary<string, Element> masterElement;
+
+        public static void initElements() {
+            masterElement = new Dictionary<string, Element>();
+
+            masterElement.Add(
+                "fire", new Element( "Fire", 0, "Burny!" )
+            );
+            masterElement.Add(
+                "ice", new Element( "Ice", 0, "Freezy!" )
+            );
+            masterElement.Add(
+                "electric", new Element( "Electric", 0, "Zappy!" )
+            );
+            masterElement.Add(
+                "holy", new Element( "Holy", 0, "Blessy!" )
+            );
+            masterElement.Add(
+                "dark", new Element( "Dark", 0, "Damney!" )
+            );
+            masterElement.Add(
+                "drain", new Element( "Drain", 0, "Draino!" )
+            );
+            masterElement.Add(
+                "reduction", new Element( "Reduction", 0, "Halvey!" )
+            );
+            masterElement.Add(
+                "antimech", new Element( "AntiMech", 0, "Roboty!" )
+            );
+
+        }
+
+        public static Element get( string key ) {
+            Element e = masterElement[key.ToLower()];
+
+            if( e == null ) {
+                throw new Exception( "Attempted to get an invalid Element named '" + key + "'.  Plato disapproves.." );
+            }
+
+            return e;
+        }
+
+        public string name { get; private set; }
+        public string description { get; private set; }
+        public int icon { get; private set; }
+        public Element( string name, int icon, string description ) {
+            this.name = name;
+            this.icon = icon;
+            this.description = description;
+        }
+    }
+
+    public class Status {
+        public static Dictionary<string, Status> masterStatus;
+
+        public static void initStatuses() {
+            masterStatus = new Dictionary<string, Status>();
+
+            Dictionary<string, object> dict = (Dictionary<string, object>)Utility.parse_JSON( @"content\dat\Status.json" );
+
+            foreach( string key in dict.Keys ) {
+
+                Dictionary<string, object> myLine = (Dictionary<string, object>)dict[key];
+                Status s = new Status( key, myLine );
+                masterStatus.Add( s.name.ToLower(), s );
+            }
+        }
+
+        public static Status get( string key ) {
+            Status s = masterStatus[key.ToLower()];
+
+            if( s == null ) {
+                throw new Exception( "Attempted to get an invalid Status named '" + key + "'.  Status seeker." );
+            }
+
+            return s;
+        }
+
+        public string name { get; private set; }
+        public int icon { get; private set; }
+        public int duration { get; private set; }
+        public string render_func { get; private set; }
+        public string effect_func { get; private set; }
+        public string description { get; private set; }
+        public string[] remove_events { get; private set; }
+        public string CANCELS { get; private set; }
+
+        public Status( string name, Dictionary<string, object> entry ) {
+            this.name = name;
+            Int64? i;
+
+            i = entry["icon"] as Int64?;
+            icon = (int)i.Value;
+            i = entry["duration"] as Int64?;
+            duration = (int)i.Value;
+
+            render_func = entry["render_func"] as string;
+            effect_func = entry["effect_func"] as string;
+
+            if( entry.ContainsKey( "CANCELS" ) ) {
+                CANCELS = entry["CANCELS"] as string;
+            }
+
+            description = entry["description"] as string;
+
+            List<object> obj = entry["remove"] as List<object>;
+            List<string> foo = new List<string>();
+            foreach( string s in obj ) {
+                foo.Add( s );
+            }
+            remove_events = foo.ToArray();
+
+        }
+    }
+
     public class Skill {
         public static Dictionary<string, Skill> masterSkills;
         public static void initSkills() {
@@ -68,7 +184,6 @@ namespace Sully {
                 masterSkills.Add( s.name.ToLower(), s );
             }
 
-            int i = 0;
         }
 
         public static Skill get( string key ) {

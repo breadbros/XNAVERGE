@@ -1,0 +1,100 @@
+{
+    "Overworld_A": [
+        {
+            "weight": 300,
+            "group": [
+                [
+                    "Bunny",
+                    50,
+                    110
+                ],
+                [
+                    "Bunny",
+                    95,
+                    180
+                ],
+                [
+                    "Bunny",
+                    150,
+                    110
+                ],
+                [
+                    "Evil_Bunny",
+                    95,
+                    135
+                ]
+            ]
+        },
+        {
+            "weight": 30,
+            "group": [
+                [
+                    "Bunny",
+                    70,
+                    150
+                ],
+                [
+                    "Evil_Bunny",
+                    150,
+                    150
+                ],
+                [
+                    "Evil_Bunny",
+                    110,
+                    90
+                ]
+            ]
+        },
+        {
+            "weight": 30,
+            "setup_func": "leader_battle_fanfare",
+            "group": [
+                [
+                    "Bunny",
+                    110,
+                    110
+                ],
+                [
+                    "Bunny",
+                    150,
+                    110
+                ],
+                [
+                    "Bunny",
+                    150,
+                    150
+                ],
+                [
+                    "Evil_Carot",
+                    50,
+                    100,
+                    {
+                        "is_leader": 1
+                    }
+                ]
+            ]
+        }
+    ],
+    "Undersea_Cave": [
+        {
+            "weight": 1,
+            "group": [
+                [
+                    "Jelly_Baby",
+                    140,
+                    125
+                ],
+                [
+                    "Jelly_Baby",
+                    85,
+                    95
+                ],
+                [
+                    "Jelly_Baby",
+                    85,
+                    155
+                ]
+            ]
+        }
+    ]
+}

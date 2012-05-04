@@ -55,12 +55,21 @@ namespace Sully {
             SkillType.initSkillTypes();
             Klass.initClasses();
             PartyData.InitializePartyData();
-            Item.initItems();
+
+            Element.initElements();
+            Status.initStatuses();
+
             Skill.initSkills();
+            Item.initItems();
+
+            Enemy.initEnemies(); 
 
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
             mcg.AddLayer( "textbox" );
+            mcg.AddLayer( "battle_background" );
+            mcg.AddLayer( "battle_sprites" );
+            mcg.AddLayer( "battle_ui" );
             this.setMcGrender( mcg );
             
             this.game_input_handler = () => {
@@ -80,6 +89,7 @@ namespace Sully {
                 return true;
             };
 
+            Battle.LoadBackgrounds( Content );
 
             boxcolors = new Color[3];
             boxcolors[0] = new Color( 0, 0, 0 );
@@ -157,6 +167,7 @@ namespace Sully {
             dspr.move_to(150, 150);
             dspr.visible = true;
             hook_render = script<RenderLayerDelegate>("draw_darin");
+
             dspr.acceleration = new Vector2(-0.0008f, -0.001f);
             ////////// end of sprite demo
             //////////////////////////////////////////////////
@@ -169,6 +180,8 @@ namespace Sully {
             //saves.save(12);
 
             player.speed += 100;
+
+            Battle.init();
         }
 
         /// <summary>

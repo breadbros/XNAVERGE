@@ -130,6 +130,22 @@
       <Importer>CHRImporter</Importer>
       <Processor>CHRProcessor</Processor>
     </Compile>
+    <None Include="dat\Enemies.json">
+      <Name>Enemies</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\EnemyGroups.json">
+      <Name>EnemyGroups</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dat\Status.json">
+      <Name>Status</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="sprites\bandit.json">
+      <Name>bandit</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="sprites\img\bdarin.png">
       <Name>bdarin</Name>
       <Importer>TextureImporter</Importer>
@@ -244,6 +260,21 @@
       <Name>zath_-_cave</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="battlebg_grass.png">
+      <Name>battlebg_grass</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="sprites\img\gayo_bandit.png">
+      <Name>gayo_bandit</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

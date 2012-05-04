@@ -1,0 +1,441 @@
+{
+    "Poison": {
+        "icon": 127,
+        "duration": -1,
+        "render_func": "SR_Poison",
+        "effect_func": "",
+        "description": "Lose HP steadily in and out of battle.",
+        "remove": [
+            "on_death",
+            "on_rest"
+        ]
+    },
+    "Enervate": {
+        "icon": 128,
+        "duration": -1,
+        "render_func": "SR_Enervate",
+        "effect_func": "",
+        "description": "Lose MP steadily in and out of battle.",
+        "remove": [
+            "on_death",
+            "on_rest"
+        ]
+    },
+    "Blind": {
+        "icon": 129,
+        "duration": -1,
+        "render_func": "SR_Blind",
+        "effect_func": "",
+        "description": "Hit and critical rate reduced.",
+        "remove": [
+            "on_death",
+            "on_rest"
+        ]
+    },
+    "Confuse": {
+        "icon": 130,
+        "duration": -1,
+        "render_func": "SR_Confuse",
+        "effect_func": "",
+        "description": "Attack random targets until damaged.",
+        "remove": [
+            "on_hit",
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Charm": {
+        "icon": 131,
+        "duration": -1,
+        "render_func": "SR_Charm",
+        "effect_func": "",
+        "description": "Attack own party until damaged.",
+        "remove": [
+            "on_hit",
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Silence": {
+        "icon": 132,
+        "duration": 100,
+        "render_func": "SR_Silence",
+        "effect_func": "",
+        "description": "Cannot use magic.",
+        "remove": [
+            "on_death",
+            "on_rest"
+        ]
+    },
+    "Seal": {
+        "icon": 133,
+        "duration": 100,
+        "render_func": "SR_Seal",
+        "effect_func": "",
+        "description": "Cannot use any special abilities.",
+        "remove": [
+            "on_death",
+            "on_rest"
+        ]
+    },
+    "Sleep": {
+        "icon": 134,
+        "duration": 75,
+        "render_func": "SR_Sleep",
+        "effect_func": "",
+        "description": "Cannot take action until damaged.",
+        "remove": [
+            "on_hit",
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Paralysis": {
+        "icon": 135,
+        "duration": 75,
+        "render_func": "SR_Paralysis",
+        "effect_func": "",
+        "description": "Cannot take action.",
+        "remove": [
+            "on_death",
+            "on_rest"
+        ]
+    },
+    "Slow": {
+        "icon": 136,
+        "duration": 75,
+        "render_func": "SR_Slow",
+        "effect_func": "",
+        "description": "Reaction speed reduced.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Quick"
+    },
+    "Weak": {
+        "icon": 137,
+        "duration": 75,
+        "render_func": "SR_Weak",
+        "effect_func": "",
+        "description": "Attack power reduced.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Might"
+    },
+    "Fragile": {
+        "icon": 138,
+        "duration": 75,
+        "render_func": "SR_Fragile",
+        "effect_func": "",
+        "description": "Physical defense reduced.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Protect"
+    },
+    "Depress": {
+        "icon": 139,
+        "duration": 75,
+        "render_func": "SR_Depress",
+        "effect_func": "",
+        "description": "Magic defense reduced.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Barrier"
+    },
+    "Tangle": {
+        "icon": 140,
+        "duration": 75,
+        "render_func": "SR_Tangle",
+        "effect_func": "",
+        "description": "Evasion reduced.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Evade"
+    },
+    "Fugue": {
+        "icon": 141,
+        "duration": 75,
+        "render_func": "SR_Fragile",
+        "effect_func": "",
+        "description": "Magic power reduced.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Enlighten"
+    },
+    "Death": {
+        "icon": 142,
+        "duration": -1,
+        "render_func": "SR_Death",
+        "effect_func": "Status_Death",
+        "description": "Instantly defeated.",
+        "remove": [
+            "on_death"
+        ]
+    },
+    "Quick": {
+        "icon": 143,
+        "duration": 75,
+        "render_func": "SR_Quick",
+        "effect_func": "",
+        "description": "Reaction speed increased.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Slow"
+    },
+    "Might": {
+        "icon": 144,
+        "duration": 75,
+        "render_func": "SR_Might",
+        "effect_func": "",
+        "description": "Attack power increased.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Weak"
+    },
+    "Protect": {
+        "icon": 145,
+        "duration": 75,
+        "render_func": "SR_Protect",
+        "effect_func": "",
+        "description": "Physical defense increased.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Fragile"
+    },
+    "Barrier": {
+        "icon": 146,
+        "duration": 75,
+        "render_func": "",
+		"effect_func": "",
+        "description": "Magic defense increased.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Depress"
+    },
+    "Accurate": {
+        "icon": 147,
+        "duration": 75,
+        "render_func": "SR_Accurate",
+        "effect_func": "",
+        "description": "Hit and critical increased.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Evade": {
+        "icon": 148,
+        "duration": 75,
+        "render_func": "SR_Evade",
+        "effect_func": "",
+        "description": "Evasion increased.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Tangle"
+    },
+    "Enlighten": {
+        "icon": 149,
+        "duration": 75,
+        "render_func": "SR_Enlighten",
+        "effect_func": "",
+        "description": "Magic power increased.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ],
+        "CANCELS": "Fugue"
+    },
+    "Invincible": {
+        "icon": 150,
+        "duration": 25,
+        "render_func": "SR_Invincible",
+        "effect_func": "",
+        "description": "Immune to direct damage.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Lifeline": {
+        "icon": 151,
+        "duration": -1,
+        "render_func": "SR_Lifeline",
+        "effect_func": "",
+        "description": "Revive automatically when defeated.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Regenerate": {
+        "icon": 152,
+        "duration": 100,
+        "render_func": "SR_Regenerate",
+        "effect_func": "",
+        "description": "Gradually regain HP.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Nullify": {
+        "icon": 153,
+        "duration": 75,
+        "render_func": "SR_Nullify",
+        "effect_func": "",
+        "description": "Most magic has no effect",
+        "remove": [
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Reflect": {
+        "icon": 154,
+        "duration": 75,
+        "render_func": "SR_Reflect",
+        "effect_func": "",
+        "description": "Most spells are reflected.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Counter": {
+        "icon": 155,
+        "duration": 50,
+        "render_func": "SR_Counter",
+        "effect_func": "",
+        "description": "Always counter-attacks.",
+        "remove": [
+            "on_death",
+            "on_end"
+        ]
+    },
+    "Grave": {
+        "icon": 156,
+        "duration": -1,
+        "render_func": "SR_Grave",
+        "effect_func": "",
+        "description": "Cannot be revived.",
+        "remove": [
+            "on_end"
+        ]
+    },
+    "Neutro": {
+        "icon": 157,
+        "duration": -1,
+        "render_func": "SR_Neutro",
+        "effect_func": "",
+        "description": "Elemental damage is reduced.",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    },
+    "Rewarding": {
+        "icon": 0,
+        "duration": -1,
+        "render_func": "SR_Rewarding",
+        "effect_func": "",
+        "description": "You're sure to get something good!",
+        "remove": []
+    },
+    "FireWeak": {
+        "icon": 158,
+        "duration": -1,
+        "render_func": "SR_FireWeak",
+        "effect_func": "",
+        "description": "Weak against Fire damage.",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    },
+    "IceWeak": {
+        "icon": 159,
+        "duration": -1,
+        "render_func": "SR_IceWeak",
+        "effect_func": "",
+        "description": "Weak against Fire damage.",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    },
+    "ElectricWeak": {
+        "icon": 160,
+        "duration": -1,
+        "render_func": "SR_ElectricWeak",
+        "effect_func": "",
+        "description": "Weak against Electric damage.",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    },
+    "HolyWeak": {
+        "icon": 161,
+        "duration": -1,
+        "render_func": "SR_HolyWeak",
+        "effect_func": "",
+        "description": "Weak against Holy damage.",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    },
+    "DarkWeak": {
+        "icon": 162,
+        "duration": -1,
+        "render_func": "SR_DarkWeak",
+        "effect_func": "",
+        "description": "Weak against Dark damage.",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    },
+    "Immune": {
+        "icon": 163,
+        "duration": 150,
+        "render_func": "SR_Immune",
+        "effect_func": "",
+        "description": "Protected from ailments.",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    },
+    "Lucky": {
+        "icon": 0,
+        "duration": -1,
+        "render_func": "SR_Lucky",
+        "effect_func": "",
+        "description": "Maybe something good will happen?",
+        "remove": [
+            "on_end",
+            "on_death"
+        ]
+    }
+}

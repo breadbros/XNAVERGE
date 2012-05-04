@@ -100,9 +100,17 @@ namespace XNAVERGE {
             spec = (Dictionary<String, Object>)(spec["animations"]);
             foreach (KeyValuePair<String, Object> kvp in spec) {
                 arr = (List<Object>)kvp.Value;
-                anim = new SpriteAnimation(kvp.Key, b.num_frames, (String)arr[0], 
-                    (AnimationStyle)Enum.Parse(typeof(AnimationStyle), (string)arr[1], true));
-                b.animations.Add(anim.name, anim);                
+                if( arr[0] is System.Collections.Generic.List<System.Object> ) {
+
+                    System.Collections.Generic.List<System.Object> animPat = (System.Collections.Generic.List<System.Object>)arr[0];
+
+                    anim = new SpriteAnimation( kvp.Key, b.num_frames, animPat, (AnimationStyle)Enum.Parse( typeof( AnimationStyle ), (string)arr[1], true ) );
+                } else {
+                    anim = new SpriteAnimation( kvp.Key, b.num_frames, (String)arr[0],
+                        (AnimationStyle)Enum.Parse( typeof( AnimationStyle ), (string)arr[1], true ) );
+                } 
+                
+                b.animations.Add( anim.name, anim );                
             }
             foreach (SpriteAnimation a in b.animations.Values) { // now go back and set up any transitions
                 if (a.style == AnimationStyle.Transition) {

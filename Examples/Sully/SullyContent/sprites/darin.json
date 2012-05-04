@@ -10,5 +10,6 @@
 		"Weak": ["F24 W110 F25 W110", "Looping"],
 		"Attack": ["F0 W50 F8 W5 F9 W5 F10 W10 F11 W5 F12 W5 F13 W5 F14 W5 F15 W5", "Once"],
 		"Charging": ["F4 W8 F5 W8 F6 W8 F7 W8", "Looping"],
-		"Casting": ["F7 W50 F16 W15 F17 W5 F18 W5 F19 W5 F20 W5 F21 W5 F22 W5 F23 W15", "Once"]}
+		"Casting": ["F7 W50 F16 W15 F17 W5 F18 W5 F19 W5 F20 W5 F21 W5 F22 W5 F23 W15", "Once"]
+	}	
 }

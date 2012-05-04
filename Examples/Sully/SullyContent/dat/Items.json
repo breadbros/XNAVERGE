@@ -2059,7 +2059,7 @@
         "equip_slot": "Accessory",
         "equip_modcode": "ATK,+5;",
         "IMMUNE": [
-            "Enervate, Fugue, Blind"
+            "Enervate", "Fugue", "Blind"
         ],
         "ENABLE": [
             "Sunray"
