@@ -181,9 +181,9 @@ namespace XVCX {
             ProcessedEntity ent = new ProcessedEntity();
             ent.start = new Point((int)bin_reader.ReadUInt16(), (int)bin_reader.ReadUInt16()); // starting tile
             ent.facing = bin_reader.ReadByte(); // initial facing direction 
-            ent.obstructable = (bin_reader.ReadByte() == 0); // obstructable
-            ent.obstructs = (bin_reader.ReadByte() == 0); // obstructs others
-            ent.autoface = (bin_reader.ReadByte() == 0); // autoface on adjacent activation
+            ent.obstructable = (bin_reader.ReadByte() != 0); // obstructable
+            ent.obstructs = (bin_reader.ReadByte() != 0); // obstructs others
+            ent.autoface = (bin_reader.ReadByte() != 0); // autoface on adjacent activation
             ent.speed = bin_reader.ReadUInt16(); // speed (pixels moved per second)
             bin_reader.ReadByte(); // "activation mode" (unused)
             ent.movemode = bin_reader.ReadByte(); // movement mode

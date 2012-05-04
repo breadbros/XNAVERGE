@@ -46,10 +46,6 @@ namespace M
             e = map.spawn_entity(21, 14, "chap");
             e.movestring = new Movestring("L2D2R2U2B");            
             e.speed = 80;
-            for (int i = 0; i < map.num_entities; i++) {
-                map.entities[i].obstructable = true;
-                map.entities[i].obstructing = true;
-            }
 
             for (int i = 0; i < 4; i++) {
                 e = map.spawn_entity(player.x / 16, player.y / 16, "chap");
