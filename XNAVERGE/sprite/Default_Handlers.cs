@@ -29,10 +29,11 @@ namespace XNAVERGE {
         public static int vergestyle_player_movement_handler(Entity ent, Object state, ref EntityMovementData data) {
             int x = 0, y = 0;            
             float factor;
-            Vector2 ofs;
+            Vector2 ofs, old_velocity;
             VERGEMap map;
             Point pt;
             Rectangle box;
+            old_velocity = ent.velocity;
             ent.velocity = ent.acceleration = Vector2.Zero;
             ent.acceleration = Vector2.Zero;
             
@@ -171,6 +172,14 @@ namespace XNAVERGE {
             else {
                 ent.velocity.X = (float)x;
                 ent.velocity.Y = (float)y;
+
+                // ugly hack to ensure sub-pixel alignment -- only works reliably with a small number of movement
+                // directions, and is incompatible with acceleration. 
+                if (data.first_call && ent.acceleration == Vector2.Zero && ent.velocity != old_velocity) {
+                    ent.x = ent.x; // these setters will put the entity in the middle of the pixel interval
+                    ent.y = ent.y;
+                }
+
                 if (!ent.moving) ent.set_walk_state(true);
                 factor = ent.speed / 100f;
                 ent.movement_direction = Utility.direction_from_signs(x, y, true);
