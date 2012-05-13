@@ -129,6 +129,11 @@ namespace XNAVERGE {
             Vector2 velocity_change;
             EntityMovementData data = new EntityMovementData();
 
+            if (!visible) {
+                last_logic_tick = VERGEGame.game.tick;
+                return;
+            }
+
             data.time = ( VERGEGame.game.tick - last_logic_tick ) * speed;
             data.time_shortfall = 0;
             data.first_call = true;

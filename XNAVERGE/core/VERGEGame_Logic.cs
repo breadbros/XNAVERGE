@@ -102,8 +102,9 @@ namespace XNAVERGE {
 
                         // Entity activation
                         ent_enum = entity_space.elements_within_bounds( new Rectangle( facing_coords.X, facing_coords.Y, 1, 1 ), true, player );
-                        if( ent_enum.GetNext( out ent ) ) // just take the first match arbitrarily
-                            ent.activate();
+                        ent = null;
+                        while (ent_enum.GetNext(out ent) && !ent.visible) { ent = null; } // get the first visible entity in the region, if any
+                        if (ent != null) { ent.activate(); }
 
                         // Zone activation
                         // Convert facing_coords to tile coordinates

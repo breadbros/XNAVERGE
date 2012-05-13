@@ -109,8 +109,7 @@ namespace Sully {
         }
 
         public void sancho( int x, int y, bool adj ) {
-            _.sg.saves.load(12);
-            //_.TextBox( _.T_SANCHO, "*SIGH*", "", "...hi." );
+            _.TextBox( _.T_SANCHO, "*SIGH*", "", "...hi." );
         }
 
         public void undersea( int x, int y, bool adj ) {
@@ -216,8 +215,9 @@ namespace Sully {
                 _.sg.textbox.OnDone = () => {
 
                     _.sg.party.AddPartyMember( "Crystal", 3 );
-                    
-                    map.entities[0].x = 30000;
+
+
+                    map.entities[0].visible = false;
 
                     _.setFlag( _.F.F_CRYS_JOIN, 1 );
                 };

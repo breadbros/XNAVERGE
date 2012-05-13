@@ -247,8 +247,7 @@ namespace XNAVERGE {
             ent_enum = VERGEGame.game.entity_space.elements_within_bounds(collision_zone, true, ent);
             
             while (ent_enum.GetNext(out collider)) {
-                if (collider.obstructing) {
-                    // this is the worst hack. TODO: burn everything.
+                if (collider.obstructing && collider.visible) {
                     collision_zone = ent.hitbox; 
                     for (int cur_dist = 0; cur_dist < best_distance; cur_dist++) {
                         collision_zone.Offset(xs, ys);
