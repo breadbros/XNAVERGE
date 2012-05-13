@@ -149,6 +149,8 @@ namespace Sully {
         }
 
         public void girlfriend_check( int x, int y, bool adj ) {
+            return; // remove this later
+
             if( !_.getFlagB( _.F.F_CRYS_JOIN ) ) {
                 _.TextBox( _.T_DARIN, "Hrm... Crystal might get suspicious if I", "sneak off the island without her...", "" );
                 _.TextBox( _.T_DARIN, "...again.", "", "" );

@@ -115,7 +115,6 @@ namespace Sully {
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        public Sprite dspr;
         protected override void LoadContent() {
 
             Console.WriteLine( "SullyGame::LoadContent() called here" );
@@ -150,29 +149,11 @@ namespace Sully {
 
             /// spawn the player
 
-                                    
-            _.MapSwitch( "paradise_isle2", 13, 19);
-
-
-            //////////////////////////////////////////////////
-            //////////////////////////////////////////////////
-            ///////////  here's some dumb sprite-demoing stuff!
-            dspr = new Sprite("darin.json", "Attack");
-            AnimationEndingDelegate del = null;
-            del = (Sprite s) => {
-                s.set_animation("Idle");
-                s.on_done_animating -= del;
-            };
-            dspr.on_done_animating += del;
-            dspr.move_to(150, 150);
-            dspr.visible = true;
-            hook_render = script<RenderLayerDelegate>("draw_darin");
-
-            dspr.acceleration = new Vector2(-0.0008f, -0.001f);
-            ////////// end of sprite demo
-            //////////////////////////////////////////////////
-            //////////////////////////////////////////////////
-
+            // various starting points -- only uncomment one at a time
+            //_.MapSwitch( "paradise_isle2", 13, 19); // next to sully            
+            _.MapSwitch("paradise_isle2", 63, 59); // by exit to the cave
+            //_.MapSwitch("underwater", 29, 12); // by exit to the cave
+            
 
             //VERGEMap.switch_map( "underwater" );
             //player = map.spawn_entity( 29, 12, "darin" );            

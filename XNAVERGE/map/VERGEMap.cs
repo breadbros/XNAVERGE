@@ -13,6 +13,8 @@ namespace XNAVERGE {
         public static readonly Vector2 NEUTRAL_PARALLAX = new Vector2(1.0f);
         public static readonly Vector2 FIXED_PARALLAX = new Vector2(0.0f);
 
+        public const String MAP_LOCATION = @"maps\"; // If a map or tileset asset isn't found, it tries again prefixing it with this
+
         // when true, an exception is thrown on an illegal tile index. When false, loads them as 0. 
         // This is false by default because some versions of maped3 have a bug that occasionally
         // saves unobstructed tiles with illegal values, and there are many such maps "in the wild".        
@@ -366,10 +368,11 @@ namespace XNAVERGE {
             if( game.map != null ) game.map.scripts.do_on_exit();
             game.MapContent.Unload();
             Sprite.clear_cache(); // wipe out cached SpriteBases (since we just nuked their textures)
-            try {
+            if (System.IO.File.Exists(@"content\" + new_map + ".xnb")) {
                 game.map = VERGEGame.game.MapContent.Load<VERGEMap>( new_map );
-            } catch( Exception ) {
-                game.map = VERGEGame.game.MapContent.Load<VERGEMap>( "maps/" + new_map );
+            } 
+            else {
+                game.map = VERGEGame.game.MapContent.Load<VERGEMap>( MAP_LOCATION + new_map );
             }
             tileset_override = null;
 
@@ -381,43 +384,30 @@ namespace XNAVERGE {
         // the map's vsp filename, then tries to match the filename without the .vsp part, then loads the
         // game's default tileset, erroring out if there isn't one.
         public Tileset load_tileset(String filename) {
-            int pos;
-            Tileset ts = null;
-            filename = System.IO.Path.GetFileName(filename);
-            if (!String.IsNullOrEmpty(tileset_override)) {
-                ts = VERGEGame.game.MapContent.Load<Tileset>(tileset_override);                
-            }
-            else {
-                try { // there doesn't seem to be a way to check if content exists without trying to load it, so let's do that
-                    ts = VERGEGame.game.MapContent.Load<Tileset>(filename);
-                }
-                catch (Microsoft.Xna.Framework.Content.ContentLoadException e) {
-                    // OK, the filename doesn't correspond to an asset name. Let's try it without the extension
-                    try {
-                        pos = filename.LastIndexOf(".");
-                        if (pos < 0) throw e;
-                        ts = VERGEGame.game.MapContent.Load<Tileset>(filename.Substring(0, pos));
-                    }
-                    catch (Microsoft.Xna.Framework.Content.ContentLoadException) { // That didn't work either. Check for a default tileset to use.
-                        if (VERGEMap._default_tileset != null) {
-                            System.Diagnostics.Debug.WriteLine("Couldn't match legacy vsp name to an asset; using the default tileset.");
-                            ts = VERGEMap._default_tileset;
-                        }
-                        else {
+            Tileset ts = null;            
+            string cur, naked_name = System.IO.Path.GetFileNameWithoutExtension(filename);
+            int has_extension;
+            if (naked_name == filename) has_extension = 0;
+            else has_extension = 1;
 
-                            /// this is dirty and bad and I am ashamed.  But whatever.
-                            try {
-                                filename = "maps/" + filename;
-                                pos = filename.LastIndexOf( "." );
-                                if( pos < 0 ) throw e;
-                                ts = VERGEGame.game.MapContent.Load<Tileset>( (filename).Substring( 0, pos ) );
-                            } catch( Microsoft.Xna.Framework.Content.ContentLoadException ) {
-                                throw new ArgumentException( "Couldn't find a tileset asset named " + filename +
-                                                                ", with or without extension, and there was no default tileset or override given." );
-                            }
-                        }
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j <= has_extension; j++) {
+                    cur = (i == 0 ? MAP_LOCATION : "") + (j == 0 ? filename : naked_name);                    
+                    if (System.IO.File.Exists(@"content\" + cur + ".xnb")) {                        
+                        ts = VERGEGame.game.MapContent.Load<Tileset>(cur);                        
+                        i = 999;
+                        j = 999;
                     }
                 }
+            }
+            if (ts == null) {
+                if (VERGEMap._default_tileset != null) {
+                    System.Diagnostics.Debug.WriteLine("DEBUG: Couldn't match legacy vsp name to an asset; using the default tileset.");
+                    ts = VERGEMap._default_tileset;
+                }
+                else throw new ArgumentException("Couldn't find a tileset asset named " + filename + ", with or without extension, either in or not in content\\"
+                                             + MAP_LOCATION + ", and there was no default tileset or override given.");
+
             }
             tileset = ts;
             return ts;

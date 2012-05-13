@@ -36,9 +36,11 @@ namespace Sully {
 
         public static void PlayMusic( string s ) {
             // music stuff
+            /* TODO: REPLACE THIS WITH XACT
             MediaPlayer.IsRepeating = true;
             Song song = sg.Content.Load<Song>( s );
             MediaPlayer.Play( song );
+            */
         }
 
         public static int
