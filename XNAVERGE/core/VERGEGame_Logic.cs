@@ -82,8 +82,8 @@ namespace XNAVERGE {
                     prev_player_coords.X /= map.tileset.tilesize;
                     prev_player_coords.Y /= map.tileset.tilesize;
                 } else prev_player_coords = default( Point );
-                for( int i = 0; i < map.num_entities; i++ ) {
-                    ent = map.entities[i];
+                map.start_listing_entities();
+                while (map.get_next_entity(out ent)) {                    
                     if (followers.position_of(ent) < 0) ent.Update();
                 }
                 followers.Update();
@@ -130,8 +130,10 @@ namespace XNAVERGE {
         // Possibly this should be converted to something that's called in all cases, handling only
         // essentials.
         private void _idleMap(int elapsed) {
-            for (int i=0; i < map.num_entities; i++) {
-                map.entities[i].last_logic_tick += elapsed;
+            Entity ent;
+            map.start_listing_entities();
+            while (map.get_next_entity(out ent)) {
+                ent.last_logic_tick = ent.last_draw_tick = tick;                
             }
         }
 

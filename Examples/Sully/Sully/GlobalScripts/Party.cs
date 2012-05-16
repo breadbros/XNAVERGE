@@ -28,6 +28,7 @@ namespace Sully {
                 
                     for( int i = 1; i<pm.Length; i++ ) {
                         pm[i].ent = _.sg.map.spawn_entity(0, 0, pm[i].normal_chr );
+                        pm[i].ent.name = "Party Member: " + pm[i].name;
                         _.sg.followers.add( pm[i].ent );
                     }
 

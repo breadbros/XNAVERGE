@@ -75,22 +75,35 @@ namespace XNAVERGE {
         // ---------------------------------
         // ENTITY MANAGEMENT
 
+        // Pseudo-enumerator API. Too lazy to implement/optimize a real enumerator for now.
+
+        protected int enum_idx = 0;
+        // resets the enumeration pointer to the first entity
+        public void start_listing_entities() {
+            enum_idx = 0;
+        }
+        // advance through entity enumerator. Note that this may be fewer entities than num_entities, since the 
+        // latter counts lazily-deleted entities as well.
+        public bool get_next_entity(out Entity ent) {
+            ent = null;
+            while (enum_idx < num_entities) {                
+                if (!entities[enum_idx].deleted) {
+                    ent = entities[enum_idx];
+                    enum_idx++;
+                    return true;
+                }
+                enum_idx++;
+            }
+            return false;
+        }
+
+
         public Entity get_entity(String ent_name) {            
             for (int i = 0; i < _num_entities; i++) {
-                if (entities[i].name == ent_name) return entities[i];
+                if (entities[i].name == ent_name && !entities[i].deleted) return entities[i];
             }
             return null;
         }
-
-        // Returns a (possibly empty) list of all entities whose hitboxes intersect with the given rectangle.
-        public List<Entity> entities_in_region(Rectangle region) {
-            List<Entity> list = new List<Entity>(_num_entities); // initial list capacity = number of entities on map
-            for (int i = 0; i < _num_entities; i++) {
-                if (entities[i].hitbox.Intersects(region)) list.Add(entities[i]);
-            }
-            return list;
-        }
-
         
         public Entity spawn_entity(String ent_name, int x_coord, int y_coord, Direction facing, String asset_name, String animation) {
             Entity ent = new Entity(asset_name, ent_name);            
@@ -120,7 +133,6 @@ namespace XNAVERGE {
             //Console.WriteLine("{0} is #{1}", ent.name, ent.index);
             return ent;
         }
-        // overload ALL the things!
         public Entity spawn_entity(int x_coord, int y_coord, Direction facing, String asset_name, String animation) {
             return spawn_entity("", x_coord, y_coord, facing, asset_name, animation);
         }
@@ -150,7 +162,7 @@ namespace XNAVERGE {
         public bool delete_entity(Entity entity) {
             VERGEGame.game.entity_space.Remove(entity);
             for (int i = 0; i < _num_entities; i++) {
-                if (entities[i] == entity) {
+                if (entities[i] == entity && !entities[i].deleted) {
                     entity.deleted = true;
                     if (VERGEGame.game.player == entity) VERGEGame.game.player = null;
                     return true;

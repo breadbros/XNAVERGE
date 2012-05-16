@@ -26,7 +26,8 @@ namespace XNAVERGE {
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime) {            
+        protected override void Draw(GameTime gameTime) {
+            Entity ent;
             base.Draw(gameTime); // not sure if this actually does anything            
             if (map == null) return;
 
@@ -44,8 +45,9 @@ namespace XNAVERGE {
             fps++;            
 
             // Update entity frames
-            if (!entities_paused) for (int i = 0; i < map.num_entities; i++) { map.entities[i].advance_frame(); }
-            else for (int i = 0; i < map.num_entities; i++) { map.entities[i].last_draw_tick = tick; }
+            map.start_listing_entities();
+            if (!entities_paused) { while (map.get_next_entity(out ent)) { ent.advance_frame(); } }
+            else { while (map.get_next_entity(out ent)) { ent.last_draw_tick = tick; } }
 
             // Draw to native-size buffer at 1x size
             GraphicsDevice.SetRenderTarget(screen.true_size_buffer);
