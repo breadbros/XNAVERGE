@@ -185,7 +185,9 @@ namespace XNAVERGE {
 
         public virtual void init_map( BasicDelegate DoTransition ) { // TODO: dehackify this, move to VERGEMap                         
 
+            // These bounds are somewhat arbitrary and can be increased if for some reason you need more space outside the map.
             entity_space = new BoundedSpace<Entity>(-screen.width, -screen.height, map.pixel_width + 2*screen.width, map.pixel_height + 2*screen.height);
+            
             for (int i = 0; i < map.num_entities; i++) {
                 entity_space.Add(map.entities[i]);
                 map.entities[i].set_script();

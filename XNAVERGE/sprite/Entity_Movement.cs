@@ -185,7 +185,7 @@ namespace XNAVERGE {
              
             ent_enum = VERGEGame.game.entity_space.elements_within_bounds(Rectangle.Union(hitbox, goal), true, this);
             while (ent_enum.GetNext(out ent)) {
-                if (ent.obstructing) {
+                if (ent.obstructing && ent.visible) {
                     cur_path = pixel_path;
                     if (test_collision(ent.hitbox, ref cur_path)) {
                         cur_distance = Math.Abs(cur_path.X) + Math.Abs(cur_path.Y);

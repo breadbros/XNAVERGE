@@ -247,7 +247,8 @@ namespace Sully {
             }
 
             if( pm.ent == null && _.sg.map != null) {
-                pm.ent = new Entity( pm.normal_chr, "" ); 
+                pm.ent = _.sg.map.spawn_entity(-10, -10, pm.normal_chr);
+                pm.ent.name = "Party Member: " + pm.name; 
             }
 
             if( pm.level < level ) {

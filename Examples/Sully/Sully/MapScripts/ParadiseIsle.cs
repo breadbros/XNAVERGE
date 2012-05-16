@@ -18,8 +18,7 @@ namespace Sully {
             // pre-built into the map...
             if( _.getFlagB( _.F.F_CRYS_JOIN ) ) {
 
-                this.map.entities[0].x = 30000;
-                this.map.entities[0].speed = 0;
+                this.map.entities[0].visible = false;  
             }
 
             //if Sully's shown the way
@@ -109,8 +108,7 @@ namespace Sully {
         }
 
         public void sancho( int x, int y, bool adj ) {
-            _.sg.saves.load(12);
-            //_.TextBox( _.T_SANCHO, "*SIGH*", "", "...hi." );
+            _.TextBox( _.T_SANCHO, "*SIGH*", "", "...hi." );
         }
 
         public void undersea( int x, int y, bool adj ) {
@@ -215,9 +213,9 @@ namespace Sully {
                 
                 _.sg.textbox.OnDone = () => {
 
+                    map.delete_entity(map.entities[0]);  
                     _.sg.party.AddPartyMember( "Crystal", 3 );
-                    
-                    map.entities[0].x = 30000;
+                    _.sg.followers.add(PartyData.partymemberData["crystal"].ent);
 
                     _.setFlag( _.F.F_CRYS_JOIN, 1 );
                 };
