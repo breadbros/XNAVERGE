@@ -34,15 +34,6 @@ namespace Sully {
         public static void SavePoint( int x, int y, bool adj ) { }
         public static void SaveDisable() { }
 
-        public static void PlayMusic( string s ) {
-            // music stuff
-            /* TODO: REPLACE THIS WITH XACT
-            MediaPlayer.IsRepeating = true;
-            Song song = sg.Content.Load<Song>( s );
-            MediaPlayer.Play( song );
-            */
-        }
-
         public static int
             T_DARIN = 1,
             T_SARA = 2,

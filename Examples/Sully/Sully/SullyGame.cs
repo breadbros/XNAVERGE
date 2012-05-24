@@ -20,13 +20,17 @@ namespace Sully {
 
         public Party party;
         public Inventory inventory;
+        
         public Textbox textbox;
         public MainMenu mainMenu;
         public Color[] boxcolors;
         public Color menuColor;
+        
         public SaveManager saves;
-
-        public McGrenderStack mcg;
+        public McGrenderStack mcg;                
+        public AudioEngine audio;
+        public AudioBank music_bank, sfx_bank;
+        public Cue current_music; // the song being played currently, if any. TODO: move this somewhere more encapsulated
 
         // this is the time elapsed when the current game was loaded. The total time elapsed is this plus
         // the session timer's elapsed time. 
@@ -62,7 +66,9 @@ namespace Sully {
             Skill.initSkills();
             Item.initItems();
 
-            Enemy.initEnemies(); 
+            Enemy.initEnemies();
+
+            init_audio();
 
             mcg = new McGrenderStack();
             mcg.AddLayer( "menu" );
@@ -194,12 +200,21 @@ namespace Sully {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) { 
             base.Draw(gameTime);
+            audio.Update(); // needs to be called every frame
         }
 
         private void init_textbox() {
             Texture2D speechPortraits = Content.Load<Texture2D>( "speech" );
             textbox = new Textbox( screen.width, screen.height, speechPortraits, this );
             mainMenu = new MainMenu();
+        }        
+
+        private void init_audio() {
+            current_music = null;
+            audio = new AudioEngine(@"Content\sully-audio.xgs");
+            music_bank = new AudioBank();
+            music_bank.wave = new WaveBank(audio, @"Content\BGM Wave.xwb");
+            music_bank.sound = new SoundBank(audio, @"Content\BGM Sound.xsb");                      
         }
     }
 }
