@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Battle.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="GlobalScripts\Audio.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="MapScripts\UnderwaterCavern.cs" />

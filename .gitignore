@@ -25,6 +25,10 @@ MapedPreferences.xml
 *.lib
 *.sbr
 *.sdf
+*.wav
+*.xwb
+*.xsb
+*.xgs
 
 [Dd]ebug/
 obj/

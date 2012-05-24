@@ -52,13 +52,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="troupe_-_cabedge_sailing.mp3">
-      <Name>troupe_-_cabedge_sailing</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Garamond.spritefont">
       <Name>Garamond</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -66,6 +59,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="sully-audio.xap">
+      <Name>sully-audio</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </Compile>
     <Compile Include="textbox.png">
       <Name>textbox</Name>
       <Importer>TextureImporter</Importer>
@@ -254,13 +252,6 @@
       <Name>Items</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="zath_-_cave.mp3">
-      <Name>zath_-_cave</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="battlebg_grass.png">
